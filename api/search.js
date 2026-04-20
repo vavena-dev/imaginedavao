@@ -1,0 +1,23 @@
+const { buildResultSet, readJsonBody, sendJson } = require("./_lib/common");
+
+module.exports = async function handler(req, res) {
+  if (req.method !== "POST") {
+    return sendJson(res, 405, { error: "Method not allowed" });
+  }
+
+  try {
+    const body = await readJsonBody(req);
+    const category = String(body.category || "hotels").toLowerCase();
+    const city = String(body.city || "Davao");
+    const payload = body.payload && typeof body.payload === "object" ? body.payload : {};
+
+    if (!["flights", "hotels", "experiences", "cars"].includes(category)) {
+      return sendJson(res, 400, { error: "Unsupported category" });
+    }
+
+    const results = buildResultSet(category, city, payload);
+    return sendJson(res, 200, { category, city, results });
+  } catch (error) {
+    return sendJson(res, 500, { error: error.message || "Failed to generate results" });
+  }
+};
