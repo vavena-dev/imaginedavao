@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Now in Davao | ImagineDavao · ImaginePhilippines</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="page.css" />
+</head>
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <a class="brand" href="index.html"><span class="kicker">ImaginePhilippines</span><span class="city">ImagineDavao</span></a>
+      <a class="back" href="index.html">Back to City Guide</a>
+    </header>
+    <section class="hero">
+      <div class="hero-copy"><p>Now in City</p><h1>Davao Right Now</h1><p class="desc">Live campaign highlights, seasonal picks, and what travelers should prioritize this week.</p></div>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Kadayawan_Festival.jpg/1920px-Kadayawan_Festival.jpg" alt="Festival crowd" />
+    </section>
+    <section class="grid">
+      <article class="card"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Celebrating_Kadayawan_Festival.jpg/1920px-Celebrating_Kadayawan_Festival.jpg" alt="Creative fair" /><div class="body"><h3>Kadayawan Highlights</h3><p>Top event zones and best-time schedules for major festival moments.</p></div></article>
+      <article class="card"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Roxas_Ave_Night_Market_001.jpg/1920px-Roxas_Ave_Night_Market_001.jpg" alt="Night market" /><div class="body"><h3>Night Market Pulse</h3><p>Tonight's food strips, shopping lanes, and busking corners.</p></div></article>
+      <article class="card"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Davao_City_Coastal_Road.jpg/1920px-Davao_City_Coastal_Road.jpg" alt="Tourist with map" /><div class="body"><h3>Weekend Starter Plan</h3><p>Fast way to assemble a 2-day city + nature itinerary.</p></div></article>
+    </section>
+  </div>
+  <div class="chat-widget" id="chatWidget"><button class="chat-fab" id="chatFab"><span>AI</span><small>Ask Imagine AI</small></button><section class="chat-panel"><header class="chat-header"><div><h4>Imagine AI Concierge</h4><p>Live AI Travel Assistant</p></div><button id="closeChat" class="close-btn">Close</button></header><div class="chat-body"><article class="chat-msg ai">Ask for itinerary planning, hotel picks, flight routes, and activity recommendations.</article></div><form class="chat-input-row" id="chatForm"><input id="chatInput" type="text" /><button type="submit">Send</button></form></section></div>
+  <script src="api-client.js"></script><script src="page.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "name": "imaginephilippines",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Multi-city Philippines tourism site with tracked booking links and streaming chat API",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

@@ -1,0 +1,381 @@
+const http = require("http");
+const fs = require("fs");
+const fsp = require("fs/promises");
+const path = require("path");
+const crypto = require("crypto");
+
+const HOST = process.env.HOST || "127.0.0.1";
+const PORT = Number(process.env.PORT || 8080);
+const ROOT = process.cwd();
+const DATA_DIR = path.join(ROOT, "data");
+const CLICKS_LOG = path.join(DATA_DIR, "booking_clicks.jsonl");
+
+const MIME = {
+  ".html": "text/html; charset=utf-8",
+  ".css": "text/css; charset=utf-8",
+  ".js": "application/javascript; charset=utf-8",
+  ".json": "application/json; charset=utf-8",
+  ".png": "image/png",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".svg": "image/svg+xml",
+  ".ico": "image/x-icon"
+};
+
+const RESULT_IMAGES = {
+  hotels: [
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Davao_City_skyline_at_night_01.jpg/1920px-Davao_City_skyline_at_night_01.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Davao_Agdao_skyline_%28Davao_City%3B_04-22-2024%29.jpg/1920px-Davao_Agdao_skyline_%28Davao_City%3B_04-22-2024%29.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Davao_City_Coastal_Road.jpg/1920px-Davao_City_Coastal_Road.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Davao_skyline_at_Jackridge_Resort_and_Restaurant.jpg/1920px-Davao_skyline_at_Jackridge_Resort_and_Restaurant.jpg"
+  ],
+  flights: [
+    "https://upload.wikimedia.org/wikipedia/commons/0/04/2022-10-07_Davao-Samal_Bridge_001.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/4/4f/2022-10-07_Davao-Samal_Bridge_002.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/2025-07-19_Bucana_Bridge_007.jpg/1920px-2025-07-19_Bucana_Bridge_007.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Davao_City_Coastal_Road_Bucana_northbound_%28Davao_City%3B_08-21-2023%29.jpg/1920px-Davao_City_Coastal_Road_Bucana_northbound_%28Davao_City%3B_08-21-2023%29.jpg"
+  ],
+  experiences: [
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Kadayawan_Festival.jpg/1920px-Kadayawan_Festival.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Celebrating_Kadayawan_Festival.jpg/1920px-Celebrating_Kadayawan_Festival.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Roxas_Ave_Night_Market_001.jpg/1920px-Roxas_Ave_Night_Market_001.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Roxas_Ave_Night_Market_002.jpg/1920px-Roxas_Ave_Night_Market_002.jpg"
+  ],
+  cars: [
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Mount_Apo_Banner.JPG/1920px-Mount_Apo_Banner.JPG",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Mount_Apo_Rainforest.jpg/1920px-Mount_Apo_Rainforest.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Lake_Venado.jpg/1920px-Lake_Venado.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Fruit_market_in_Magsaysay_Davao_City.jpg/1920px-Fruit_market_in_Magsaysay_Davao_City.jpg"
+  ]
+};
+
+function sendJson(res, statusCode, payload) {
+  res.writeHead(statusCode, { "Content-Type": "application/json; charset=utf-8" });
+  res.end(JSON.stringify(payload));
+}
+
+function getIp(req) {
+  const forwarded = req.headers["x-forwarded-for"];
+  if (typeof forwarded === "string" && forwarded.trim()) {
+    return forwarded.split(",")[0].trim();
+  }
+  return req.socket.remoteAddress || "unknown";
+}
+
+async function readBody(req) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+
+    req.on("data", (chunk) => {
+      chunks.push(chunk);
+      const size = chunks.reduce((sum, item) => sum + item.length, 0);
+      if (size > 1_000_000) {
+        reject(new Error("Payload too large"));
+      }
+    });
+
+    req.on("end", () => {
+      const raw = Buffer.concat(chunks).toString("utf8").trim();
+      if (!raw) {
+        resolve({});
+        return;
+      }
+
+      try {
+        resolve(JSON.parse(raw));
+      } catch {
+        reject(new Error("Invalid JSON payload"));
+      }
+    });
+
+    req.on("error", reject);
+  });
+}
+
+async function appendClickLog(entry) {
+  await fsp.mkdir(DATA_DIR, { recursive: true });
+  await fsp.appendFile(CLICKS_LOG, JSON.stringify(entry) + "\n", "utf8");
+}
+
+function buildTrackedUrl(urlString, trackId) {
+  const url = new URL(urlString);
+  url.searchParams.set("aff_track", trackId);
+  return url.toString();
+}
+
+function buildAssistantReply(message, city) {
+  const lower = message.toLowerCase();
+  const cityLabel = city || "your city";
+
+  let focus = "a balanced city trip";
+  if (lower.includes("hotel") || lower.includes("stay")) focus = "best-value hotels";
+  if (lower.includes("flight")) focus = "flight options";
+  if (lower.includes("car")) focus = "car rentals";
+  if (lower.includes("experience") || lower.includes("tour") || lower.includes("activity")) focus = "experiences and tours";
+
+  const text = `Great choice. I can help you plan ${focus} for ${cityLabel}. Start with the booking action below, then I can refine by budget, travel dates, and traveler type.`;
+
+  const actions = [
+    { type: "book", label: "Book Flights", tab: "flights" },
+    { type: "book", label: "Book Hotels", tab: "hotels" },
+    { type: "book", label: "Book Experiences", tab: "experiences" },
+    { type: "book", label: "Book Cars", tab: "cars" }
+  ];
+
+  return { text, actions };
+}
+
+async function handleBookLink(req, res) {
+  try {
+    const body = await readBody(req);
+    const { url, category = "unknown", city = "unknown", payload = {}, source = "web", title = "" } = body;
+
+    if (!url || typeof url !== "string") {
+      sendJson(res, 400, { error: "Missing booking URL" });
+      return;
+    }
+
+    const trackId = crypto.randomUUID();
+    const trackedUrl = buildTrackedUrl(url, trackId);
+
+    await appendClickLog({
+      trackId,
+      timestamp: new Date().toISOString(),
+      category,
+      city,
+      source,
+      title,
+      url,
+      trackedUrl,
+      payload,
+      userAgent: req.headers["user-agent"] || "",
+      referer: req.headers.referer || "",
+      ip: getIp(req)
+    });
+
+    sendJson(res, 200, { trackId, trackedUrl });
+  } catch (error) {
+    sendJson(res, 500, { error: error.message || "Failed to create booking link" });
+  }
+}
+
+function asNumber(value, fallback) {
+  const n = Number(value);
+  return Number.isFinite(n) && n > 0 ? n : fallback;
+}
+
+function buildResultSet(category, city, payload = {}) {
+  const cityLabel = city || "Davao";
+  const images = RESULT_IMAGES[category] || RESULT_IMAGES.hotels;
+  const adults = asNumber(payload.adults, 2);
+
+  if (category === "flights") {
+    const origin = payload.origin || "MNL";
+    const destination = payload.destination || "DVO";
+    return Array.from({ length: 4 }).map((_, idx) => ({
+      id: `flight-${idx + 1}`,
+      title: `${origin} to ${destination} • ${cityLabel} Saver ${idx + 1}`,
+      description: `Flexible fare with ${adults} passenger${adults > 1 ? "s" : ""}, baggage option available.`,
+      rating: (4.2 + idx * 0.1).toFixed(1),
+      location: `${origin} → ${destination}`,
+      price: 2600 + idx * 850,
+      currency: "PHP",
+      priceUnit: "per passenger",
+      image: images[idx % images.length]
+    }));
+  }
+
+  if (category === "experiences") {
+    const interest = payload.interest || "city highlights";
+    return Array.from({ length: 4 }).map((_, idx) => ({
+      id: `exp-${idx + 1}`,
+      title: `${cityLabel} ${interest} Experience ${idx + 1}`,
+      description: "Hosted activity with local guide, curated route, and priority slots.",
+      rating: (4.4 + idx * 0.1).toFixed(1),
+      location: cityLabel,
+      price: 1200 + idx * 300,
+      currency: "PHP",
+      priceUnit: "per guest",
+      image: images[idx % images.length]
+    }));
+  }
+
+  if (category === "cars") {
+    return Array.from({ length: 4 }).map((_, idx) => ({
+      id: `car-${idx + 1}`,
+      title: `${cityLabel} Car Class ${idx + 1}`,
+      description: "Automatic transmission, insurance options, and flexible pick-up windows.",
+      rating: (4.1 + idx * 0.1).toFixed(1),
+      location: cityLabel,
+      price: 1800 + idx * 520,
+      currency: "PHP",
+      priceUnit: "per day",
+      image: images[idx % images.length]
+    }));
+  }
+
+  const destination = payload.destination || cityLabel;
+  const rooms = asNumber(payload.rooms, 1);
+  return Array.from({ length: 4 }).map((_, idx) => ({
+    id: `hotel-${idx + 1}`,
+    title: `${destination} Hotel Collection ${idx + 1}`,
+    description: `${rooms} room plan with breakfast options and city access.`,
+    rating: (4.3 + idx * 0.1).toFixed(1),
+    location: destination,
+    price: 3200 + idx * 950,
+    currency: "PHP",
+    priceUnit: "per night",
+    image: images[idx % images.length]
+  }));
+}
+
+async function handleSearch(req, res) {
+  try {
+    const body = await readBody(req);
+    const category = String(body.category || "hotels").toLowerCase();
+    const city = String(body.city || "Davao");
+    const payload = body.payload && typeof body.payload === "object" ? body.payload : {};
+
+    if (!["flights", "hotels", "experiences", "cars"].includes(category)) {
+      sendJson(res, 400, { error: "Unsupported category" });
+      return;
+    }
+
+    const results = buildResultSet(category, city, payload);
+    sendJson(res, 200, { category, city, results });
+  } catch (error) {
+    sendJson(res, 500, { error: error.message || "Failed to generate results" });
+  }
+}
+
+async function proxyRagIfConfigured(message, city, history) {
+  const endpoint = process.env.RAG_API_URL;
+  if (!endpoint) return null;
+
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message, city, history })
+    });
+
+    if (!response.ok) return null;
+    const data = await response.json();
+    if (!data || typeof data.answer !== "string") return null;
+
+    return {
+      text: data.answer,
+      actions: Array.isArray(data.actions)
+        ? data.actions
+        : [
+            { type: "book", label: "Book Flights", tab: "flights" },
+            { type: "book", label: "Book Hotels", tab: "hotels" }
+          ]
+    };
+  } catch {
+    return null;
+  }
+}
+
+async function handleChatStream(req, res) {
+  let body;
+  try {
+    body = await readBody(req);
+  } catch (error) {
+    sendJson(res, 400, { error: error.message || "Invalid request" });
+    return;
+  }
+
+  const message = String(body.message || "").trim();
+  const city = String(body.city || "Davao");
+  const history = Array.isArray(body.history) ? body.history : [];
+
+  if (!message) {
+    sendJson(res, 400, { error: "Message is required" });
+    return;
+  }
+
+  const ragReply = await proxyRagIfConfigured(message, city, history);
+  const assistant = ragReply || buildAssistantReply(message, city);
+
+  res.writeHead(200, {
+    "Content-Type": "text/event-stream; charset=utf-8",
+    "Cache-Control": "no-cache, no-transform",
+    Connection: "keep-alive"
+  });
+
+  const emit = (payload) => {
+    res.write(`data: ${JSON.stringify(payload)}\n\n`);
+  };
+
+  emit({ type: "start" });
+
+  const words = assistant.text.split(" ");
+  for (let index = 0; index < words.length; index += 1) {
+    const chunk = index === 0 ? words[index] : ` ${words[index]}`;
+    emit({ type: "token", text: chunk });
+    await new Promise((resolve) => setTimeout(resolve, 20));
+  }
+
+  emit({ type: "actions", actions: assistant.actions || [] });
+  emit({ type: "done" });
+  res.end();
+}
+
+async function serveStatic(req, res, pathname) {
+  const safePath = path.normalize(pathname).replace(/^\/+/g, "");
+  let filePath = path.join(ROOT, safePath);
+
+  if (pathname === "/") {
+    filePath = path.join(ROOT, "index.html");
+  }
+
+  if (!filePath.startsWith(ROOT)) {
+    sendJson(res, 403, { error: "Forbidden" });
+    return;
+  }
+
+  try {
+    const stat = await fsp.stat(filePath);
+    if (stat.isDirectory()) {
+      filePath = path.join(filePath, "index.html");
+    }
+
+    const ext = path.extname(filePath).toLowerCase();
+    const type = MIME[ext] || "application/octet-stream";
+    res.writeHead(200, { "Content-Type": type });
+    fs.createReadStream(filePath).pipe(res);
+  } catch {
+    sendJson(res, 404, { error: "Not found" });
+  }
+}
+
+const server = http.createServer(async (req, res) => {
+  const reqUrl = new URL(req.url, `http://${req.headers.host || `${HOST}:${PORT}`}`);
+
+  if (req.method === "POST" && reqUrl.pathname === "/api/book-link") {
+    await handleBookLink(req, res);
+    return;
+  }
+
+  if (req.method === "POST" && reqUrl.pathname === "/api/chat/stream") {
+    await handleChatStream(req, res);
+    return;
+  }
+
+  if (req.method === "POST" && reqUrl.pathname === "/api/search") {
+    await handleSearch(req, res);
+    return;
+  }
+
+  if (req.method !== "GET" && req.method !== "HEAD") {
+    sendJson(res, 405, { error: "Method not allowed" });
+    return;
+  }
+
+  await serveStatic(req, res, reqUrl.pathname);
+});
+
+server.listen(PORT, HOST, () => {
+  console.log(`ImaginePhilippines server running at http://${HOST}:${PORT}`);
+});

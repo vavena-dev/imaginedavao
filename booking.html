@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book Flights, Hotels, Experiences & Cars | ImagineDavao · ImaginePhilippines</title>
+  <meta name="description" content="Booking engine for Davao and Philippine cities: flights, hotels, experiences, and cars with affiliate-ready links." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="booking.css" />
+</head>
+<body>
+  <div class="texture" aria-hidden="true"></div>
+
+  <header class="shell">
+    <div class="topbar">
+      <a href="index.html" class="brand">
+        <span class="kicker">ImaginePhilippines</span>
+        <span class="city" id="brandCity">ImagineDavao</span>
+      </a>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="things.html">Things To Do</a>
+        <a href="events.html">Events</a>
+        <a href="stay.html">Stays</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Travel Commerce Suite</p>
+        <h1>Unified Booking for Flights, Hotels, Experiences and Cars</h1>
+        <p>
+          A premium conversion-focused booking experience for Philippine destinations. ImagineDavao is the first city module under the larger ImaginePhilippines brand framework.
+        </p>
+        <div class="hero-actions">
+          <label for="citySwitch">City</label>
+          <select id="citySwitch">
+            <option value="davao" selected>Davao</option>
+            <option value="cebu">Cebu</option>
+            <option value="iloilo">Iloilo</option>
+          </select>
+        </div>
+      </div>
+      <img id="heroImage" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Roxas_Ave_Night_Market_002.jpg/1920px-Roxas_Ave_Night_Market_002.jpg" alt="Davao skyline" />
+    </section>
+
+    <section class="booking-engine">
+      <div class="tab-row" id="tabRow">
+        <button class="tab active" data-tab="flights">Flights</button>
+        <button class="tab" data-tab="hotels">Hotels</button>
+        <button class="tab" data-tab="experiences">Experiences</button>
+        <button class="tab" data-tab="cars">Cars</button>
+      </div>
+
+      <article class="tab-panel active" data-panel="flights">
+        <h2>Book Flights</h2>
+        <form id="flightForm" class="form-grid">
+          <label>From
+            <input name="origin" value="MNL" required />
+          </label>
+          <label>To
+            <input name="destination" id="flightDestination" value="DVO" required />
+          </label>
+          <label>Departure
+            <input type="date" name="depart" required />
+          </label>
+          <label>Return
+            <input type="date" name="return" required />
+          </label>
+          <label>Passengers
+            <input type="number" name="adults" min="1" value="1" required />
+          </label>
+          <button type="submit">Find Flights</button>
+        </form>
+      </article>
+
+      <article class="tab-panel" data-panel="hotels">
+        <h2>Book Hotels</h2>
+        <form id="hotelForm" class="form-grid">
+          <label>Destination
+            <input name="destination" id="hotelDestination" value="Davao City" required />
+          </label>
+          <label>Check-in
+            <input type="date" name="checkin" required />
+          </label>
+          <label>Check-out
+            <input type="date" name="checkout" required />
+          </label>
+          <label>Adults
+            <input type="number" name="adults" min="1" value="2" required />
+          </label>
+          <label>Rooms
+            <input type="number" name="rooms" min="1" value="1" required />
+          </label>
+          <button type="submit">Find Hotels</button>
+        </form>
+      </article>
+
+      <article class="tab-panel" data-panel="experiences">
+        <h2>Book Experiences</h2>
+        <form id="experienceForm" class="form-grid">
+          <label>City
+            <input name="city" id="experienceCity" value="Davao" required />
+          </label>
+          <label>Interest
+            <input name="interest" value="food tours" required />
+          </label>
+          <label>Date
+            <input type="date" name="date" required />
+          </label>
+          <button type="submit">Find Experiences</button>
+        </form>
+      </article>
+
+      <article class="tab-panel" data-panel="cars">
+        <h2>Book Cars</h2>
+        <form id="carForm" class="form-grid">
+          <label>Pick-up City
+            <input name="pickupCity" id="carCity" value="Davao" required />
+          </label>
+          <label>Pick-up Date
+            <input type="date" name="pickupDate" required />
+          </label>
+          <label>Drop-off Date
+            <input type="date" name="dropoffDate" required />
+          </label>
+          <button type="submit">Find Cars</button>
+        </form>
+      </article>
+
+      <section class="result" id="bookingResult">
+        <p>
+          Complete any form above to display live booking results directly on this page.
+        </p>
+      </section>
+
+      <section class="results-panel" id="resultsPanel">
+        <div class="section-head">
+          <p class="eyebrow">In-Page Results</p>
+          <h3 id="resultsTitle">No Search Yet</h3>
+        </div>
+        <div id="resultsSummary" class="results-summary">Run a search to see matching options.</div>
+        <div class="results-grid" id="resultsGrid"></div>
+      </section>
+    </section>
+
+    <section class="demo-panel">
+      <div class="section-head">
+        <p class="eyebrow">Demo Mode</p>
+        <h3>Client-Ready Booking Scenarios</h3>
+      </div>
+      <div class="demo-controls">
+        <button type="button" id="demoModeToggle" class="demo-toggle">Enable Demo Mode</button>
+        <button type="button" id="demoResultsBtn" class="demo-toggle">Run Instant Demo Results</button>
+        <p id="demoModeStatus">Demo mode is currently off.</p>
+      </div>
+      <div class="demo-scenarios">
+        <button type="button" class="scenario-btn" data-scenario="weekend-escape">Weekend Escape</button>
+        <button type="button" class="scenario-btn" data-scenario="family-leisure">Family Leisure</button>
+        <button type="button" class="scenario-btn" data-scenario="food-culture">Food + Culture</button>
+        <button type="button" class="scenario-btn" data-scenario="business-quick">Business Quick Trip</button>
+      </div>
+    </section>
+
+    <section class="cards-section">
+      <div class="section-head">
+        <p class="eyebrow">Popular Destinations</p>
+        <h3>Most-Booked Spots</h3>
+      </div>
+      <div class="cards-grid" id="destinationsGrid"></div>
+    </section>
+
+    <section class="cards-section">
+      <div class="section-head">
+        <p class="eyebrow">Special Offers</p>
+        <h3>Travel Deals</h3>
+      </div>
+      <div class="cards-grid" id="offersGrid"></div>
+    </section>
+
+    <section class="cards-section">
+      <div class="section-head">
+        <p class="eyebrow">Discounted Hotel Deals</p>
+        <h3>Featured Stays</h3>
+      </div>
+      <div class="cards-grid" id="hotelsGrid"></div>
+    </section>
+
+    <section class="notes">
+      <h4>Affiliate Configuration</h4>
+      <p>
+        Booking links are generated with campaign metadata and tracking IDs. Configure your official Booking.com campaign settings in
+        <code>booking.js</code>.
+      </p>
+    </section>
+  </main>
+
+  <div class="chat-widget" id="chatWidget">
+    <button class="chat-fab" id="chatFab" aria-label="Open AI chat">
+      <span>AI</span>
+      <small>Ask Imagine AI</small>
+    </button>
+    <section class="chat-panel" id="chatPanel" aria-hidden="true">
+      <header class="chat-header">
+        <div>
+          <h4>Imagine AI Concierge</h4>
+          <p>Live AI Travel Assistant</p>
+        </div>
+        <button id="closeChat" class="close-btn" aria-label="Close chat">Close</button>
+      </header>
+      <div class="chat-body">
+        <article class="chat-msg ai">Ask for itinerary planning, hotel picks, flight routes, and activity recommendations.</article>
+      </div>
+      <form class="chat-input-row" id="chatForm">
+        <input id="chatInput" type="text" />
+        <button type="submit">Send</button>
+      </form>
+    </section>
+  </div>
+
+  <script src="api-client.js"></script>
+  <script src="booking.js"></script>
+</body>
+</html>
