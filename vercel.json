@@ -1,5 +1,12 @@
 {
   "version": 2,
+  "routes": [
+    { "src": "^/api/search$", "dest": "/api/search.js" },
+    { "src": "^/api/book-link$", "dest": "/api/book-link.js" },
+    { "src": "^/api/chat/stream$", "dest": "/api/chat/stream.js" },
+    { "handle": "filesystem" },
+    { "src": "^/$", "dest": "/index.html" }
+  ],
   "functions": {
     "api/chat/stream.js": {
       "maxDuration": 60
