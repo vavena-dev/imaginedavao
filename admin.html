@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ImaginePhilippines CMS Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+  <a class="skip-link" href="#adminMain">Skip to admin content</a>
+  <main class="wrap" id="adminMain">
+    <header class="head">
+      <div>
+        <p class="kicker">ImaginePhilippines</p>
+        <h1>Content Admin</h1>
+        <p class="desc">Manage homepage and category content with booking actions.</p>
+      </div>
+      <a href="index.html" class="btn ghost">Back to Site</a>
+    </header>
+
+    <section class="panel filters">
+      <label>City
+        <select id="filterCity">
+          <option value="davao">Davao</option>
+          <option value="cebu">Cebu</option>
+          <option value="iloilo">Iloilo</option>
+        </select>
+      </label>
+      <label>Page
+        <select id="filterPage">
+          <option value="index">Homepage</option>
+          <option value="things">Things To Do</option>
+          <option value="events">Events</option>
+          <option value="eat">Eat & Drink</option>
+          <option value="stay">Where to Stay</option>
+          <option value="guides">Maps & Guides</option>
+        </select>
+      </label>
+      <label>Section
+        <select id="filterSection">
+          <option value="things">Things To Do</option>
+          <option value="events">Events</option>
+          <option value="eat">Eat & Drink</option>
+          <option value="stay">Where to Stay</option>
+          <option value="guides">Maps & Guides</option>
+          <option value="districts">Districts</option>
+          <option value="deals">Deals</option>
+        </select>
+      </label>
+      <button id="reloadBtn" class="btn">Reload</button>
+    </section>
+
+    <section class="panel">
+      <h2 id="formTitle">Create Item</h2>
+      <form id="itemForm" class="form-grid">
+        <input type="hidden" id="itemId" />
+        <label>Title <input id="title" name="title" autocomplete="off" required /></label>
+        <label>Image URL <input id="image" name="image" type="url" inputmode="url" autocomplete="off" required /></label>
+        <label>Meta <input id="meta" name="meta" autocomplete="off" /></label>
+        <label>Tag <input id="tag" name="tag" autocomplete="off" /></label>
+        <label>Sort Order <input id="sortOrder" type="number" value="1" /></label>
+        <label>Text <textarea id="text" name="text" rows="3" required></textarea></label>
+        <label>Tags (comma-separated) <input id="tags" name="tags" placeholder="Nature, Family" autocomplete="off" /></label>
+        <label>Booking Mode
+          <select id="bookingMode">
+            <option value="none">None</option>
+            <option value="book">Book on this website</option>
+            <option value="provider">External provider booking link</option>
+            <option value="info">Booking instructions text</option>
+          </select>
+        </label>
+        <label>Booking Type
+          <select id="bookingType">
+            <option value="experiences">Experiences</option>
+            <option value="hotels">Hotels</option>
+            <option value="flights">Flights</option>
+            <option value="cars">Cars</option>
+          </select>
+        </label>
+        <label>CTA Label <input id="ctaLabel" name="ctaLabel" autocomplete="off" /></label>
+        <label>CTA URL <input id="ctaUrl" name="ctaUrl" type="url" inputmode="url" autocomplete="off" /></label>
+        <label>Booking Info <textarea id="bookingInfo" name="bookingInfo" rows="2"></textarea></label>
+        <div class="actions">
+          <button class="btn" type="submit">Save Item</button>
+          <button class="btn ghost" id="resetBtn" type="button">Reset</button>
+        </div>
+      </form>
+      <p id="status" class="status" aria-live="polite"></p>
+    </section>
+
+    <section class="panel">
+      <h2>Items</h2>
+      <div id="itemsGrid" class="items-grid"></div>
+    </section>
+
+    <section class="panel">
+      <h2 id="bookingFormTitle">Booking Inventory (Affiliate Rows)</h2>
+      <form id="bookingForm" class="form-grid">
+        <input type="hidden" id="bookingItemId" />
+        <label>Category
+          <select id="bookingCategory">
+            <option value="flights">Flights</option>
+            <option value="hotels">Hotels</option>
+            <option value="experiences">Experiences / Tours</option>
+            <option value="cars">Cars</option>
+          </select>
+        </label>
+        <label>Provider Name <input id="bookingProviderName" autocomplete="off" required /></label>
+        <label>Title <input id="bookingTitle" autocomplete="off" required /></label>
+        <label>Image URL <input id="bookingThumbnailUrl" type="url" inputmode="url" autocomplete="off" required /></label>
+        <label>Location Label <input id="bookingLocationLabel" autocomplete="off" /></label>
+        <label>Price Amount <input id="bookingPriceAmount" type="number" min="0" step="0.01" value="0" /></label>
+        <label>Price Currency <input id="bookingPriceCurrency" value="PHP" autocomplete="off" /></label>
+        <label>Price Unit <input id="bookingPriceUnit" placeholder="per night / per day / per guest" autocomplete="off" /></label>
+        <label>Rating <input id="bookingRating" type="number" min="0" max="5" step="0.1" value="4.5" /></label>
+        <label>Review Count <input id="bookingReviewCount" type="number" min="0" step="1" value="0" /></label>
+        <label>Affiliate URL <input id="bookingAffiliateUrl" type="url" inputmode="url" autocomplete="off" required /></label>
+        <label>Status
+          <select id="bookingStatus">
+            <option value="published">Published</option>
+            <option value="draft">Draft</option>
+          </select>
+        </label>
+        <label>Sort Order <input id="bookingSortOrder" type="number" value="1" /></label>
+        <label>Description <textarea id="bookingDescription" rows="3" required></textarea></label>
+        <div class="actions">
+          <button class="btn" type="submit">Save Booking Row</button>
+          <button class="btn ghost" id="bookingResetBtn" type="button">Reset</button>
+        </div>
+      </form>
+      <p id="bookingStatusMsg" class="status" aria-live="polite"></p>
+    </section>
+
+    <section class="panel">
+      <h2>Booking Inventory Rows</h2>
+      <div id="bookingItemsGrid" class="items-grid"></div>
+    </section>
+  </main>
+
+  <script src="admin.js"></script>
+</body>
+</html>

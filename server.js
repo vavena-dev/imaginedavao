@@ -4,6 +4,44 @@ const fsp = require("fs/promises");
 const path = require("path");
 const crypto = require("crypto");
 
+function loadEnvFile(filePath) {
+  if (!fs.existsSync(filePath)) return;
+  const raw = fs.readFileSync(filePath, "utf8");
+  const lines = raw.split(/\r?\n/);
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) continue;
+    const idx = trimmed.indexOf("=");
+    if (idx <= 0) continue;
+    const key = trimmed.slice(0, idx).trim();
+    let value = trimmed.slice(idx + 1).trim();
+    if (
+      (value.startsWith('"') && value.endsWith('"')) ||
+      (value.startsWith("'") && value.endsWith("'"))
+    ) {
+      value = value.slice(1, -1);
+    }
+    if (!(key in process.env)) {
+      process.env[key] = value;
+    }
+  }
+}
+
+loadEnvFile(path.join(process.cwd(), ".env.local"));
+loadEnvFile(path.join(process.cwd(), ".env"));
+
+const cmsContentHandler = require("./api/cms/content");
+const cmsItemsHandler = require("./api/cms/items");
+const searchHandler = require("./api/search");
+const bookingInventoryHandler = require("./api/booking/inventory");
+const adminBookingInventoryHandler = require("./api/admin/booking-inventory");
+const authLoginHandler = require("./api/auth/login");
+const authSignupHandler = require("./api/auth/signup");
+const authMeHandler = require("./api/auth/me");
+const authLogoutHandler = require("./api/auth/logout");
+const authProfileHandler = require("./api/auth/profile");
+const authBookingsHandler = require("./api/auth/bookings");
+
 const HOST = process.env.HOST || "127.0.0.1";
 const PORT = Number(process.env.PORT || 8080);
 const ROOT = process.cwd();
@@ -364,7 +402,57 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (req.method === "POST" && reqUrl.pathname === "/api/search") {
-    await handleSearch(req, res);
+    await searchHandler(req, res);
+    return;
+  }
+
+  if (req.method === "POST" && reqUrl.pathname === "/api/auth/login") {
+    await authLoginHandler(req, res);
+    return;
+  }
+
+  if (req.method === "POST" && reqUrl.pathname === "/api/auth/signup") {
+    await authSignupHandler(req, res);
+    return;
+  }
+
+  if (req.method === "GET" && reqUrl.pathname === "/api/auth/me") {
+    await authMeHandler(req, res);
+    return;
+  }
+
+  if (req.method === "POST" && reqUrl.pathname === "/api/auth/logout") {
+    await authLogoutHandler(req, res);
+    return;
+  }
+
+  if ((req.method === "GET" || req.method === "PUT") && reqUrl.pathname === "/api/auth/profile") {
+    await authProfileHandler(req, res);
+    return;
+  }
+
+  if (req.method === "GET" && reqUrl.pathname === "/api/auth/bookings") {
+    await authBookingsHandler(req, res);
+    return;
+  }
+
+  if ((req.method === "GET" || req.method === "POST") && reqUrl.pathname === "/api/cms/content") {
+    await cmsContentHandler(req, res);
+    return;
+  }
+
+  if (["GET", "POST", "PUT", "DELETE"].includes(req.method) && reqUrl.pathname === "/api/cms/items") {
+    await cmsItemsHandler(req, res);
+    return;
+  }
+
+  if (req.method === "GET" && reqUrl.pathname === "/api/booking/inventory") {
+    await bookingInventoryHandler(req, res);
+    return;
+  }
+
+  if (["GET", "POST", "PUT", "DELETE"].includes(req.method) && reqUrl.pathname === "/api/admin/booking-inventory") {
+    await adminBookingInventoryHandler(req, res);
     return;
   }
 

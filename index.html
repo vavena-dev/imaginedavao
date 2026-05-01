@@ -11,14 +11,15 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <a class="skip-link" href="#mainContent">Skip to main content</a>
   <div class="texture" aria-hidden="true"></div>
 
   <header class="site-header">
     <div class="utility-bar">
       <a href="partner.html" class="utility-link">Partner With City Tourism</a>
       <div class="utility-meta">
-        <button class="lang-toggle is-active" data-lang="en">EN</button>
-        <button class="lang-toggle" data-lang="fil">Filipino</button>
+        <button class="lang-toggle is-active" type="button" aria-pressed="true" data-lang="en">EN</button>
+        <button class="lang-toggle" type="button" aria-pressed="false" data-lang="fil">Filipino</button>
       </div>
     </div>
 
@@ -40,7 +41,7 @@
     </nav>
   </header>
 
-  <main>
+  <main id="mainContent">
     <section class="hero" id="now">
       <div class="hero-copy fade-up">
           <p class="eyebrow">Signature Campaign</p>
@@ -48,11 +49,11 @@
         <p id="heroText">Start your Davao journey where dawn hikes meet night markets, and every neighborhood tells a different story.</p>
         <div class="hero-cta-row">
           <a href="booking.html" class="cta-primary" id="heroCta">Plan & Book Davao</a>
-          <button class="carousel-toggle" id="carouselToggle">Next Story</button>
+          <button class="carousel-toggle" id="carouselToggle" type="button">Next Story</button>
         </div>
       </div>
       <div class="hero-media fade-up delay-1">
-        <img id="heroImage" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Davao_City_skyline_at_night_01.jpg/1920px-Davao_City_skyline_at_night_01.jpg" alt="Davao City skyline at dusk" />
+        <img id="heroImage" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Davao_City_skyline_at_night_01.jpg/1920px-Davao_City_skyline_at_night_01.jpg" alt="Davao City skyline at dusk" width="1920" height="1080" fetchpriority="high" decoding="async" />
         <div class="hero-stamp" id="heroStamp">DVO</div>
       </div>
     </section>
@@ -63,7 +64,7 @@
         <h2 id="welcomeTitle">Safe, soulful and proudly Mindanawon</h2>
       </div>
       <div class="panel-media">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Davao_Agdao_skyline_%28Davao_City%3B_04-22-2024%29.jpg/1920px-Davao_Agdao_skyline_%28Davao_City%3B_04-22-2024%29.jpg" alt="Local travel scene in Davao" />
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Davao_Agdao_skyline_%28Davao_City%3B_04-22-2024%29.jpg/1920px-Davao_Agdao_skyline_%28Davao_City%3B_04-22-2024%29.jpg" alt="Local travel scene in Davao" width="1920" height="1080" loading="lazy" decoding="async" />
       </div>
       <p id="welcomeText" class="panel-full">
         Davao is where island adventures, elevated coffee culture and heritage-rich communities connect in one trip.
@@ -92,8 +93,8 @@
         <div class="map-stage">
           <aside class="map-copy">
             <div class="map-nav-row">
-              <button class="map-nav-btn" id="mapPrev" aria-label="Previous district">←</button>
-              <button class="map-nav-btn" id="mapNext" aria-label="Next district">→</button>
+              <button class="map-nav-btn" id="mapPrev" type="button" aria-label="Previous district">←</button>
+              <button class="map-nav-btn" id="mapNext" type="button" aria-label="Next district">→</button>
             </div>
             <h3 id="mapZoneTitle">Davao City Metro Core</h3>
             <p id="mapZoneText">Urban anchor of the region with Poblacion, Buhangin, Toril, Calinan and nearby Samal access in one connected gateway.</p>
@@ -170,30 +171,30 @@
       </div>
       <div class="deal-grid">
         <article class="deal-card">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Davao_City_Coastal_Road.jpg/1920px-Davao_City_Coastal_Road.jpg" alt="Flights booking" />
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Davao_City_Coastal_Road.jpg/1920px-Davao_City_Coastal_Road.jpg" alt="Flights booking" width="1920" height="1080" loading="lazy" decoding="async" />
           <div class="deal-body">
             <h3>Book Flights</h3>
             <p>Search preferred routes and continue through tracked affiliate handoff.</p>
             <span class="deal-tag">Flights</span>
-            <p><a href="booking.html#flights" class="text-link">Open Flights Booking</a></p>
+            <p><a href="booking.html#flights" class="card-link-btn">Open Booking</a></p>
           </div>
         </article>
         <article class="deal-card">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/2022-10-07_Davao-Samal_Bridge_001.jpg" alt="Hotels booking" />
+          <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/2022-10-07_Davao-Samal_Bridge_001.jpg" alt="Hotels booking" width="1920" height="1080" loading="lazy" decoding="async" />
           <div class="deal-body">
             <h3>Book Hotels</h3>
             <p>Search premium stays by city, travel dates, and guest mix.</p>
             <span class="deal-tag">Hotels</span>
-            <p><a href="booking.html#hotels" class="text-link">Open Hotel Booking</a></p>
+            <p><a href="booking.html#hotels" class="card-link-btn">Open Booking</a></p>
           </div>
         </article>
         <article class="deal-card">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/4/4f/2022-10-07_Davao-Samal_Bridge_002.jpg" alt="Experiences and cars" />
+          <img src="https://upload.wikimedia.org/wikipedia/commons/4/4f/2022-10-07_Davao-Samal_Bridge_002.jpg" alt="Experiences and cars" width="1920" height="1080" loading="lazy" decoding="async" />
           <div class="deal-body">
             <h3>Book Experiences & Cars</h3>
             <p>Bundle activities and transport with one conversion-ready booking flow.</p>
             <span class="deal-tag">Experiences + Cars</span>
-            <p><a href="booking.html#experiences" class="text-link">Open Activity Booking</a></p>
+            <p><a href="booking.html#experiences" class="card-link-btn">Open Booking</a></p>
           </div>
         </article>
       </div>
@@ -206,11 +207,11 @@
         <p id="newsletterText">Get fresh stories, event drops and local promos in one weekly email.</p>
       </div>
       <div class="panel-media">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Fruit_market_in_Magsaysay_Davao_City.jpg/1920px-Fruit_market_in_Magsaysay_Davao_City.jpg" alt="Island and mountain landscape near Davao" />
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Fruit_market_in_Magsaysay_Davao_City.jpg/1920px-Fruit_market_in_Magsaysay_Davao_City.jpg" alt="Island and mountain landscape near Davao" width="1920" height="1080" loading="lazy" decoding="async" />
       </div>
       <form class="newsletter-form panel-full" id="newsletterForm">
         <label for="email">Email</label>
-        <input id="email" type="email" required />
+        <input id="email" name="email" type="email" autocomplete="email" required />
         <button type="submit">Sign Up</button>
       </form>
     </section>
@@ -267,17 +268,17 @@
         <p>Create a practical day plan based on your travel vibe in one click.</p>
       </div>
       <div class="panel-media">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Roxas_Ave_Night_Market_001.jpg/1920px-Roxas_Ave_Night_Market_001.jpg" alt="Traveler planning a city trip" />
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Roxas_Ave_Night_Market_001.jpg/1920px-Roxas_Ave_Night_Market_001.jpg" alt="Traveler planning a city trip" width="1920" height="1080" loading="lazy" decoding="async" />
       </div>
       <form id="plannerForm" class="planner-form panel-full">
         <label for="tripMood">Travel Mood</label>
-        <select id="tripMood" required>
+        <select id="tripMood" name="tripMood" required>
           <option value="nature">Nature + Chill</option>
           <option value="food">Food Crawl</option>
           <option value="culture">Culture + Heritage</option>
         </select>
         <label for="tripLength">Length</label>
-        <select id="tripLength" required>
+        <select id="tripLength" name="tripLength" required>
           <option value="1">1 Day</option>
           <option value="2">2 Days</option>
           <option value="3">3 Days</option>
@@ -302,6 +303,7 @@
         <option value="iloilo">Iloilo</option>
       </select>
       <button type="button" class="search-btn" id="brandConsoleBtn">Brand Console</button>
+      <a href="admin.html" class="search-btn" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">CMS Admin</a>
     </div>
   </footer>
 
@@ -311,7 +313,8 @@
         <h3>Search the City Guide</h3>
         <button id="closeSearch" class="close-btn" aria-label="Close search">Close</button>
       </div>
-      <input id="searchInput" type="search" />
+      <label for="searchInput" class="sr-only">Search the city guide</label>
+      <input id="searchInput" name="search" type="search" autocomplete="off" placeholder="Try: beach, hotels, festivals, food" />
       <div class="search-results" id="searchResults"></div>
     </div>
   </aside>
@@ -346,7 +349,8 @@
         <article class="chat-msg user">Example: Build me a 2-day Davao food + nature itinerary.</article>
       </div>
       <form class="chat-input-row" id="chatForm">
-        <input id="chatInput" type="text" />
+        <label for="chatInput" class="sr-only">Message Imagine AI</label>
+        <input id="chatInput" name="chatMessage" type="text" autocomplete="off" placeholder="Ask for itinerary, stays, flights, or food spots" />
         <button type="submit">Send</button>
       </form>
     </section>

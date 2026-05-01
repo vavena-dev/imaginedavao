@@ -290,6 +290,7 @@ let activeCity = "davao";
 let activeLang = "en";
 let activeChip = "All";
 let heroIndex = 0;
+const CMS_OVERRIDES = {};
 
 const brandCity = document.getElementById("brandCity");
 const heroTitle = document.getElementById("heroTitle");
@@ -501,10 +502,19 @@ function renderCards(target, items, type) {
     .map(
       (item) => `
       <article class="card js-open-detail" data-type="${type}" data-title="${item.title}" data-text="${item.text}" data-image="${item.image}">
-        <img src="${item.image}" alt="${item.title}" />
+        <img src="${item.image}" alt="${item.title}" loading="lazy" decoding="async" />
         <div class="card-body">
           <h3>${item.title}</h3>
           <p>${item.text}</p>
+          ${
+            item.bookingMode === "book"
+              ? `<p class="card-action-row"><a class="card-link-btn" href="${item.ctaUrl || `booking.html#${item.bookingType || "experiences"}`}">${item.ctaLabel || "Open Booking"}</a></p>`
+              : item.bookingMode === "provider"
+              ? `<p class="card-action-row"><a class="card-link-btn" href="${item.ctaUrl || "#"}" target="_blank" rel="noopener">${item.ctaLabel || "Open Booking"}</a></p>`
+              : item.bookingMode === "info" && item.bookingInfo
+              ? `<p class="card-action-row">${item.bookingInfo}</p>`
+              : ""
+          }
         </div>
       </article>
     `
@@ -517,7 +527,7 @@ function renderDistricts(items) {
     .map(
       (item) => `
       <article class="district js-open-detail" data-type="District" data-title="${item.title}" data-text="${item.text}" data-image="${item.image}">
-        <img src="${item.image}" alt="${item.title}" />
+        <img src="${item.image}" alt="${item.title}" loading="lazy" decoding="async" />
         <div class="district-body">
           <h3>${item.title}</h3>
           <p>${item.text}</p>
@@ -533,7 +543,7 @@ function renderEvents(items) {
     .map(
       (item) => `
       <article class="event-card js-open-detail" data-type="Event" data-title="${item.title}" data-text="${item.text}" data-image="${item.image}">
-        <img src="${item.image}" alt="${item.title}" />
+        <img src="${item.image}" alt="${item.title}" loading="lazy" decoding="async" />
         <div class="event-body">
           <h3>${item.title}</h3>
           <p>${item.text}</p>
@@ -550,7 +560,7 @@ function renderDeals(items) {
     .map(
       (item) => `
       <article class="deal-card js-open-detail" data-type="Deal" data-title="${item.title}" data-text="${item.text}" data-image="${item.image}">
-        <img src="${item.image}" alt="${item.title}" />
+        <img src="${item.image}" alt="${item.title}" loading="lazy" decoding="async" />
         <div class="deal-body">
           <h3>${item.title}</h3>
           <p>${item.text}</p>
@@ -639,6 +649,52 @@ function getCityData(cityKey) {
   return buildFallbackCity(city);
 }
 
+function normalizeCmsItem(item, section) {
+  return {
+    title: item.title || "Untitled",
+    text: item.text || "",
+    image: item.image || "assets/fallback-travel.svg",
+    meta: item.meta || "",
+    tag: item.tag || "",
+    tags: Array.isArray(item.tags) ? item.tags : [],
+    ctaLabel: item.ctaLabel || "",
+    ctaUrl: item.ctaUrl || "",
+    bookingMode: item.bookingMode || "none",
+    bookingType: item.bookingType || (section === "stay" ? "hotels" : "experiences"),
+    bookingInfo: item.bookingInfo || ""
+  };
+}
+
+function applyCmsOverrides(cityKey, baseCity) {
+  const grouped = CMS_OVERRIDES[cityKey];
+  if (!grouped) return baseCity;
+
+  const next = { ...baseCity };
+  ["things", "events", "eat", "stay", "guides", "districts", "deals"].forEach((section) => {
+    if (Array.isArray(grouped[section]) && grouped[section].length) {
+      next[section] = grouped[section].map((item) => normalizeCmsItem(item, section));
+    }
+  });
+  return next;
+}
+
+function resolveCityContent(cityKey) {
+  const base = getCityData(cityKey);
+  return applyCmsOverrides(cityKey, base);
+}
+
+async function fetchCmsOverrides(cityKey) {
+  try {
+    const response = await fetch(`/api/cms/content?city=${encodeURIComponent(cityKey)}&page=index`);
+    if (!response.ok) return;
+    const data = await response.json();
+    if (!data || !data.grouped) return;
+    CMS_OVERRIDES[cityKey] = data.grouped;
+  } catch {
+    // Keep local defaults when API is unavailable.
+  }
+}
+
 function applyLocale(city) {
   const copy = city.locale[activeLang] || city.locale.en;
   welcomeEyebrow.textContent = copy.welcomeEyebrow;
@@ -661,7 +717,7 @@ function renderThings(city) {
 
 function renderCity(cityKey) {
   activeCity = cityKey;
-  const city = getCityData(cityKey);
+  const city = resolveCityContent(cityKey);
   applyPalette(city.palette);
   brandCity.textContent = city.cityLabel;
   heroStamp.textContent = city.shortCode;
@@ -735,7 +791,7 @@ function collectSearchItems(city) {
 }
 
 function runSearch(query) {
-  const city = getCityData(activeCity);
+  const city = resolveCityContent(activeCity);
   const items = collectSearchItems(city);
 
   if (!query) {
@@ -771,7 +827,7 @@ function closeSearchPanel() {
 }
 
 function buildItinerary(mood, length) {
-  const city = getCityData(activeCity);
+  const city = resolveCityContent(activeCity);
   const route = city.itineraries[mood] || [];
   const days = Number(length);
 
@@ -785,13 +841,17 @@ function buildItinerary(mood, length) {
 }
 
 carouselToggle.addEventListener("click", () => {
-  const stories = getCityData(activeCity).heroStories;
+  const stories = resolveCityContent(activeCity).heroStories;
   heroIndex = (heroIndex + 1) % stories.length;
   updateHero(stories[heroIndex]);
 });
 
 citySwitch.addEventListener("change", (event) => {
-  renderCity(event.target.value);
+  const nextCity = event.target.value;
+  renderCity(nextCity);
+  fetchCmsOverrides(nextCity).then(() => {
+    if (activeCity === nextCity) renderCity(nextCity);
+  });
 });
 
 newsletterForm.addEventListener("submit", (event) => {
@@ -814,7 +874,11 @@ plannerForm.addEventListener("submit", (event) => {
 langToggles.forEach((toggle) => {
   toggle.addEventListener("click", () => {
     activeLang = toggle.dataset.lang;
-    langToggles.forEach((item) => item.classList.toggle("is-active", item === toggle));
+    langToggles.forEach((item) => {
+      const isActive = item === toggle;
+      item.classList.toggle("is-active", isActive);
+      item.setAttribute("aria-pressed", isActive ? "true" : "false");
+    });
     renderCity(activeCity);
   });
 });
@@ -823,7 +887,7 @@ thingsChips.addEventListener("click", (event) => {
   const btn = event.target.closest(".chip");
   if (!btn) return;
   activeChip = btn.dataset.chip;
-  renderThings(getCityData(activeCity));
+  renderThings(resolveCityContent(activeCity));
 });
 
 mapRegions.forEach((region) => {
@@ -878,13 +942,16 @@ document.addEventListener("keydown", (event) => {
 
 if (window.BookingApi && typeof window.BookingApi.attachChatWidget === "function") {
   window.BookingApi.attachChatWidget({
-    cityResolver: () => getCityData(activeCity).cityLabel,
+    cityResolver: () => resolveCityContent(activeCity).cityLabel,
     bookingPath: "booking.html"
   });
 }
 
 renderCity("davao");
 itineraryOutput.innerHTML = "<p>Choose your mood and trip length, then click Build Itinerary.</p>";
+fetchCmsOverrides("davao").then(() => {
+  if (activeCity === "davao") renderCity("davao");
+});
 
 if (window.BookingApi && typeof window.BookingApi.initWhiteLabelAdmin === "function") {
   window.BookingApi.initWhiteLabelAdmin({
@@ -893,6 +960,9 @@ if (window.BookingApi && typeof window.BookingApi.initWhiteLabelAdmin === "funct
       if (CITY_DATA[cityKey]) {
         citySwitch.value = cityKey;
         renderCity(cityKey);
+        fetchCmsOverrides(cityKey).then(() => {
+          if (activeCity === cityKey) renderCity(cityKey);
+        });
       }
     }
   });

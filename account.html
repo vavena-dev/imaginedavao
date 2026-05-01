@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Account | ImaginePhilippines</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="account.css" />
+</head>
+<body>
+  <main class="shell">
+    <header class="head">
+      <a class="brand" href="index.html">
+        <span class="kicker">ImaginePhilippines</span>
+        <span class="city">Account</span>
+      </a>
+      <nav class="head-nav">
+        <a href="index.html">Home</a>
+        <a href="booking.html">Book</a>
+        <a href="my-bookings.html">My Bookings</a>
+        <a href="signin.html">Sign In</a>
+      </nav>
+    </header>
+
+    <section class="panel">
+      <h1>Your Account</h1>
+      <p class="muted" id="accountMessage">Sign in to manage your profile details.</p>
+      <div class="actions">
+        <a class="btn ghost block-link" id="goToSignIn" href="signin.html">Go to Sign In</a>
+      </div>
+    </section>
+
+    <section class="panel profile-panel" id="profilePanel" hidden>
+      <h2>Profile Details</h2>
+      <div class="grid two">
+        <label>Full Name <input id="fullName" type="text" autocomplete="name" /></label>
+        <label>Phone <input id="phone" type="tel" autocomplete="tel" /></label>
+        <label class="full">Avatar URL <input id="avatarUrl" type="url" inputmode="url" autocomplete="url" /></label>
+      </div>
+      <div class="actions">
+        <a class="btn ghost block-link" href="my-bookings.html">My Bookings</a>
+        <button class="btn" id="saveProfileBtn" type="button">Save Profile</button>
+        <button class="btn ghost" id="signOutBtn" type="button">Sign Out</button>
+      </div>
+      <p class="status" id="profileStatus" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <script src="api-client.js"></script>
+  <script src="account.js"></script>
+</body>
+</html>

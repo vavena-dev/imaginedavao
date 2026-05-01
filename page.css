@@ -20,6 +20,34 @@ body {
   font-family: var(--font-body);
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: 0.8rem;
+  top: -3rem;
+  z-index: 999;
+  background: #111;
+  color: #fff;
+  padding: 0.55rem 0.8rem;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.skip-link:focus-visible {
+  top: 0.8rem;
+}
+
 .wrap {
   width: min(1120px, 92vw);
   margin: 0 auto;
@@ -61,6 +89,15 @@ body {
   border: 1px solid var(--line);
   border-radius: 999px;
   padding: 0.45rem 0.9rem;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--secondary);
+  outline-offset: 2px;
 }
 
 .hero {
@@ -141,6 +178,39 @@ body {
   color: var(--muted);
   line-height: 1.5;
   font-size: 0.92rem;
+}
+
+.card-meta {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.card-action,
+.card-link-btn {
+  display: inline-flex;
+  margin-top: 0.25rem;
+  text-decoration: none;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  padding: 0.45rem 0.78rem;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0.03em;
+  font-size: 0.78rem;
+}
+
+.card-action:hover,
+.card-link-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: rgba(15, 107, 87, 0.08);
+}
+
+.book-info {
+  font-size: 0.82rem;
 }
 
 .chat-widget {
@@ -270,4 +340,12 @@ body {
 @media (max-width: 620px) {
   .grid { grid-template-columns: 1fr; }
   .hero img { height: 270px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
 }
