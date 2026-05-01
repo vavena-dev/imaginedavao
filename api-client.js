@@ -474,10 +474,10 @@ async function fetchCurrentUser() {
   const token = getAuthToken();
   if (!token) return null;
   try {
-    const data = await authRequest("/api/auth/me", {}, "GET", token);
+    const data = await authRequest("/api/auth/profile", {}, "GET", token);
     const session = readAuthSession() || {};
-    writeAuthSession({ ...session, user: data.user || null });
-    return data.user || null;
+    writeAuthSession({ ...session, user: data.profile || null });
+    return data.profile || null;
   } catch {
     writeAuthSession(null);
     return null;

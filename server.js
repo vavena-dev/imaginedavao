@@ -37,7 +37,6 @@ const bookingInventoryHandler = require("./api/booking/inventory");
 const adminBookingInventoryHandler = require("./api/admin/booking-inventory");
 const authLoginHandler = require("./api/auth/login");
 const authSignupHandler = require("./api/auth/signup");
-const authMeHandler = require("./api/auth/me");
 const authLogoutHandler = require("./api/auth/logout");
 const authProfileHandler = require("./api/auth/profile");
 const authBookingsHandler = require("./api/auth/bookings");
@@ -413,11 +412,6 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === "POST" && reqUrl.pathname === "/api/auth/signup") {
     await authSignupHandler(req, res);
-    return;
-  }
-
-  if (req.method === "GET" && reqUrl.pathname === "/api/auth/me") {
-    await authMeHandler(req, res);
     return;
   }
 
