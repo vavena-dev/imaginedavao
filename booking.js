@@ -93,6 +93,11 @@ const hotelsGrid = document.getElementById("hotelsGrid");
 const resultsGrid = document.getElementById("resultsGrid");
 const resultsTitle = document.getElementById("resultsTitle");
 const resultsSummary = document.getElementById("resultsSummary");
+const partnerCheckout = document.getElementById("partnerCheckout");
+const partnerCheckoutTitle = document.getElementById("partnerCheckoutTitle");
+const partnerCheckoutText = document.getElementById("partnerCheckoutText");
+const partnerCheckoutLink = document.getElementById("partnerCheckoutLink");
+const partnerCheckoutClose = document.getElementById("partnerCheckoutClose");
 const demoModeToggle = document.getElementById("demoModeToggle");
 const demoResultsBtn = document.getElementById("demoResultsBtn");
 const demoModeStatus = document.getElementById("demoModeStatus");
@@ -120,7 +125,7 @@ function renderCards(target, items, linkType) {
         <div class="card-body">
           <h4>${item.title}</h4>
           <p>${item.text}</p>
-          <a href="#" data-quick-book="${linkType}" data-title="${item.title}">Quick Search</a>
+          <a class="card-link-btn" href="#" data-quick-book="${linkType}" data-title="${item.title}">Open Booking</a>
         </div>
       </article>
     `).join("");
@@ -315,11 +320,12 @@ function renderSearchResults(category, results, context = {}) {
         <div class="result-body">
           <h4>${item.title}</h4>
           <p class="result-meta">${item.description}</p>
+          ${item.providerName ? `<p class="result-meta">Provider: ${item.providerName}</p>` : ""}
           <p class="result-meta">Rating: ${item.rating} / 5 • ${item.location}</p>
           <p class="result-price">${formatCurrency(item.price, item.currency)} ${item.priceUnit || ""}</p>
           <div class="result-actions">
             <button type="button" data-action="details" data-id="${item.id}">View Details</button>
-            <button type="button" class="primary" data-action="select" data-id="${item.id}" data-category="${category}">Select Option</button>
+            <button type="button" class="primary" data-action="select" data-id="${item.id}" data-category="${category}">Start Booking</button>
           </div>
         </div>
       </article>
@@ -331,6 +337,7 @@ function renderSearchResults(category, results, context = {}) {
 }
 
 async function searchInPage(category, payload) {
+  if (partnerCheckout) partnerCheckout.hidden = true;
   writeResult(`Searching ${category} options...`);
   try {
     const response = await fetch("/api/search", {
@@ -365,16 +372,39 @@ async function runInstantDemoResults() {
 }
 
 async function trackSelection(item, category) {
-  const sourceUrl = addAffiliateParams(AFFILIATE.endpoints[category] || AFFILIATE.endpoints.hotels);
+  const session = window.BookingApi && typeof window.BookingApi.readAuthSession === "function" ? window.BookingApi.readAuthSession() : null;
+  if (!session || !session.user) {
+    writeResult("Please sign in from the Account button (top-right) before selecting and saving booking preferences.");
+    return null;
+  }
+
+  const sourceUrl = addAffiliateParams(item.affiliateUrl || AFFILIATE.endpoints[category] || AFFILIATE.endpoints.hotels);
   if (window.BookingApi && typeof window.BookingApi.postTrackedBooking === "function") {
-    await window.BookingApi.postTrackedBooking({
+    const tracked = await window.BookingApi.postTrackedBooking({
       url: sourceUrl,
       category,
       city: CITY_BOOKING[activeCity].cityLabel,
-      payload: { selectedId: item.id, selectedTitle: item.title, price: item.price },
+      payload: {
+        selectedId: item.id,
+        selectedTitle: item.title,
+        price: item.price,
+        userId: session.user.id || "",
+        userEmail: session.user.email || ""
+      },
       title: `${category} selection`
     });
+    return tracked?.trackedUrl || sourceUrl;
   }
+  return sourceUrl;
+}
+
+function openPartnerCheckout(item, trackedUrl, category) {
+  if (!partnerCheckout || !partnerCheckoutTitle || !partnerCheckoutText || !partnerCheckoutLink) return;
+  partnerCheckout.hidden = false;
+  partnerCheckoutTitle.textContent = `${item.title} · ${category[0].toUpperCase()}${category.slice(1)} Checkout`;
+  partnerCheckoutText.textContent = `Your selection is prepared on ImaginePhilippines. Continue to secure partner checkout to finalize reservation details and payment.`;
+  partnerCheckoutLink.href = trackedUrl;
+  partnerCheckout.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function getFormData(form) {
@@ -449,10 +479,19 @@ document.body.addEventListener("click", async (event) => {
 
   if (actionButton.dataset.action === "select") {
     const category = actionButton.dataset.category || "hotels";
-    await trackSelection(item, category);
-    writeResult(`Selected <strong>${item.title}</strong>. This preference has been saved for concierge follow-up and booking confirmation.`);
+    const trackedUrl = await trackSelection(item, category);
+    if (trackedUrl) {
+      openPartnerCheckout(item, trackedUrl, category);
+      writeResult(`Selected <strong>${item.title}</strong>. This preference has been saved for concierge follow-up and booking confirmation.`);
+    }
   }
 });
+
+if (partnerCheckoutClose) {
+  partnerCheckoutClose.addEventListener("click", () => {
+    partnerCheckout.hidden = true;
+  });
+}
 
 demoModeToggle.addEventListener("click", () => {
   const next = !readDemoMode();

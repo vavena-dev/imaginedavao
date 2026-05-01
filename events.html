@@ -1,2 +1,41 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Events | ImaginePhilippines</title><link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet" /><link rel="stylesheet" href="page.css" /></head><body><div class="wrap"><header class="topbar"><a class="brand" href="index.html"><span class="kicker">ImaginePhilippines</span><span class="city">Events</span></a><a class="back" href="index.html">Back to City Guide</a></header><section class="hero"><div class="hero-copy"><p>Calendar</p><h1>Davao Events</h1><p class="desc">Festival moments, city gatherings, and monthly happenings.</p></div><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Mangosteen_in_Davao_City.jpg/1920px-Mangosteen_in_Davao_City.jpg" alt="Events" /></section><section class="grid"><article class="card"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Davao_skyline_at_Jackridge_Resort_and_Restaurant.jpg/1920px-Davao_skyline_at_Jackridge_Resort_and_Restaurant.jpg" alt="Kadayawan" /><div class="body"><h3>Kadayawan</h3><p>Culture-heavy festival week with major street energy.</p></div></article><article class="card"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Davao_City%2C_Toril.jpg" alt="Run" /><div class="body"><h3>Sunset City Runs</h3><p>Community race routes and post-run food stalls.</p></div></article><article class="card"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/2025-07-19_Bucana_Bridge_007.jpg/1920px-2025-07-19_Bucana_Bridge_007.jpg" alt="Concert" /><div class="body"><h3>Weekend Stage Nights</h3><p>Live performances in central public plazas.</p></div></article></section></div><div class="chat-widget" id="chatWidget"><button class="chat-fab" id="chatFab"><span>AI</span><small>Ask Imagine AI</small></button><section class="chat-panel"><header class="chat-header"><div><h4>Imagine AI Concierge</h4><p>Live AI Travel Assistant</p></div><button id="closeChat" class="close-btn">Close</button></header><div class="chat-body"><article class="chat-msg ai">Ask for itinerary planning, hotel picks, flight routes, and activity recommendations.</article></div><form class="chat-input-row" id="chatForm"><input id="chatInput" type="text" /><button type="submit">Send</button></form></section></div><script src="api-client.js"></script><script src="page.js"></script></body></html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Events | ImaginePhilippines</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="page.css" />
+</head>
+<body data-page="events" data-section="events">
+  <a class="skip-link" href="#sectionMain">Skip to main content</a>
+  <div class="wrap" id="sectionMain">
+    <header class="topbar">
+      <a class="brand" href="index.html"><span class="kicker">ImaginePhilippines</span><span class="city">Events</span></a>
+      <a class="back" href="index.html">Back to City Guide</a>
+    </header>
+    <section class="hero">
+      <div class="hero-copy">
+        <p>Current Calendar</p>
+        <h1 id="heroTitle">Events in Davao</h1>
+        <p class="desc" id="heroText">Festival highlights, weekend schedules, and city happenings.</p>
+      </div>
+      <img id="heroImage" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Kadayawan_Festival.jpg/1920px-Kadayawan_Festival.jpg" alt="Events in Davao" width="1920" height="1080" fetchpriority="high" decoding="async" />
+    </section>
+    <section class="grid" id="cardsGrid"></section>
+  </div>
+  <div class="chat-widget" id="chatWidget">
+    <button class="chat-fab" id="chatFab"><span>AI</span><small>Ask Imagine AI</small></button>
+    <section class="chat-panel">
+      <header class="chat-header"><div><h4>Imagine AI Concierge</h4><p>Live AI Travel Assistant</p></div><button id="closeChat" class="close-btn">Close</button></header>
+      <div class="chat-body"><article class="chat-msg ai">Ask for itinerary planning, hotel picks, flight routes, and activity recommendations.</article></div>
+      <form class="chat-input-row" id="chatForm"><label for="chatInput" class="sr-only">Message Imagine AI</label><input id="chatInput" name="chatMessage" type="text" autocomplete="off" placeholder="Ask for itineraries, stays, or activities" /><button type="submit">Send</button></form>
+    </section>
+  </div>
+  <script src="api-client.js"></script>
+  <script src="page.js"></script>
+  <script src="section-page.js"></script>
+</body>
+</html>

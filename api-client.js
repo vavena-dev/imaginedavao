@@ -409,11 +409,381 @@ function attachChatWidget({ cityResolver, bookingPath = "booking.html" } = {}) {
   });
 }
 
+const AUTH_STORAGE_KEY = "imagineph_auth_session";
+
+function readAuthSession() {
+  try {
+    const raw = localStorage.getItem(AUTH_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeAuthSession(session) {
+  if (!session) {
+    localStorage.removeItem(AUTH_STORAGE_KEY);
+    return;
+  }
+  localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(session));
+}
+
+function getAuthToken() {
+  const session = readAuthSession();
+  return session?.accessToken || "";
+}
+
+async function authRequest(pathname, payload = {}, method = "POST", token = "") {
+  const headers = { "Content-Type": "application/json" };
+  if (token) headers.Authorization = `Bearer ${token}`;
+  const response = await fetch(pathname, {
+    method,
+    headers,
+    body: method === "GET" ? undefined : JSON.stringify(payload || {})
+  });
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.error || "Authentication request failed");
+  }
+  return data;
+}
+
+async function loginUser(email, password) {
+  const data = await authRequest("/api/auth/login", { email, password }, "POST");
+  writeAuthSession({
+    accessToken: data.accessToken || "",
+    refreshToken: data.refreshToken || "",
+    user: data.user || null
+  });
+  return data.user || null;
+}
+
+async function signupUser(email, password) {
+  const data = await authRequest("/api/auth/signup", { email, password }, "POST");
+  if (data.accessToken) {
+    writeAuthSession({
+      accessToken: data.accessToken || "",
+      refreshToken: data.refreshToken || "",
+      user: data.user || null
+    });
+  }
+  return data;
+}
+
+async function fetchCurrentUser() {
+  const token = getAuthToken();
+  if (!token) return null;
+  try {
+    const data = await authRequest("/api/auth/me", {}, "GET", token);
+    const session = readAuthSession() || {};
+    writeAuthSession({ ...session, user: data.user || null });
+    return data.user || null;
+  } catch {
+    writeAuthSession(null);
+    return null;
+  }
+}
+
+async function fetchUserProfile() {
+  const token = getAuthToken();
+  if (!token) return null;
+  const data = await authRequest("/api/auth/profile", {}, "GET", token);
+  return data.profile || null;
+}
+
+async function updateUserProfile(profilePatch) {
+  const token = getAuthToken();
+  if (!token) throw new Error("Not authenticated");
+  const data = await authRequest("/api/auth/profile", profilePatch || {}, "PUT", token);
+  const session = readAuthSession() || {};
+  writeAuthSession({ ...session, user: data.profile || session.user || null });
+  return data.profile || null;
+}
+
+async function logoutUser() {
+  const token = getAuthToken();
+  try {
+    await authRequest("/api/auth/logout", { accessToken: token }, "POST", token);
+  } finally {
+    writeAuthSession(null);
+  }
+}
+
+function ensureAuthStyles() {
+  if (document.getElementById("auth-widget-style")) return;
+  const style = document.createElement("style");
+  style.id = "auth-widget-style";
+  style.textContent = `
+    .auth-widget {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+    .auth-widget.auth-widget--inline {
+      margin-left: auto;
+    }
+    .auth-chip {
+      border: 1px solid rgba(0,0,0,0.18);
+      background: #fff;
+      color: #1f1b16;
+      border-radius: 999px;
+      padding: 0.34rem 0.62rem;
+      font-size: 0.72rem;
+      cursor: pointer;
+      box-shadow: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-height: 42px;
+    }
+    .auth-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background: #0f6b57;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.82rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-transform: uppercase;
+      flex: 0 0 28px;
+    }
+    .auth-label {
+      display: grid;
+      gap: 0.02rem;
+      text-align: left;
+      line-height: 1.1;
+    }
+    .auth-name {
+      font-size: 0.8rem;
+      font-weight: 700;
+      max-width: 150px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .auth-level {
+      font-size: 0.67rem;
+      color: #665e55;
+    }
+    .auth-menu {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 0.45rem);
+      width: 220px;
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.15);
+      border-radius: 12px;
+      box-shadow: 0 16px 34px rgba(0,0,0,0.16);
+      padding: 0.35rem;
+      display: none;
+      z-index: 220;
+    }
+    .auth-widget.open .auth-menu { display: grid; }
+    .auth-menu-item {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 0.45rem;
+      border: none;
+      background: #fff;
+      color: #1f1b16;
+      border-radius: 9px;
+      padding: 0.6rem 0.72rem;
+      font-size: 0.82rem;
+      cursor: pointer;
+      text-decoration: none;
+      width: 100%;
+    }
+    .auth-menu-item:hover {
+      background: rgba(15, 107, 87, 0.1);
+    }
+    .auth-menu-icon {
+      width: 18px;
+      text-align: center;
+      color: #665e55;
+    }
+    .auth-widget--inline.auth-widget-mobile {
+      display: flex;
+      width: 100%;
+      justify-content: flex-end;
+    }
+    @media (max-width: 980px) {
+      .auth-name {
+        max-width: 110px;
+      }
+      .auth-menu {
+        position: fixed;
+        top: 4.2rem;
+        right: 0.8rem;
+        width: min(240px, calc(100vw - 1.6rem));
+        z-index: 200;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+function emitAuthEvent() {
+  const event = new CustomEvent("imagineph:auth-updated", { detail: { user: readAuthSession()?.user || null } });
+  window.dispatchEvent(event);
+}
+
+function initAuthWidget() {
+  const pathName = (window.location.pathname || "").toLowerCase();
+  if (pathName.endsWith("/account.html") || pathName.endsWith("/my-bookings.html") || pathName.endsWith("/signin.html")) return;
+  if (document.getElementById("authWidget")) return;
+  ensureAuthStyles();
+
+  const widget = document.createElement("section");
+  widget.className = "auth-widget";
+  widget.id = "authWidget";
+  widget.innerHTML = `
+    <button class="auth-chip" id="authChip" type="button">
+      <span class="auth-avatar" id="authAvatar">A</span>
+      <span class="auth-label">
+        <span class="auth-name" id="authName">Account</span>
+        <span class="auth-level" id="authLevel">Sign in</span>
+      </span>
+    </button>
+    <div class="auth-menu" id="authMenu"></div>
+  `;
+  const utilityMeta = document.querySelector(".utility-meta");
+  const topbarNav = document.querySelector(".topbar nav");
+  const topbar = document.querySelector(".topbar");
+  const utilityContainer = utilityMeta || topbarNav || topbar;
+  if (utilityContainer) {
+    widget.classList.add("auth-widget--inline");
+    utilityContainer.appendChild(widget);
+  } else {
+    document.body.appendChild(widget);
+  }
+
+  const chip = widget.querySelector("#authChip");
+  const avatar = widget.querySelector("#authAvatar");
+  const nameLabel = widget.querySelector("#authName");
+  const levelLabel = widget.querySelector("#authLevel");
+  const menu = widget.querySelector("#authMenu");
+
+  const getDisplayName = (user) => {
+    if (user?.fullName && String(user.fullName).trim()) {
+      return String(user.fullName).trim().split(/\s+/)[0];
+    }
+    if (user?.email) return String(user.email).split("@")[0];
+    return "Account";
+  };
+
+  const getInitial = (name) => {
+    const value = String(name || "A").trim();
+    return value ? value.charAt(0).toUpperCase() : "A";
+  };
+
+  const buildMenu = (loggedIn) => {
+    if (!loggedIn) {
+      menu.innerHTML = `
+        <a class="auth-menu-item" href="signin.html"><span class="auth-menu-icon">→</span> Sign in or create account</a>
+      `;
+      return;
+    }
+    menu.innerHTML = `
+      <a class="auth-menu-item" href="account.html"><span class="auth-menu-icon">A</span> My account</a>
+      <a class="auth-menu-item" href="my-bookings.html"><span class="auth-menu-icon">B</span> Bookings</a>
+      <button class="auth-menu-item" id="authSignOutBtn" type="button"><span class="auth-menu-icon">S</span> Sign out</button>
+    `;
+
+    const signOutBtn = menu.querySelector("#authSignOutBtn");
+    signOutBtn.addEventListener("click", async () => {
+      await logoutUser();
+      widget.classList.remove("open");
+      setChipState();
+      emitAuthEvent();
+      window.location.href = window.location.pathname + window.location.search;
+    });
+  };
+
+  const loadLevel = async () => {
+    const token = getAuthToken();
+    if (!token) return null;
+    try {
+      const response = await fetch("/api/auth/bookings", { headers: { Authorization: `Bearer ${token}` } });
+      if (!response.ok) return null;
+      const data = await response.json();
+      return data?.stats?.level || null;
+    } catch {
+      return null;
+    }
+  };
+
+  const setChipState = () => {
+    const session = readAuthSession();
+    const user = session?.user || null;
+    const loggedIn = Boolean(user);
+    const displayName = loggedIn ? getDisplayName(user) : "Account";
+    avatar.textContent = getInitial(displayName);
+    nameLabel.textContent = loggedIn ? displayName : "Account";
+    levelLabel.textContent = loggedIn ? "Signed in" : "Sign in";
+    chip.title = loggedIn ? user.email || "Signed in" : "Sign in or create account";
+    buildMenu(loggedIn);
+  };
+
+  chip.addEventListener("click", () => {
+    const session = readAuthSession();
+    if (!session?.user) {
+      const returnTo = encodeURIComponent(window.location.pathname + window.location.search + window.location.hash);
+      window.location.href = `signin.html?returnTo=${returnTo}`;
+      return;
+    }
+    widget.classList.toggle("open");
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!widget.classList.contains("open")) return;
+    if (!widget.contains(event.target)) widget.classList.remove("open");
+  });
+
+  fetchCurrentUser()
+    .then(() => fetchUserProfile().catch(() => null))
+    .then((profile) => {
+      if (profile) {
+        const session = readAuthSession() || {};
+        writeAuthSession({ ...session, user: { ...(session.user || {}), ...profile } });
+      }
+    })
+    .then(async () => {
+      setChipState();
+      const session = readAuthSession();
+      if (session?.user) {
+        const level = await loadLevel();
+        levelLabel.textContent = level ? `Level ${level}` : "Signed in";
+      }
+    })
+    .finally(() => {
+      emitAuthEvent();
+    });
+}
+
 window.BookingApi = {
+  fetchCurrentUser,
+  fetchUserProfile,
+  getAuthToken,
+  loginUser,
+  logoutUser,
   postTrackedBooking,
+  readAuthSession,
+  signupUser,
+  updateUserProfile,
   streamAssistantChat,
   attachChatWidget,
   initWhiteLabelAdmin
 };
 
 initGlobalImageFallback();
+if (typeof window !== "undefined") {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initAuthWidget);
+  } else {
+    initAuthWidget();
+  }
+}
