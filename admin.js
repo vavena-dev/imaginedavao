@@ -52,6 +52,8 @@ let currentItems = [];
 let bookingItems = [];
 
 const ADMIN_TOKEN_KEY = "imagineph_admin_token";
+const ADMIN_REQUIRED_MESSAGE =
+  "Admin access required. Sign in with an admin account in signin.html or set a valid ADMIN_TOKEN in this browser.";
 
 function getAuthHeaders() {
   const headers = { "Content-Type": "application/json" };
@@ -80,6 +82,11 @@ function ensureAdminTokenIfNeeded() {
   if (typed && typed.trim()) {
     localStorage.setItem(ADMIN_TOKEN_KEY, typed.trim());
   }
+}
+
+function apiErrorMessage(response, data, fallback) {
+  if (response.status === 401) return ADMIN_REQUIRED_MESSAGE;
+  return data?.error || fallback;
 }
 
 function setStatus(text, isError = false) {
@@ -206,7 +213,7 @@ async function loadItems() {
   const qs = new URLSearchParams(ctx);
   const response = await fetch(`/api/cms/items?${qs.toString()}`, { headers: getAuthHeaders() });
   const data = await response.json();
-  if (!response.ok) throw new Error(data.error || "Failed to load items");
+  if (!response.ok) throw new Error(apiErrorMessage(response, data, "Failed to load items"));
   currentItems = data.items || [];
   renderItems();
 }
@@ -215,7 +222,7 @@ async function loadBookingItems() {
   const qs = new URLSearchParams({ city: filterCity.value });
   const response = await fetch(`/api/admin/booking-inventory?${qs.toString()}`, { headers: getAuthHeaders() });
   const data = await response.json();
-  if (!response.ok) throw new Error(data.error || "Failed to load booking inventory");
+  if (!response.ok) throw new Error(apiErrorMessage(response, data, "Failed to load booking inventory"));
   bookingItems = data.items || [];
   renderBookingItems();
 }
@@ -292,7 +299,7 @@ async function saveItem(event) {
     body: JSON.stringify(payload)
   });
   const data = await response.json();
-  if (!response.ok) throw new Error(data.error || "Failed to save item");
+  if (!response.ok) throw new Error(apiErrorMessage(response, data, "Failed to save item"));
   setStatus(isUpdate ? "Item updated." : "Item created.");
   clearForm();
   await loadItems();
@@ -308,7 +315,7 @@ async function saveBookingItem(event) {
     body: JSON.stringify(payload)
   });
   const data = await response.json();
-  if (!response.ok) throw new Error(data.error || "Failed to save booking inventory item");
+  if (!response.ok) throw new Error(apiErrorMessage(response, data, "Failed to save booking inventory item"));
   setBookingStatus(isUpdate ? "Booking row updated." : "Booking row created.");
   clearBookingForm();
   await loadBookingItems();
@@ -320,7 +327,7 @@ async function deleteItem(id) {
     headers: getAuthHeaders()
   });
   const data = await response.json();
-  if (!response.ok) throw new Error(data.error || "Failed to delete item");
+  if (!response.ok) throw new Error(apiErrorMessage(response, data, "Failed to delete item"));
   setStatus("Item deleted.");
   await loadItems();
 }
@@ -331,7 +338,7 @@ async function deleteBookingItem(id) {
     headers: getAuthHeaders()
   });
   const data = await response.json();
-  if (!response.ok) throw new Error(data.error || "Failed to delete booking row");
+  if (!response.ok) throw new Error(apiErrorMessage(response, data, "Failed to delete booking row"));
   setBookingStatus("Booking row deleted.");
   await loadBookingItems();
 }
