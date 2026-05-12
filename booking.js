@@ -175,10 +175,38 @@ function initBookingLanguage() {
   const initial = stored === "fil" ? "fil" : "en";
   bookingLangSelect.value = initial;
   document.documentElement.lang = initial;
+  makePickerFullyClickable(".lang-select", bookingLangSelect);
   bookingLangSelect.addEventListener("change", () => {
     const next = bookingLangSelect.value === "fil" ? "fil" : "en";
     localStorage.setItem("imagineph_lang", next);
     document.documentElement.lang = next;
+  });
+}
+
+function openSelectDropdown(selectEl) {
+  if (!selectEl) return;
+  if (typeof selectEl.showPicker === "function") {
+    selectEl.showPicker();
+    return;
+  }
+  selectEl.focus();
+  selectEl.click();
+  selectEl.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
+}
+
+function makePickerFullyClickable(wrapperSelector, selectEl) {
+  const wrapper = document.querySelector(wrapperSelector);
+  if (!wrapper || !selectEl) return;
+  wrapper.addEventListener("click", (event) => {
+    if (event.target === selectEl) return;
+    event.preventDefault();
+    openSelectDropdown(selectEl);
+  });
+  wrapper.addEventListener("keydown", (event) => {
+    if (event.key === " " || event.key === "Enter" || event.key === "ArrowDown") {
+      event.preventDefault();
+      openSelectDropdown(selectEl);
+    }
   });
 }
 

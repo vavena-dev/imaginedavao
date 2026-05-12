@@ -75,6 +75,18 @@ function initSharedInnerNav() {
     <div class="utility-meta" id="innerUtilityMeta"></div>
   `;
 
+  const navRow = document.createElement("div");
+  navRow.className = "inner-nav-row";
+  navRow.innerHTML = `
+    <a class="inner-search-btn" href="index.html#search" aria-label="Search">
+      <svg class="search-icon" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"></circle>
+        <path d="M16.5 16.5L21 21"></path>
+      </svg>
+    </a>
+  `;
+  navRow.prepend(nav);
+
   const menuBtn = document.createElement("button");
   menuBtn.type = "button";
   menuBtn.className = "inner-menu-btn";
@@ -102,7 +114,7 @@ function initSharedInnerNav() {
     </nav>
   `;
 
-  topbarRight.append(utilityRow, nav);
+  topbarRight.append(utilityRow, navRow);
   topbar.append(topbarRight, menuBtn);
   document.body.append(backdrop, drawer);
 
@@ -116,6 +128,7 @@ function initSharedInnerNav() {
     localStorage.setItem("imagineph_lang", next);
     document.documentElement.lang = next;
   });
+  makePickerFullyClickable(utilityRow.querySelector(".inner-lang"), langSelect);
 
   menuBtn.addEventListener("click", () => {
     const isOpen = drawer.classList.contains("open");
@@ -135,6 +148,32 @@ function initSharedInnerNav() {
 
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") closeInnerNav(drawer, backdrop, menuBtn);
+  });
+}
+
+function openSelectDropdown(selectEl) {
+  if (!selectEl) return;
+  if (typeof selectEl.showPicker === "function") {
+    selectEl.showPicker();
+    return;
+  }
+  selectEl.focus();
+  selectEl.click();
+  selectEl.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
+}
+
+function makePickerFullyClickable(wrapper, selectEl) {
+  if (!wrapper || !selectEl) return;
+  wrapper.addEventListener("click", (event) => {
+    if (event.target === selectEl) return;
+    event.preventDefault();
+    openSelectDropdown(selectEl);
+  });
+  wrapper.addEventListener("keydown", (event) => {
+    if (event.key === " " || event.key === "Enter" || event.key === "ArrowDown") {
+      event.preventDefault();
+      openSelectDropdown(selectEl);
+    }
   });
 }
 

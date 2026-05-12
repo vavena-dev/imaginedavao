@@ -912,6 +912,33 @@ function closeSearchPanel() {
   searchPanel.setAttribute("aria-hidden", "true");
 }
 
+function openSelectDropdown(selectEl) {
+  if (!selectEl) return;
+  if (typeof selectEl.showPicker === "function") {
+    selectEl.showPicker();
+    return;
+  }
+  selectEl.focus();
+  selectEl.click();
+  selectEl.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
+}
+
+function makePickerFullyClickable(wrapperSelector, selectEl) {
+  const wrapper = document.querySelector(wrapperSelector);
+  if (!wrapper || !selectEl) return;
+  wrapper.addEventListener("click", (event) => {
+    if (event.target === selectEl) return;
+    event.preventDefault();
+    openSelectDropdown(selectEl);
+  });
+  wrapper.addEventListener("keydown", (event) => {
+    if (event.key === " " || event.key === "Enter" || event.key === "ArrowDown") {
+      event.preventDefault();
+      openSelectDropdown(selectEl);
+    }
+  });
+}
+
 function buildItinerary(mood, length) {
   const city = resolveCityContent(activeCity);
   const route = city.itineraries[mood] || [];
@@ -960,6 +987,7 @@ plannerForm.addEventListener("submit", (event) => {
 if (langSelect) {
   langSelect.value = activeLang;
   document.documentElement.lang = activeLang === "fil" ? "fil" : "en";
+  makePickerFullyClickable(".lang-select", langSelect);
   langSelect.addEventListener("change", () => {
     activeLang = langSelect.value === "fil" ? "fil" : "en";
     localStorage.setItem("imagineph_lang", activeLang);
@@ -1035,6 +1063,7 @@ if (window.BookingApi && typeof window.BookingApi.attachChatWidget === "function
 
 initIndexMobileMenu();
 renderCity("davao");
+if (window.location.hash === "#search") openSearchPanel();
 itineraryOutput.innerHTML = "<p>Choose your mood and trip length, then click Build Itinerary.</p>";
 fetchCmsOverrides("davao").then(() => {
   if (activeCity === "davao") renderCity("davao");
