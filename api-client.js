@@ -470,6 +470,53 @@ async function signupUser(email, password) {
   return data;
 }
 
+async function getOAuthAuthorizeUrl(provider = "google", redirectTo = "") {
+  const query = new URLSearchParams({
+    provider: String(provider || "google"),
+    redirectTo: String(redirectTo || "")
+  });
+  const response = await fetch(`/api/auth/oauth-url?${query.toString()}`, { method: "GET" });
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.error || "OAuth sign-in is unavailable");
+  }
+  if (!data || !data.url) {
+    throw new Error("OAuth sign-in URL is missing");
+  }
+  return data.url;
+}
+
+function completeOAuthFromHash() {
+  const hash = String(window.location.hash || "").replace(/^#/, "");
+  if (!hash) return false;
+
+  const params = new URLSearchParams(hash);
+  const accessToken = params.get("access_token");
+  if (!accessToken) return false;
+
+  const refreshToken = params.get("refresh_token") || "";
+  const tokenType = params.get("token_type") || "";
+  const expiresInRaw = Number(params.get("expires_in"));
+  const expiresIn = Number.isFinite(expiresInRaw) ? expiresInRaw : null;
+  const expiresAt = expiresIn ? Date.now() + expiresIn * 1000 : null;
+
+  writeAuthSession({
+    accessToken,
+    refreshToken,
+    tokenType,
+    expiresAt,
+    user: null
+  });
+
+  if (window.history && typeof window.history.replaceState === "function") {
+    window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+  } else {
+    window.location.hash = "";
+  }
+
+  return true;
+}
+
 async function requestPasswordReset(email, redirectTo) {
   const data = await authRequest("/api/auth/forgot-password", {
     email: String(email || "").trim().toLowerCase(),
@@ -549,6 +596,32 @@ function ensureAuthStyles() {
     .auth-widget.auth-widget--inline {
       margin-left: auto;
     }
+    .auth-guest-links {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.44rem;
+    }
+    .auth-guest-link {
+      border: 1px solid rgba(0,0,0,0.18);
+      background: #fff;
+      color: #1f1b16;
+      border-radius: 10px;
+      padding: 0.48rem 0.82rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-decoration: none;
+      line-height: 1;
+    }
+    .auth-guest-link:hover {
+      border-color: #0f6b57;
+      color: #0f6b57;
+      background: rgba(15, 107, 87, 0.08);
+    }
+    .auth-guest-link.auth-guest-link--primary {
+      background: #0f6b57;
+      color: #fff;
+      border-color: #0f6b57;
+    }
     .auth-chip {
       border: 1px solid rgba(0,0,0,0.18);
       background: #fff;
@@ -558,7 +631,7 @@ function ensureAuthStyles() {
       font-size: 0.72rem;
       cursor: pointer;
       box-shadow: none;
-      display: inline-flex;
+      display: none;
       align-items: center;
       gap: 0.5rem;
       min-height: 42px;
@@ -660,7 +733,13 @@ function emitAuthEvent() {
 
 function initAuthWidget() {
   const pathName = (window.location.pathname || "").toLowerCase();
-  if (pathName.endsWith("/account.html") || pathName.endsWith("/my-bookings.html") || pathName.endsWith("/signin.html")) return;
+  if (
+    pathName.endsWith("/account.html") ||
+    pathName.endsWith("/my-bookings.html") ||
+    pathName.endsWith("/signin.html") ||
+    pathName.endsWith("/forgot-password.html") ||
+    pathName.endsWith("/reset-password.html")
+  ) return;
   if (document.getElementById("authWidget")) return;
   ensureAuthStyles();
 
@@ -668,6 +747,10 @@ function initAuthWidget() {
   widget.className = "auth-widget";
   widget.id = "authWidget";
   widget.innerHTML = `
+    <div class="auth-guest-links" id="authGuestLinks">
+      <a class="auth-guest-link" href="signin.html">Login</a>
+      <a class="auth-guest-link auth-guest-link--primary" href="signin.html?mode=signup">Sign Up</a>
+    </div>
     <button class="auth-chip" id="authChip" type="button">
       <span class="auth-avatar" id="authAvatar">A</span>
       <span class="auth-label">
@@ -689,6 +772,7 @@ function initAuthWidget() {
   }
 
   const chip = widget.querySelector("#authChip");
+  const guestLinks = widget.querySelector("#authGuestLinks");
   const avatar = widget.querySelector("#authAvatar");
   const nameLabel = widget.querySelector("#authName");
   const levelLabel = widget.querySelector("#authLevel");
@@ -748,6 +832,8 @@ function initAuthWidget() {
     const user = session?.user || null;
     const loggedIn = Boolean(user);
     const displayName = loggedIn ? getDisplayName(user) : "Account";
+    guestLinks.style.display = loggedIn ? "none" : "inline-flex";
+    chip.style.display = loggedIn ? "inline-flex" : "none";
     avatar.textContent = getInitial(displayName);
     nameLabel.textContent = loggedIn ? displayName : "Account";
     levelLabel.textContent = loggedIn ? "Signed in" : "Sign in";
@@ -792,8 +878,10 @@ function initAuthWidget() {
 }
 
 window.BookingApi = {
+  completeOAuthFromHash,
   fetchCurrentUser,
   fetchUserProfile,
+  getOAuthAuthorizeUrl,
   getAuthToken,
   loginUser,
   logoutUser,

@@ -3,55 +3,61 @@ const passwordInput = document.getElementById("signInPassword");
 const continueEmailBtn = document.getElementById("continueEmailBtn");
 const createAccountBtn = document.getElementById("createAccountBtn");
 const signInStatus = document.getElementById("signInStatus");
-const forgotPasswordToggleBtn = document.getElementById("forgotPasswordToggleBtn");
-const forgotUserToggleBtn = document.getElementById("forgotUserToggleBtn");
-const forgotPasswordCard = document.getElementById("forgotPasswordCard");
-const forgotUserCard = document.getElementById("forgotUserCard");
-const forgotPasswordEmail = document.getElementById("forgotPasswordEmail");
-const sendResetBtn = document.getElementById("sendResetBtn");
-const forgotPasswordStatus = document.getElementById("forgotPasswordStatus");
-const forgotUserFullName = document.getElementById("forgotUserFullName");
-const forgotUserPhone = document.getElementById("forgotUserPhone");
-const findUserBtn = document.getElementById("findUserBtn");
-const forgotUserStatus = document.getElementById("forgotUserStatus");
-const forgotUserResult = document.getElementById("forgotUserResult");
+const googleOauthBtn = document.getElementById("googleOauthBtn");
+const passwordVisibilityBtn = document.getElementById("passwordVisibilityBtn");
+const authTitle = document.getElementById("authTitle");
+const authIntro = document.getElementById("authIntro");
+const forgotPasswordLink = document.getElementById("forgotPasswordLink");
+const authCornerLoginLink = document.querySelector(".auth-corner-link[href='signin.html']");
+const authCornerSignupLink = document.querySelector(".auth-corner-link[href='signin.html?mode=signup']");
 
-const googleBtn = document.getElementById("googleBtn");
-const facebookBtn = document.getElementById("facebookBtn");
-const linkedinBtn = document.getElementById("linkedinBtn");
-
-function setStatus(text, isError = false) {
+function setStatus(text, isError = false, isSuccess = false) {
   signInStatus.textContent = text || "";
   signInStatus.classList.toggle("error", Boolean(isError));
+  signInStatus.classList.toggle("success", Boolean(isSuccess));
 }
 
-function setForgotPasswordStatus(text, isError = false, isSuccess = false) {
-  forgotPasswordStatus.textContent = text || "";
-  forgotPasswordStatus.classList.toggle("error", Boolean(isError));
-  forgotPasswordStatus.classList.toggle("success", Boolean(isSuccess));
-}
+function setSignInMode(mode) {
+  const isSignup = mode === "signup";
 
-function setForgotUserStatus(text, isError = false, isSuccess = false) {
-  forgotUserStatus.textContent = text || "";
-  forgotUserStatus.classList.toggle("error", Boolean(isError));
-  forgotUserStatus.classList.toggle("success", Boolean(isSuccess));
-}
-
-function showCard(card) {
-  if (card === "password") {
-    forgotPasswordCard.hidden = !forgotPasswordCard.hidden;
-    forgotUserCard.hidden = true;
+  if (isSignup) {
+    authTitle.textContent = "Create your account";
+    authIntro.textContent = "Use Google or email/password to start your ImaginePhilippines account.";
+    continueEmailBtn.textContent = "Sign in";
+    createAccountBtn.textContent = "Create account";
+    createAccountBtn.classList.remove("ghost");
+    createAccountBtn.classList.add("btn");
+    continueEmailBtn.classList.remove("btn");
+    continueEmailBtn.classList.add("btn", "ghost");
+    if (authCornerSignupLink) authCornerSignupLink.classList.add("is-active");
+    if (authCornerLoginLink) authCornerLoginLink.classList.remove("is-active");
+    setStatus("Create your account with email/password or continue with Google.");
     return;
   }
-  if (card === "user") {
-    forgotUserCard.hidden = !forgotUserCard.hidden;
-    forgotPasswordCard.hidden = true;
-  }
+
+  authTitle.textContent = "Sign in or create an account";
+  authIntro.textContent = "Choose Google OAuth or continue with your email and password.";
+  continueEmailBtn.textContent = "Sign in";
+  createAccountBtn.textContent = "Sign up";
+  continueEmailBtn.classList.remove("ghost");
+  continueEmailBtn.classList.add("btn");
+  createAccountBtn.classList.remove("btn");
+  createAccountBtn.classList.add("btn", "ghost");
+  if (authCornerLoginLink) authCornerLoginLink.classList.add("is-active");
+  if (authCornerSignupLink) authCornerSignupLink.classList.remove("is-active");
 }
 
 function returnUrl() {
   const params = new URLSearchParams(window.location.search);
   return params.get("returnTo") || "index.html";
+}
+
+function syncForgotLink() {
+  if (!forgotPasswordLink) return;
+  const value = emailInput.value.trim();
+  const params = new URLSearchParams();
+  if (value) params.set("email", value);
+  forgotPasswordLink.href = `forgot-password.html${params.toString() ? `?${params.toString()}` : ""}`;
 }
 
 async function hydrateProfile() {
@@ -64,7 +70,23 @@ async function hydrateProfile() {
   return merged;
 }
 
-continueEmailBtn.addEventListener("click", async () => {
+function resolveOauthRedirectUrl() {
+  const returnTo = encodeURIComponent(returnUrl());
+  return `${window.location.origin}/signin.html?returnTo=${returnTo}`;
+}
+
+async function handleGoogleOauth() {
+  try {
+    setStatus("Redirecting to Google...");
+    const redirectTo = resolveOauthRedirectUrl();
+    const oauthUrl = await window.BookingApi.getOAuthAuthorizeUrl("google", redirectTo);
+    window.location.href = oauthUrl;
+  } catch (error) {
+    setStatus(error.message || "Google sign-in is unavailable right now.", true);
+  }
+}
+
+async function handleEmailSignIn() {
   const email = emailInput.value.trim().toLowerCase();
   const password = passwordInput.value;
   if (!email || !password) {
@@ -76,18 +98,18 @@ continueEmailBtn.addEventListener("click", async () => {
     setStatus("Signing in...");
     await window.BookingApi.loginUser(email, password);
     await hydrateProfile();
-    setStatus("Signed in.");
+    setStatus("Signed in.", false, true);
     window.location.href = returnUrl();
   } catch (error) {
     setStatus(error.message || "Unable to sign in.", true);
   }
-});
+}
 
-createAccountBtn.addEventListener("click", async () => {
+async function handleSignUp() {
   const email = emailInput.value.trim().toLowerCase();
   const password = passwordInput.value;
   if (!email || !password) {
-    setStatus("Enter email and password.", true);
+    setStatus("Enter email and password to create your account.", true);
     return;
   }
 
@@ -95,80 +117,64 @@ createAccountBtn.addEventListener("click", async () => {
     setStatus("Creating account...");
     const result = await window.BookingApi.signupUser(email, password);
     if (result.needsEmailConfirmation) {
-      setStatus("Account created. Confirm your email, then sign in.");
+      setStatus("Account created. Confirm your email, then sign in.", false, true);
       return;
     }
     await hydrateProfile();
-    setStatus("Account created and signed in.");
+    setStatus("Account created and signed in.", false, true);
     window.location.href = returnUrl();
   } catch (error) {
     setStatus(error.message || "Unable to create account.", true);
   }
+}
+
+async function initializeFromOauthHash() {
+  const sessionRestored = window.BookingApi.completeOAuthFromHash();
+  if (!sessionRestored) return false;
+  await hydrateProfile();
+  window.location.href = returnUrl();
+  return true;
+}
+
+googleOauthBtn.addEventListener("click", handleGoogleOauth);
+continueEmailBtn.addEventListener("click", handleEmailSignIn);
+createAccountBtn.addEventListener("click", handleSignUp);
+
+passwordVisibilityBtn.addEventListener("click", () => {
+  const showPassword = passwordInput.type === "password";
+  passwordInput.type = showPassword ? "text" : "password";
+  passwordVisibilityBtn.setAttribute("aria-pressed", showPassword ? "true" : "false");
+  passwordVisibilityBtn.setAttribute("aria-label", showPassword ? "Hide password" : "Show password");
 });
 
-[googleBtn, facebookBtn, linkedinBtn].forEach((btn) => {
-  btn.addEventListener("click", () => {
-    setStatus(`${btn.textContent} sign-in will be enabled next. Use email sign-in for now.`);
-  });
-});
-
-forgotPasswordToggleBtn.addEventListener("click", () => {
-  showCard("password");
-  setForgotPasswordStatus("");
-});
-
-forgotUserToggleBtn.addEventListener("click", () => {
-  showCard("user");
-  setForgotUserStatus("");
-  forgotUserResult.innerHTML = "";
-});
-
-sendResetBtn.addEventListener("click", async () => {
-  const email = forgotPasswordEmail.value.trim().toLowerCase() || emailInput.value.trim().toLowerCase();
-  if (!email) {
-    setForgotPasswordStatus("Enter your account email first.", true);
-    return;
-  }
-
-  try {
-    setForgotPasswordStatus("Sending reset link...");
-    const redirectTo = `${window.location.origin}/reset-password.html`;
-    const message = await window.BookingApi.requestPasswordReset(email, redirectTo);
-    setForgotPasswordStatus(message, false, true);
-  } catch (error) {
-    setForgotPasswordStatus(error.message || "Unable to send password reset link.", true);
+emailInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    handleEmailSignIn();
   }
 });
 
-findUserBtn.addEventListener("click", async () => {
-  const fullName = forgotUserFullName.value.trim();
-  const phone = forgotUserPhone.value.trim();
-  if (!fullName || !phone) {
-    setForgotUserStatus("Enter your full name and phone number.", true);
-    return;
-  }
+emailInput.addEventListener("input", syncForgotLink);
 
-  try {
-    setForgotUserStatus("Looking up your account...");
-    const data = await window.BookingApi.recoverUserAccount(fullName, phone);
-    forgotUserResult.innerHTML = "";
-    if (data.emails.length) {
-      data.emails.forEach((email) => {
-        const li = document.createElement("li");
-        li.textContent = email;
-        forgotUserResult.appendChild(li);
-      });
-      setForgotUserStatus("Matching account email(s) found.", false, true);
-      return;
-    }
-    setForgotUserStatus(data.message || "No matching account found.", true);
-  } catch (error) {
-    setForgotUserStatus(error.message || "Unable to find account.", true);
+passwordInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    handleEmailSignIn();
   }
 });
 
-hydrateProfile().then((user) => {
+(async () => {
+  const params = new URLSearchParams(window.location.search);
+  const mode = params.get("mode") === "signup" ? "signup" : "login";
+  setSignInMode(mode);
+
+  const oauthHandled = await initializeFromOauthHash();
+  if (oauthHandled) return;
+
+  syncForgotLink();
+
+  const user = await hydrateProfile();
   if (user) {
     window.location.href = returnUrl();
   }
-});
+})();

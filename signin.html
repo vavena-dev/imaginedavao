@@ -10,65 +10,67 @@
   <link rel="stylesheet" href="account.css" />
 </head>
 <body>
-  <main class="shell shell-narrow">
+  <a class="skip-link" href="#authMain">Skip to main content</a>
+  <main class="shell shell-narrow" id="authMain">
     <header class="head">
       <a class="brand" href="index.html">
         <span class="kicker">ImaginePhilippines</span>
         <span class="city">Sign In</span>
       </a>
-      <nav class="head-nav">
-        <a href="index.html">Home</a>
-        <a href="booking.html">Book</a>
-      </nav>
+      <div class="head-actions">
+        <nav class="head-nav">
+          <a href="index.html">Home</a>
+          <a href="booking.html">Book</a>
+        </nav>
+        <div class="auth-corner" aria-label="Authentication links">
+          <a class="auth-corner-link is-active" href="signin.html">Login</a>
+          <a class="auth-corner-link" href="signin.html?mode=signup">Sign Up</a>
+        </div>
+      </div>
     </header>
 
     <section class="panel">
-      <h1>Sign in or create an account</h1>
-      <p class="muted">Sign in with email now. Social login options are prepared for future activation.</p>
+      <h1 id="authTitle">Sign in or create an account</h1>
+      <p class="muted signin-intro" id="authIntro">Choose Google OAuth or continue with your email and password.</p>
 
-      <article class="card">
-        <label>Email address <input id="signInEmail" type="email" autocomplete="email" /></label>
-        <label>Password <input id="signInPassword" type="password" autocomplete="current-password" /></label>
+      <article class="card signin-card">
+        <button class="oauth-btn" id="googleOauthBtn" type="button" aria-label="Continue with Google">
+          <span class="oauth-google-mark" aria-hidden="true">
+            <svg viewBox="0 0 256 262" width="18" height="18" role="img" aria-hidden="true" focusable="false">
+              <path fill="#4285F4" d="M255.9 133.5c0-11.4-1-19.6-3.2-28.2H130.6v47.1h71.7c-1.4 11.7-9 29.5-25.8 41.4l-.2 1.6 37.5 29 .2.1c34.4-31.8 42-78.7 42-111z"/>
+              <path fill="#34A853" d="M130.6 261.1c35.1 0 64.6-11.6 86.1-31.6l-41-31.8c-11 7.7-25.7 13.1-45.1 13.1-34.4 0-63.6-22.7-74-54.1l-1.5.1-39 30.1-.5 1.4c21.4 42.4 65.3 72.8 115 72.8z"/>
+              <path fill="#FBBC05" d="M56.6 156.7c-2.7-8.1-4.2-16.7-4.2-25.6s1.5-17.5 4.1-25.6l-.1-1.7-39.5-30.6-1.3.6C6 93.2.5 111.4.5 131.1s5.5 37.9 15.1 57.3l41-31.7z"/>
+              <path fill="#EB4335" d="M130.6 51.4c24.5 0 41 10.6 50.4 19.5l36.8-35.9C195.2 13.8 165.7.1 130.6.1 80.9.1 37 30.4 15.6 72.8l41 31.6c10.5-31.4 39.7-53 74-53z"/>
+            </svg>
+          </span>
+          Continue with Google
+        </button>
+
+        <p class="signin-divider" role="presentation">or continue with email</p>
+
+        <label>Email address <input id="signInEmail" name="email" type="email" autocomplete="email" spellcheck="false" placeholder="Enter your email&hellip;" /></label>
+        <label>Password
+          <span class="password-field">
+            <input id="signInPassword" name="password" type="password" autocomplete="current-password" placeholder="Enter your password&hellip;" />
+            <button class="password-visibility-btn" id="passwordVisibilityBtn" type="button" aria-label="Show password" aria-pressed="false">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+                <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </span>
+        </label>
+
         <div class="actions">
-          <button class="btn" id="continueEmailBtn" type="button">Continue with email</button>
-          <button class="btn ghost" id="createAccountBtn" type="button">Create account</button>
+          <button class="btn" id="continueEmailBtn" type="button">Sign in</button>
+          <button class="btn ghost" id="createAccountBtn" type="button">Sign up</button>
         </div>
-        <div class="actions">
-          <button class="btn ghost" id="forgotPasswordToggleBtn" type="button">Forgot password</button>
-          <button class="btn ghost" id="forgotUserToggleBtn" type="button">Forgot user</button>
+
+        <div class="actions actions-split">
+          <a class="btn ghost block-link btn-inline-link" id="forgotPasswordLink" href="forgot-password.html">Forgot your password?</a>
         </div>
+
         <p class="status" id="signInStatus" aria-live="polite"></p>
-      </article>
-
-      <article class="card" id="forgotPasswordCard" hidden>
-        <h2>Password reset</h2>
-        <p class="muted">Enter your account email and we will send a password reset link.</p>
-        <label>Email address <input id="forgotPasswordEmail" type="email" autocomplete="email" /></label>
-        <div class="actions">
-          <button class="btn" id="sendResetBtn" type="button">Send reset link</button>
-        </div>
-        <p class="status" id="forgotPasswordStatus" aria-live="polite"></p>
-      </article>
-
-      <article class="card" id="forgotUserCard" hidden>
-        <h2>Find my account</h2>
-        <p class="muted">Enter your profile name and phone number to retrieve your registered email.</p>
-        <label>Full name <input id="forgotUserFullName" type="text" autocomplete="name" /></label>
-        <label>Phone number <input id="forgotUserPhone" type="tel" autocomplete="tel" /></label>
-        <div class="actions">
-          <button class="btn" id="findUserBtn" type="button">Find account email</button>
-        </div>
-        <p class="status" id="forgotUserStatus" aria-live="polite"></p>
-        <ul id="forgotUserResult" class="muted"></ul>
-      </article>
-
-      <article class="card">
-        <p class="muted">Or use one of these options</p>
-        <div class="social-grid">
-          <button class="social-btn" type="button" id="googleBtn">Google</button>
-          <button class="social-btn" type="button" id="facebookBtn">Facebook</button>
-          <button class="social-btn" type="button" id="linkedinBtn">LinkedIn</button>
-        </div>
       </article>
     </section>
   </main>

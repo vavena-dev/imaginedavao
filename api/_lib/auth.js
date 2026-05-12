@@ -72,6 +72,27 @@ async function signupWithPassword(email, password) {
   });
 }
 
+function buildOAuthAuthorizeUrl(provider = "google", redirectTo = "") {
+  if (!hasSupabaseAuthConfig()) {
+    throw new Error("Supabase auth environment variables are not configured");
+  }
+
+  const safeProvider = String(provider || "").trim().toLowerCase();
+  if (!["google"].includes(safeProvider)) {
+    throw new Error("Unsupported OAuth provider");
+  }
+
+  const url = new URL("/auth/v1/authorize", SUPABASE_URL);
+  url.searchParams.set("provider", safeProvider);
+
+  const safeRedirectTo = String(redirectTo || "").trim();
+  if (safeRedirectTo) {
+    url.searchParams.set("redirect_to", safeRedirectTo);
+  }
+
+  return url.toString();
+}
+
 async function requestPasswordReset(email, redirectTo = "") {
   const safeEmail = String(email || "").trim().toLowerCase();
   if (!safeEmail) throw new Error("email is required");
@@ -281,6 +302,7 @@ async function resolveAuthContext(req) {
 }
 
 module.exports = {
+  buildOAuthAuthorizeUrl,
   ensureProfileForUser,
   getProfileById,
   getUserFromAccessToken,
