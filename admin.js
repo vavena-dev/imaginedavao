@@ -89,6 +89,51 @@ function apiErrorMessage(response, data, fallback) {
   return data?.error || fallback;
 }
 
+function readSession() {
+  try {
+    const raw = localStorage.getItem("imagineph_auth_session");
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function isAdminRole(user) {
+  return String(user?.role || "").toLowerCase() === "admin";
+}
+
+async function guardAdminAccess() {
+  const adminToken = localStorage.getItem(ADMIN_TOKEN_KEY);
+  if (adminToken) return true;
+
+  const session = readSession();
+  const token = session?.accessToken || "";
+  if (!token) {
+    const returnTo = encodeURIComponent(window.location.pathname + window.location.search + window.location.hash);
+    window.location.href = `signin.html?returnTo=${returnTo}`;
+    return false;
+  }
+
+  try {
+    const response = await fetch("/api/auth/me", {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const data = await response.json().catch(() => ({}));
+    const user = data?.user || null;
+    if (!response.ok || !isAdminRole(user)) {
+      alert("Admin access is required to open the CMS.");
+      window.location.href = "index.html";
+      return false;
+    }
+    localStorage.setItem("imagineph_auth_session", JSON.stringify({ ...session, user: { ...(session?.user || {}), ...user } }));
+    return true;
+  } catch {
+    alert("Unable to verify admin session right now.");
+    window.location.href = "index.html";
+    return false;
+  }
+}
+
 function setStatus(text, isError = false) {
   statusEl.textContent = text;
   statusEl.style.color = isError ? "#a12626" : "#665e55";
@@ -428,15 +473,20 @@ bookingForm.addEventListener("submit", async (event) => {
   });
 });
 
-ensureAdminTokenIfNeeded();
+async function initAdminPage() {
+  const allowed = await guardAdminAccess();
+  if (!allowed) return;
 
-Promise.all([loadItems(), loadBookingItems()]).then(
-  () => {
-    setStatus("Items loaded.");
-    setBookingStatus("Booking rows loaded.");
-  },
-  (error) => {
-    setStatus(error.message, true);
-    setBookingStatus(error.message, true);
-  }
-);
+  Promise.all([loadItems(), loadBookingItems()]).then(
+    () => {
+      setStatus("Items loaded.");
+      setBookingStatus("Booking rows loaded.");
+    },
+    (error) => {
+      setStatus(error.message, true);
+      setBookingStatus(error.message, true);
+    }
+  );
+}
+
+initAdminPage();

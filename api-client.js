@@ -679,6 +679,19 @@ function emitAuthEvent() {
   window.dispatchEvent(event);
 }
 
+function isAdminUser(user) {
+  return String(user?.role || "").toLowerCase() === "admin";
+}
+
+function syncAdminOnlyVisibility(user) {
+  const showAdmin = isAdminUser(user);
+  const nodes = document.querySelectorAll("[data-admin-only]");
+  nodes.forEach((node) => {
+    node.hidden = !showAdmin;
+    node.setAttribute("aria-hidden", showAdmin ? "false" : "true");
+  });
+}
+
 function initAuthWidget() {
   const pathName = (window.location.pathname || "").toLowerCase();
   if (
@@ -739,16 +752,21 @@ function initAuthWidget() {
     return value ? value.charAt(0).toUpperCase() : "A";
   };
 
-  const buildMenu = (loggedIn) => {
+  const buildMenu = (user) => {
+    const loggedIn = Boolean(user);
     if (!loggedIn) {
       menu.innerHTML = `
         <a class="auth-menu-item" href="signin.html"><span class="auth-menu-icon">→</span> Sign in or create account</a>
       `;
       return;
     }
+    const adminMenuItem = isAdminUser(user)
+      ? '<a class="auth-menu-item" href="admin.html"><span class="auth-menu-icon">C</span> Admin CMS</a>'
+      : "";
     menu.innerHTML = `
       <a class="auth-menu-item" href="account.html"><span class="auth-menu-icon">A</span> My account</a>
       <a class="auth-menu-item" href="my-bookings.html"><span class="auth-menu-icon">B</span> Bookings</a>
+      ${adminMenuItem}
       <button class="auth-menu-item" id="authSignOutBtn" type="button"><span class="auth-menu-icon">S</span> Sign out</button>
     `;
 
@@ -786,7 +804,8 @@ function initAuthWidget() {
     nameLabel.textContent = loggedIn ? displayName : "Account";
     levelLabel.textContent = loggedIn ? "Signed in" : "Sign in";
     chip.title = loggedIn ? user.email || "Signed in" : "Sign in or create account";
-    buildMenu(loggedIn);
+    buildMenu(user);
+    syncAdminOnlyVisibility(user);
   };
 
   chip.addEventListener("click", () => {
