@@ -1,11 +1,11 @@
-const { readJsonBody, sendJson } = require("../_lib/common");
+const { readJsonBody, sendJson } = require("../../lib/common");
 const {
   createBookingInventoryItem,
   deleteBookingInventoryItem,
   listBookingInventory,
   updateBookingInventoryItem
-} = require("../_lib/booking-store");
-const { resolveAuthContext } = require("../_lib/auth");
+} = require("../../lib/booking-store");
+const { resolveAuthContext } = require("../../lib/auth");
 
 async function hasAdminAccess(req) {
   const required = process.env.ADMIN_TOKEN;

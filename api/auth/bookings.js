@@ -1,7 +1,7 @@
 const fs = require("fs/promises");
 const path = require("path");
-const { sendJson } = require("../_lib/common");
-const { hasSupabaseAuthConfig, resolveAuthContext } = require("../_lib/auth");
+const { sendJson } = require("../../lib/common");
+const { hasSupabaseAuthConfig, resolveAuthContext } = require("../../lib/auth");
 
 async function readJsonl(filePath) {
   try {

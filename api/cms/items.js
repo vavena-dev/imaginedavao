@@ -1,6 +1,6 @@
-const { readJsonBody, sendJson } = require("../_lib/common");
-const { createCmsItem, deleteCmsItem, listCmsItems, updateCmsItem } = require("../_lib/cms-store");
-const { resolveAuthContext } = require("../_lib/auth");
+const { readJsonBody, sendJson } = require("../../lib/common");
+const { createCmsItem, deleteCmsItem, listCmsItems, updateCmsItem } = require("../../lib/cms-store");
+const { resolveAuthContext } = require("../../lib/auth");
 
 async function hasAdminAccess(req) {
   const required = process.env.ADMIN_TOKEN;

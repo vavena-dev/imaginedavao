@@ -1,5 +1,5 @@
-const { buildResultSet, readJsonBody, sendJson } = require("./_lib/common");
-const { listBookingInventory, mapInventoryToSearchResult } = require("./_lib/booking-store");
+const { buildResultSet, readJsonBody, sendJson } = require("../lib/common");
+const { listBookingInventory, mapInventoryToSearchResult } = require("../lib/booking-store");
 
 function normalizeCity(city) {
   return String(city || "davao").trim().toLowerCase();

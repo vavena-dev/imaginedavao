@@ -1,5 +1,5 @@
-const { readJsonBody, sendJson } = require("../_lib/common");
-const { hasSupabaseAuthConfig, requestPasswordReset } = require("../_lib/auth");
+const { readJsonBody, sendJson } = require("../../lib/common");
+const { hasSupabaseAuthConfig, requestPasswordReset } = require("../../lib/auth");
 
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") return sendJson(res, 405, { error: "Method not allowed" });

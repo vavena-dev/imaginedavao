@@ -1,5 +1,5 @@
-const { readJsonBody, sendJson } = require("../_lib/common");
-const { hasSupabaseAuthConfig, resolveAuthContext, updateProfileById } = require("../_lib/auth");
+const { readJsonBody, sendJson } = require("../../lib/common");
+const { hasSupabaseAuthConfig, resolveAuthContext, updateProfileById } = require("../../lib/auth");
 
 module.exports = async function handler(req, res) {
   if (!hasSupabaseAuthConfig()) return sendJson(res, 500, { error: "Supabase auth is not configured" });

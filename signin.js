@@ -3,7 +3,6 @@ const passwordInput = document.getElementById("signInPassword");
 const continueEmailBtn = document.getElementById("continueEmailBtn");
 const createAccountBtn = document.getElementById("createAccountBtn");
 const signInStatus = document.getElementById("signInStatus");
-const googleOauthBtn = document.getElementById("googleOauthBtn");
 const passwordVisibilityBtn = document.getElementById("passwordVisibilityBtn");
 const authTitle = document.getElementById("authTitle");
 const authIntro = document.getElementById("authIntro");
@@ -22,7 +21,7 @@ function setSignInMode(mode) {
 
   if (isSignup) {
     authTitle.textContent = "Create your account";
-    authIntro.textContent = "Use Google or email/password to start your ImaginePhilippines account.";
+    authIntro.textContent = "Use your email and password to start your ImaginePhilippines account.";
     continueEmailBtn.textContent = "Sign in";
     createAccountBtn.textContent = "Create account";
     createAccountBtn.classList.remove("ghost");
@@ -31,12 +30,12 @@ function setSignInMode(mode) {
     continueEmailBtn.classList.add("btn", "ghost");
     if (authCornerSignupLink) authCornerSignupLink.classList.add("is-active");
     if (authCornerLoginLink) authCornerLoginLink.classList.remove("is-active");
-    setStatus("Create your account with email/password or continue with Google.");
+    setStatus("Create your account with email and password.");
     return;
   }
 
   authTitle.textContent = "Sign in or create an account";
-  authIntro.textContent = "Choose Google OAuth or continue with your email and password.";
+  authIntro.textContent = "Continue with your email and password.";
   continueEmailBtn.textContent = "Sign in";
   createAccountBtn.textContent = "Sign up";
   continueEmailBtn.classList.remove("ghost");
@@ -68,22 +67,6 @@ async function hydrateProfile() {
   const merged = { ...(session.user || {}), ...(profile || {}) };
   localStorage.setItem("imagineph_auth_session", JSON.stringify({ ...session, user: merged }));
   return merged;
-}
-
-function resolveOauthRedirectUrl() {
-  const returnTo = encodeURIComponent(returnUrl());
-  return `${window.location.origin}/signin.html?returnTo=${returnTo}`;
-}
-
-async function handleGoogleOauth() {
-  try {
-    setStatus("Redirecting to Google...");
-    const redirectTo = resolveOauthRedirectUrl();
-    const oauthUrl = await window.BookingApi.getOAuthAuthorizeUrl("google", redirectTo);
-    window.location.href = oauthUrl;
-  } catch (error) {
-    setStatus(error.message || "Google sign-in is unavailable right now.", true);
-  }
 }
 
 async function handleEmailSignIn() {
@@ -136,7 +119,6 @@ async function initializeFromOauthHash() {
   return true;
 }
 
-googleOauthBtn.addEventListener("click", handleGoogleOauth);
 continueEmailBtn.addEventListener("click", handleEmailSignIn);
 createAccountBtn.addEventListener("click", handleSignUp);
 

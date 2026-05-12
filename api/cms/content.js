@@ -1,5 +1,5 @@
-const { readJsonBody, sendJson } = require("../_lib/common");
-const { groupBySection, listCmsItems } = require("../_lib/cms-store");
+const { readJsonBody, sendJson } = require("../../lib/common");
+const { groupBySection, listCmsItems } = require("../../lib/cms-store");
 
 module.exports = async function handler(req, res) {
   if (req.method === "GET") {

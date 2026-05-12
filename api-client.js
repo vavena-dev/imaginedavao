@@ -1,19 +1,5 @@
 async function postTrackedBooking(payload) {
-  try {
-    const response = await fetch("/api/book-link", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to create tracked booking URL");
-    }
-
-    return await response.json();
-  } catch {
-    return { trackedUrl: payload.url, trackId: null };
-  }
+  return { trackedUrl: payload.url, trackId: null };
 }
 
 function initGlobalImageFallback() {
@@ -266,45 +252,26 @@ function initWhiteLabelAdmin({ onCityChange, cityResolver } = {}) {
 
 async function streamAssistantChat({ message, city, history = [], onToken, onActions, onDone, onError }) {
   try {
-    const response = await fetch("/api/chat/stream", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message, city, history })
-    });
+    const prompt = String(message || "").toLowerCase();
+    let focus = "a balanced trip";
+    if (prompt.includes("hotel") || prompt.includes("stay")) focus = "hotel options";
+    if (prompt.includes("flight")) focus = "flight options";
+    if (prompt.includes("car")) focus = "car rentals";
+    if (prompt.includes("tour") || prompt.includes("experience") || prompt.includes("activity")) focus = "tours and experiences";
 
-    if (!response.ok || !response.body) {
-      throw new Error("Failed to stream chat");
+    const reply = `Great choice. I can help you plan ${focus} for ${city || "Davao"}. Use the quick booking actions below and I can refine by budget and dates.`;
+    if (onToken) {
+      reply.split(" ").forEach((word, index) => onToken(index === 0 ? word : ` ${word}`));
     }
-
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = "";
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-
-      buffer += decoder.decode(value, { stream: true });
-      const chunks = buffer.split("\n\n");
-      buffer = chunks.pop() || "";
-
-      chunks.forEach((chunk) => {
-        const line = chunk
-          .split("\n")
-          .find((item) => item.startsWith("data: "));
-
-        if (!line) return;
-
-        try {
-          const payload = JSON.parse(line.replace(/^data:\s*/, ""));
-          if (payload.type === "token" && onToken) onToken(payload.text || "");
-          if (payload.type === "actions" && onActions) onActions(payload.actions || []);
-          if (payload.type === "done" && onDone) onDone();
-        } catch {
-          // ignore malformed chunk
-        }
-      });
+    if (onActions) {
+      onActions([
+        { label: "Book Flights", tab: "flights" },
+        { label: "Book Hotels", tab: "hotels" },
+        { label: "Book Experiences", tab: "experiences" },
+        { label: "Book Cars", tab: "cars" }
+      ]);
     }
+    if (onDone) onDone();
   } catch (error) {
     if (onError) onError(error);
   }
@@ -471,19 +438,7 @@ async function signupUser(email, password) {
 }
 
 async function getOAuthAuthorizeUrl(provider = "google", redirectTo = "") {
-  const query = new URLSearchParams({
-    provider: String(provider || "google"),
-    redirectTo: String(redirectTo || "")
-  });
-  const response = await fetch(`/api/auth/oauth-url?${query.toString()}`, { method: "GET" });
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.error || "OAuth sign-in is unavailable");
-  }
-  if (!data || !data.url) {
-    throw new Error("OAuth sign-in URL is missing");
-  }
-  return data.url;
+  throw new Error("OAuth sign-in is currently unavailable on this deployment tier.");
 }
 
 function completeOAuthFromHash() {
@@ -526,14 +481,7 @@ async function requestPasswordReset(email, redirectTo) {
 }
 
 async function recoverUserAccount(fullName, phone) {
-  const data = await authRequest("/api/auth/forgot-user", {
-    fullName: String(fullName || "").trim(),
-    phone: String(phone || "").trim()
-  }, "POST");
-  return {
-    message: data?.message || "",
-    emails: Array.isArray(data?.emails) ? data.emails : []
-  };
+  throw new Error("Account recovery is currently unavailable on this deployment tier.");
 }
 
 async function resetPassword(accessToken, password) {

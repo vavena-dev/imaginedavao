@@ -1,5 +1,5 @@
-const { sendJson } = require("../_lib/common");
-const { listBookingInventory } = require("../_lib/booking-store");
+const { sendJson } = require("../../lib/common");
+const { listBookingInventory } = require("../../lib/booking-store");
 
 module.exports = async function handler(req, res) {
   if (req.method !== "GET") {
