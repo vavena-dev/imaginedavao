@@ -102,6 +102,7 @@ const demoModeToggle = document.getElementById("demoModeToggle");
 const demoResultsBtn = document.getElementById("demoResultsBtn");
 const demoModeStatus = document.getElementById("demoModeStatus");
 const scenarioButtons = [...document.querySelectorAll(".scenario-btn")];
+const bookingLangSelect = document.getElementById("bookingLangSelect");
 let closeBookingMenu = () => {};
 
 const DEMO_MODE_KEY = "imaginephilippines_demo_mode";
@@ -135,7 +136,7 @@ function renderCards(target, items, linkType) {
 function renderCity(cityKey) {
   activeCity = cityKey;
   const city = CITY_BOOKING[cityKey];
-  brandCity.textContent = city.cityLabel;
+  brandCity.textContent = "Davao";
   heroImage.src = city.heroImage;
   heroImage.alt = `${city.cityLabel} booking`;
   flightDestination.value = city.airport;
@@ -166,6 +167,19 @@ function switchCityFromQuery() {
     citySwitch.value = matched;
     renderCity(matched);
   }
+}
+
+function initBookingLanguage() {
+  if (!bookingLangSelect) return;
+  const stored = localStorage.getItem("imagineph_lang");
+  const initial = stored === "fil" ? "fil" : "en";
+  bookingLangSelect.value = initial;
+  document.documentElement.lang = initial;
+  bookingLangSelect.addEventListener("change", () => {
+    const next = bookingLangSelect.value === "fil" ? "fil" : "en";
+    localStorage.setItem("imagineph_lang", next);
+    document.documentElement.lang = next;
+  });
 }
 
 function initBookingMobileMenu() {
@@ -600,6 +614,7 @@ document.addEventListener("keydown", (event) => {
 });
 
 initBookingMobileMenu();
+initBookingLanguage();
 renderCity("davao");
 switchCityFromQuery();
 switchTabFromHash();

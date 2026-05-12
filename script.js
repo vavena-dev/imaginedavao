@@ -291,6 +291,10 @@ let activeLang = "en";
 let activeChip = "All";
 let heroIndex = 0;
 const CMS_OVERRIDES = {};
+const storedLangPref = localStorage.getItem("imagineph_lang");
+if (storedLangPref === "en" || storedLangPref === "fil") {
+  activeLang = storedLangPref;
+}
 
 const brandCity = document.getElementById("brandCity");
 const heroTitle = document.getElementById("heroTitle");
@@ -311,7 +315,7 @@ const citySwitch = document.getElementById("citySwitch");
 const newsletterForm = document.getElementById("newsletterForm");
 const plannerForm = document.getElementById("plannerForm");
 const itineraryOutput = document.getElementById("itineraryOutput");
-const langToggles = [...document.querySelectorAll(".lang-toggle")];
+const langSelect = document.getElementById("langSelect");
 const searchPanel = document.getElementById("searchPanel");
 const openSearch = document.getElementById("openSearch");
 const closeSearch = document.getElementById("closeSearch");
@@ -720,7 +724,7 @@ function renderCity(cityKey) {
   activeCity = cityKey;
   const city = resolveCityContent(cityKey);
   applyPalette(city.palette);
-  brandCity.textContent = city.cityLabel;
+  brandCity.textContent = "Davao";
   heroStamp.textContent = city.shortCode;
   applyLocale(city);
 
@@ -953,17 +957,16 @@ plannerForm.addEventListener("submit", (event) => {
   buildItinerary(mood, length);
 });
 
-langToggles.forEach((toggle) => {
-  toggle.addEventListener("click", () => {
-    activeLang = toggle.dataset.lang;
-    langToggles.forEach((item) => {
-      const isActive = item === toggle;
-      item.classList.toggle("is-active", isActive);
-      item.setAttribute("aria-pressed", isActive ? "true" : "false");
-    });
+if (langSelect) {
+  langSelect.value = activeLang;
+  document.documentElement.lang = activeLang === "fil" ? "fil" : "en";
+  langSelect.addEventListener("change", () => {
+    activeLang = langSelect.value === "fil" ? "fil" : "en";
+    localStorage.setItem("imagineph_lang", activeLang);
+    document.documentElement.lang = activeLang === "fil" ? "fil" : "en";
     renderCity(activeCity);
   });
-});
+}
 
 thingsChips.addEventListener("click", (event) => {
   const btn = event.target.closest(".chip");

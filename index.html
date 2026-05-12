@@ -16,17 +16,27 @@
 
   <header class="site-header">
     <div class="utility-bar">
-      <a href="partner.html" class="utility-link">Partner With City Tourism</a>
       <div class="utility-meta">
-        <button class="lang-toggle is-active" type="button" aria-pressed="true" data-lang="en">EN</button>
-        <button class="lang-toggle" type="button" aria-pressed="false" data-lang="fil">Filipino</button>
+        <label class="lang-select" for="langSelect" aria-label="Language">
+          <span class="lang-select-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"></path>
+            </svg>
+          </span>
+          <select id="langSelect" name="language" aria-label="Language">
+            <option value="en">EN</option>
+            <option value="fil">FIL</option>
+          </select>
+          <span class="lang-select-caret" aria-hidden="true">▾</span>
+        </label>
       </div>
     </div>
 
     <nav class="main-nav">
       <a href="index.html" class="brand-mark">
-        <span class="brand-kicker">ImaginePhilippines</span>
-        <span class="brand-city" id="brandCity">ImagineDavao</span>
+        <span class="brand-kicker">Imagine</span>
+        <span class="brand-city" id="brandCity">Davao</span>
       </a>
       <ul>
         <li><a href="now.html">Now in City</a></li>
@@ -291,7 +301,7 @@
 
   <footer class="site-footer">
     <div>
-      <span class="brand-kicker">ImaginePhilippines Network</span>
+      <span class="brand-kicker">Imagine</span>
       <h3>ImagineDavao City Experience</h3>
       <p>ImagineDavao is one city module in a reusable multi-city platform for the Philippines.</p>
     </div>

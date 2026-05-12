@@ -14,10 +14,28 @@
   <div class="texture" aria-hidden="true"></div>
 
   <header class="shell">
+    <div class="utility-bar booking-utility">
+      <div class="utility-spacer" aria-hidden="true"></div>
+      <div class="utility-meta">
+        <label class="lang-select" for="bookingLangSelect" aria-label="Language">
+          <span class="lang-select-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"></path>
+            </svg>
+          </span>
+          <select id="bookingLangSelect" name="language" aria-label="Language">
+            <option value="en">EN</option>
+            <option value="fil">FIL</option>
+          </select>
+          <span class="lang-select-caret" aria-hidden="true">▾</span>
+        </label>
+      </div>
+    </div>
     <div class="topbar">
       <a href="index.html" class="brand">
-        <span class="kicker">ImaginePhilippines</span>
-        <span class="city" id="brandCity">ImagineDavao</span>
+        <span class="kicker">Imagine</span>
+        <span class="city" id="brandCity">Davao</span>
       </a>
       <nav class="booking-main-nav">
         <a href="now.html">Now in City</a>
