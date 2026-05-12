@@ -107,6 +107,13 @@ input {
 
 .status { margin: 0; color: var(--muted); min-height: 1.2rem; font-size: 0.88rem; }
 .status.error { color: #a12626; }
+.status.success { color: #0f6b57; }
+
+#forgotUserResult {
+  margin: 0.1rem 0 0;
+  padding-left: 1rem;
+  font-size: 0.88rem;
+}
 
 .social-grid {
   display: grid;

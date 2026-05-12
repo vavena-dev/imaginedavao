@@ -470,6 +470,33 @@ async function signupUser(email, password) {
   return data;
 }
 
+async function requestPasswordReset(email, redirectTo) {
+  const data = await authRequest("/api/auth/forgot-password", {
+    email: String(email || "").trim().toLowerCase(),
+    redirectTo: String(redirectTo || "").trim()
+  }, "POST");
+  return data?.message || "Password reset request sent.";
+}
+
+async function recoverUserAccount(fullName, phone) {
+  const data = await authRequest("/api/auth/forgot-user", {
+    fullName: String(fullName || "").trim(),
+    phone: String(phone || "").trim()
+  }, "POST");
+  return {
+    message: data?.message || "",
+    emails: Array.isArray(data?.emails) ? data.emails : []
+  };
+}
+
+async function resetPassword(accessToken, password) {
+  const data = await authRequest("/api/auth/reset-password", {
+    accessToken: String(accessToken || "").trim(),
+    password: String(password || "")
+  }, "POST");
+  return data?.message || "Password updated.";
+}
+
 async function fetchCurrentUser() {
   const token = getAuthToken();
   if (!token) return null;
@@ -772,6 +799,9 @@ window.BookingApi = {
   logoutUser,
   postTrackedBooking,
   readAuthSession,
+  recoverUserAccount,
+  requestPasswordReset,
+  resetPassword,
   signupUser,
   updateUserProfile,
   streamAssistantChat,

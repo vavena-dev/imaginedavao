@@ -72,6 +72,30 @@ async function signupWithPassword(email, password) {
   });
 }
 
+async function requestPasswordReset(email, redirectTo = "") {
+  const safeEmail = String(email || "").trim().toLowerCase();
+  if (!safeEmail) throw new Error("email is required");
+  const redirect = String(redirectTo || "").trim();
+  const path = redirect ? `recover?redirect_to=${encodeURIComponent(redirect)}` : "recover";
+  return supabaseAuthRequest(path, {
+    method: "POST",
+    body: { email: safeEmail }
+  });
+}
+
+async function resetPasswordWithAccessToken(accessToken, nextPassword) {
+  const token = String(accessToken || "").trim();
+  const password = String(nextPassword || "");
+  if (!token) throw new Error("access token is required");
+  if (!password) throw new Error("password is required");
+
+  return supabaseAuthRequest("user", {
+    method: "PUT",
+    headers: { Authorization: `Bearer ${token}` },
+    body: { password }
+  });
+}
+
 async function signoutToken(accessToken) {
   if (!accessToken) return null;
   return supabaseAuthRequest("logout", {
@@ -188,6 +212,41 @@ async function updateProfileById(userId, patch = {}) {
   return Array.isArray(rows) && rows[0] ? rows[0] : null;
 }
 
+function maskEmail(email) {
+  const value = String(email || "").trim().toLowerCase();
+  const parts = value.split("@");
+  if (parts.length !== 2) return "";
+  const [name, domain] = parts;
+  if (!name) return `***@${domain}`;
+  const lead = name.slice(0, 2);
+  return `${lead}${"*".repeat(Math.max(3, name.length - 2))}@${domain}`;
+}
+
+function normalizePhone(raw) {
+  return String(raw || "").replace(/[^\d+]/g, "");
+}
+
+async function recoverUserEmails({ fullName = "", phone = "" } = {}) {
+  const safeName = String(fullName || "").trim().toLowerCase();
+  const safePhone = normalizePhone(phone);
+  if (!safeName || !safePhone) {
+    throw new Error("fullName and phone are required");
+  }
+
+  const rows = await restRequest("profiles", {
+    query: {
+      select: "email,full_name,phone",
+      full_name: `ilike.%${safeName}%`,
+      limit: 25
+    }
+  });
+
+  return (Array.isArray(rows) ? rows : [])
+    .filter((row) => normalizePhone(row.phone) === safePhone)
+    .map((row) => maskEmail(row.email))
+    .filter(Boolean);
+}
+
 async function resolveAuthContext(req) {
   const token = parseBearerToken(req);
   if (!token || !hasSupabaseAuthConfig()) {
@@ -228,6 +287,9 @@ module.exports = {
   hasSupabaseAuthConfig,
   loginWithPassword,
   parseBearerToken,
+  recoverUserEmails,
+  requestPasswordReset,
+  resetPasswordWithAccessToken,
   resolveAuthContext,
   serviceRoleKey,
   signoutToken,

@@ -40,6 +40,9 @@ const authSignupHandler = require("./api/auth/signup");
 const authLogoutHandler = require("./api/auth/logout");
 const authProfileHandler = require("./api/auth/profile");
 const authBookingsHandler = require("./api/auth/bookings");
+const authForgotPasswordHandler = require("./api/auth/forgot-password");
+const authResetPasswordHandler = require("./api/auth/reset-password");
+const authForgotUserHandler = require("./api/auth/forgot-user");
 
 const HOST = process.env.HOST || "127.0.0.1";
 const PORT = Number(process.env.PORT || 8080);
@@ -417,6 +420,21 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === "POST" && reqUrl.pathname === "/api/auth/logout") {
     await authLogoutHandler(req, res);
+    return;
+  }
+
+  if (req.method === "POST" && reqUrl.pathname === "/api/auth/forgot-password") {
+    await authForgotPasswordHandler(req, res);
+    return;
+  }
+
+  if (req.method === "POST" && reqUrl.pathname === "/api/auth/reset-password") {
+    await authResetPasswordHandler(req, res);
+    return;
+  }
+
+  if (req.method === "POST" && reqUrl.pathname === "/api/auth/forgot-user") {
+    await authForgotUserHandler(req, res);
     return;
   }
 

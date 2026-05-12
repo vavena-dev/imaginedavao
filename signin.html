@@ -33,7 +33,33 @@
           <button class="btn" id="continueEmailBtn" type="button">Continue with email</button>
           <button class="btn ghost" id="createAccountBtn" type="button">Create account</button>
         </div>
+        <div class="actions">
+          <button class="btn ghost" id="forgotPasswordToggleBtn" type="button">Forgot password</button>
+          <button class="btn ghost" id="forgotUserToggleBtn" type="button">Forgot user</button>
+        </div>
         <p class="status" id="signInStatus" aria-live="polite"></p>
+      </article>
+
+      <article class="card" id="forgotPasswordCard" hidden>
+        <h2>Password reset</h2>
+        <p class="muted">Enter your account email and we will send a password reset link.</p>
+        <label>Email address <input id="forgotPasswordEmail" type="email" autocomplete="email" /></label>
+        <div class="actions">
+          <button class="btn" id="sendResetBtn" type="button">Send reset link</button>
+        </div>
+        <p class="status" id="forgotPasswordStatus" aria-live="polite"></p>
+      </article>
+
+      <article class="card" id="forgotUserCard" hidden>
+        <h2>Find my account</h2>
+        <p class="muted">Enter your profile name and phone number to retrieve your registered email.</p>
+        <label>Full name <input id="forgotUserFullName" type="text" autocomplete="name" /></label>
+        <label>Phone number <input id="forgotUserPhone" type="tel" autocomplete="tel" /></label>
+        <div class="actions">
+          <button class="btn" id="findUserBtn" type="button">Find account email</button>
+        </div>
+        <p class="status" id="forgotUserStatus" aria-live="polite"></p>
+        <ul id="forgotUserResult" class="muted"></ul>
       </article>
 
       <article class="card">
