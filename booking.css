@@ -21,6 +21,10 @@ html, body {
   background: var(--bg);
 }
 
+body.booking-nav-open {
+  overflow: hidden;
+}
+
 .texture {
   position: fixed;
   inset: 0;
@@ -76,6 +80,96 @@ html, body {
   letter-spacing: 0.09em;
   font-size: 0.74rem;
   color: var(--ink);
+}
+
+.booking-menu-btn {
+  display: none;
+  border: 1px solid var(--ink);
+  border-radius: 10px;
+  background: #fff;
+  width: 44px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.booking-menu-btn span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--ink);
+}
+
+.booking-nav-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(12, 10, 7, 0.4);
+  z-index: 89;
+}
+
+.booking-nav-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: min(92vw, 430px);
+  height: 100vh;
+  background: var(--bg);
+  border-left: 1px solid var(--line);
+  z-index: 90;
+  transform: translateX(102%);
+  transition: transform 0.24s ease;
+  padding: 1.15rem 1.2rem;
+}
+
+.booking-nav-drawer.open {
+  transform: translateX(0);
+}
+
+.booking-nav-drawer-head {
+  display: flex;
+  justify-content: flex-end;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.8rem;
+}
+
+.booking-nav-close {
+  border: none;
+  background: transparent;
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.booking-nav-drawer-list {
+  display: grid;
+  margin-top: 0.75rem;
+}
+
+.booking-nav-drawer-list a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  color: var(--ink);
+  padding: 0.98rem 0;
+  text-transform: uppercase;
+  font-size: 1.08rem;
+  letter-spacing: 0.03em;
+  font-weight: 800;
+}
+
+.booking-nav-drawer-list a.is-active {
+  color: var(--primary);
+}
+
+.booking-nav-drawer-list a strong {
+  font-size: 1.5rem;
+  line-height: 1;
 }
 
 .hero {
@@ -597,6 +691,15 @@ textarea:focus-visible {
 
   .cards-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .topbar nav {
+    display: none;
+  }
+
+  .booking-menu-btn {
+    display: inline-flex;
+    margin-left: auto;
   }
 }
 

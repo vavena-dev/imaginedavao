@@ -33,6 +33,10 @@ body {
   overflow-x: hidden;
 }
 
+body.main-nav-open {
+  overflow: hidden;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -182,6 +186,96 @@ main,
   font-size: 0.82rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.main-menu-btn {
+  display: none;
+  border: 1px solid var(--ink);
+  border-radius: 10px;
+  background: #fff;
+  width: 44px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.main-menu-btn span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--ink);
+}
+
+.main-nav-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(12, 10, 7, 0.4);
+  z-index: 84;
+}
+
+.main-nav-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: min(92vw, 430px);
+  height: 100vh;
+  background: var(--bg);
+  border-left: 1px solid var(--line);
+  z-index: 85;
+  transform: translateX(102%);
+  transition: transform 0.24s ease;
+  padding: 1.15rem 1.2rem;
+}
+
+.main-nav-drawer.open {
+  transform: translateX(0);
+}
+
+.main-nav-drawer-head {
+  display: flex;
+  justify-content: flex-end;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.8rem;
+}
+
+.main-nav-close {
+  border: none;
+  background: transparent;
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.main-nav-drawer-list {
+  display: grid;
+  margin-top: 0.75rem;
+}
+
+.main-nav-drawer-list a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  color: var(--ink);
+  padding: 0.98rem 0;
+  text-transform: uppercase;
+  font-size: 1.08rem;
+  letter-spacing: 0.03em;
+  font-weight: 800;
+}
+
+.main-nav-drawer-list a.is-active {
+  color: var(--primary);
+}
+
+.main-nav-drawer-list a strong {
+  font-size: 1.5rem;
+  line-height: 1;
 }
 
 .search-btn,
@@ -999,14 +1093,28 @@ main {
   }
 }
 
-@media (max-width: 680px) {
+@media (max-width: 900px) {
   .main-nav {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr auto auto;
     gap: 0.8rem;
   }
 
   .main-nav ul {
-    justify-content: start;
+    display: none;
+  }
+
+  .main-menu-btn {
+    display: inline-flex;
+  }
+
+  .search-btn {
+    padding: 0.45rem 0.8rem;
+  }
+}
+
+@media (max-width: 680px) {
+  .main-nav {
+    gap: 0.55rem;
   }
 
   .district-grid,

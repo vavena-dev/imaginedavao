@@ -349,6 +349,7 @@ const mapLabels = {
   davao_occidental: document.getElementById("mapLabel-davao_occidental")
 };
 let activeMapRegion = "davao_city";
+let closeMainMenu = () => {};
 
 const CITY_MAP_DATA = {
   davao: {
@@ -785,6 +786,87 @@ function closeDetailModal() {
   detailModal.setAttribute("aria-hidden", "true");
 }
 
+function initIndexMobileMenu() {
+  const nav = document.querySelector(".main-nav");
+  const navList = nav?.querySelector("ul");
+  if (!nav || !navList || document.getElementById("mainMenuBtn")) return;
+
+  const links = [...navList.querySelectorAll("a")].map((anchor) => ({
+    href: anchor.getAttribute("href") || "#",
+    label: anchor.textContent ? anchor.textContent.trim() : ""
+  }));
+  const current = (window.location.pathname.split("/").pop() || "index.html").toLowerCase();
+
+  const menuBtn = document.createElement("button");
+  menuBtn.type = "button";
+  menuBtn.className = "main-menu-btn";
+  menuBtn.id = "mainMenuBtn";
+  menuBtn.setAttribute("aria-controls", "mainNavDrawer");
+  menuBtn.setAttribute("aria-expanded", "false");
+  menuBtn.setAttribute("aria-label", "Open main menu");
+  menuBtn.innerHTML = '<span></span><span></span><span></span>';
+
+  const searchBtn = nav.querySelector("#openSearch");
+  nav.insertBefore(menuBtn, searchBtn || null);
+
+  const backdrop = document.createElement("div");
+  backdrop.className = "main-nav-backdrop";
+  backdrop.hidden = true;
+
+  const drawer = document.createElement("aside");
+  drawer.className = "main-nav-drawer";
+  drawer.id = "mainNavDrawer";
+  drawer.setAttribute("aria-hidden", "true");
+  drawer.innerHTML = `
+    <div class="main-nav-drawer-head">
+      <button type="button" class="main-nav-close" id="mainNavClose" aria-label="Close menu">×</button>
+    </div>
+    <nav class="main-nav-drawer-list" aria-label="Mobile Main">
+      ${links
+        .map((item) => {
+          const isActive = current === item.href.toLowerCase();
+          return `<a href="${item.href}" class="${isActive ? "is-active" : ""}"${isActive ? ' aria-current="page"' : ""}><span>${item.label}</span><strong>›</strong></a>`;
+        })
+        .join("")}
+    </nav>
+  `;
+
+  document.body.append(backdrop, drawer);
+
+  const closeBtn = drawer.querySelector("#mainNavClose");
+
+  const closeMenu = () => {
+    drawer.classList.remove("open");
+    drawer.setAttribute("aria-hidden", "true");
+    backdrop.hidden = true;
+    menuBtn.setAttribute("aria-expanded", "false");
+    document.body.classList.remove("main-nav-open");
+  };
+
+  const openMenu = () => {
+    drawer.classList.add("open");
+    drawer.setAttribute("aria-hidden", "false");
+    backdrop.hidden = false;
+    menuBtn.setAttribute("aria-expanded", "true");
+    document.body.classList.add("main-nav-open");
+  };
+
+  closeMainMenu = closeMenu;
+
+  menuBtn.addEventListener("click", () => {
+    if (drawer.classList.contains("open")) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  });
+  closeBtn?.addEventListener("click", closeMenu);
+  backdrop.addEventListener("click", closeMenu);
+  drawer.addEventListener("click", (event) => {
+    if (event.target.closest("a")) closeMenu();
+  });
+}
+
 function collectSearchItems(city) {
   const groups = [city.things, city.guides, city.eat, city.stay, city.events, city.deals, city.districts];
   return groups.flat().map((item) => ({ ...item }));
@@ -934,6 +1016,7 @@ detailModal.addEventListener("click", (event) => {
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
+    closeMainMenu();
     closeSearchPanel();
     closeDetailModal();
     if (chatWidget) chatWidget.classList.remove("open");
@@ -947,6 +1030,7 @@ if (window.BookingApi && typeof window.BookingApi.attachChatWidget === "function
   });
 }
 
+initIndexMobileMenu();
 renderCity("davao");
 itineraryOutput.innerHTML = "<p>Choose your mood and trip length, then click Build Itinerary.</p>";
 fetchCmsOverrides("davao").then(() => {

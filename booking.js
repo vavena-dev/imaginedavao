@@ -102,6 +102,7 @@ const demoModeToggle = document.getElementById("demoModeToggle");
 const demoResultsBtn = document.getElementById("demoResultsBtn");
 const demoModeStatus = document.getElementById("demoModeStatus");
 const scenarioButtons = [...document.querySelectorAll(".scenario-btn")];
+let closeBookingMenu = () => {};
 
 const DEMO_MODE_KEY = "imaginephilippines_demo_mode";
 const DEMO_SCENARIOS = {
@@ -165,6 +166,85 @@ function switchCityFromQuery() {
     citySwitch.value = matched;
     renderCity(matched);
   }
+}
+
+function initBookingMobileMenu() {
+  const topbar = document.querySelector(".topbar");
+  const nav = topbar?.querySelector(".booking-main-nav");
+  if (!topbar || !nav || document.getElementById("bookingMenuBtn")) return;
+
+  const links = [...nav.querySelectorAll("a")].map((anchor) => ({
+    href: anchor.getAttribute("href") || "#",
+    label: anchor.textContent ? anchor.textContent.trim() : ""
+  }));
+  const current = (window.location.pathname.split("/").pop() || "booking.html").toLowerCase();
+
+  const menuBtn = document.createElement("button");
+  menuBtn.type = "button";
+  menuBtn.className = "booking-menu-btn";
+  menuBtn.id = "bookingMenuBtn";
+  menuBtn.setAttribute("aria-controls", "bookingNavDrawer");
+  menuBtn.setAttribute("aria-expanded", "false");
+  menuBtn.setAttribute("aria-label", "Open main menu");
+  menuBtn.innerHTML = '<span></span><span></span><span></span>';
+
+  topbar.appendChild(menuBtn);
+
+  const backdrop = document.createElement("div");
+  backdrop.className = "booking-nav-backdrop";
+  backdrop.hidden = true;
+
+  const drawer = document.createElement("aside");
+  drawer.className = "booking-nav-drawer";
+  drawer.id = "bookingNavDrawer";
+  drawer.setAttribute("aria-hidden", "true");
+  drawer.innerHTML = `
+    <div class="booking-nav-drawer-head">
+      <button type="button" class="booking-nav-close" id="bookingNavClose" aria-label="Close menu">×</button>
+    </div>
+    <nav class="booking-nav-drawer-list" aria-label="Mobile Main">
+      ${links
+        .map((item) => {
+          const isActive = current === item.href.toLowerCase();
+          return `<a href="${item.href}" class="${isActive ? "is-active" : ""}"${isActive ? ' aria-current="page"' : ""}><span>${item.label}</span><strong>›</strong></a>`;
+        })
+        .join("")}
+    </nav>
+  `;
+
+  document.body.append(backdrop, drawer);
+  const closeBtn = drawer.querySelector("#bookingNavClose");
+
+  const closeMenu = () => {
+    drawer.classList.remove("open");
+    drawer.setAttribute("aria-hidden", "true");
+    backdrop.hidden = true;
+    menuBtn.setAttribute("aria-expanded", "false");
+    document.body.classList.remove("booking-nav-open");
+  };
+
+  const openMenu = () => {
+    drawer.classList.add("open");
+    drawer.setAttribute("aria-hidden", "false");
+    backdrop.hidden = false;
+    menuBtn.setAttribute("aria-expanded", "true");
+    document.body.classList.add("booking-nav-open");
+  };
+
+  closeBookingMenu = closeMenu;
+
+  menuBtn.addEventListener("click", () => {
+    if (drawer.classList.contains("open")) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  });
+  closeBtn?.addEventListener("click", closeMenu);
+  backdrop.addEventListener("click", closeMenu);
+  drawer.addEventListener("click", (event) => {
+    if (event.target.closest("a")) closeMenu();
+  });
 }
 
 function isoDateFromToday(offsetDays) {
@@ -515,6 +595,11 @@ if (window.BookingApi && typeof window.BookingApi.attachChatWidget === "function
   });
 }
 
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") closeBookingMenu();
+});
+
+initBookingMobileMenu();
 renderCity("davao");
 switchCityFromQuery();
 switchTabFromHash();
