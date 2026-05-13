@@ -115,11 +115,11 @@ async function guardAdminAccess() {
   }
 
   try {
-    const response = await fetch("/api/auth/me", {
+    const response = await fetch("/api/auth/profile", {
       headers: { Authorization: `Bearer ${token}` }
     });
     const data = await response.json().catch(() => ({}));
-    const user = data?.user || null;
+    const user = data?.user || data?.profile || null;
     if (!response.ok || !isAdminRole(user)) {
       alert("Admin access is required to open the CMS.");
       window.location.href = "index.html";
