@@ -10,14 +10,8 @@ The app runs at `http://127.0.0.1:8080`.
 
 ## API Endpoints
 
-- `POST /api/book-link`
-  - Creates a tracked affiliate URL.
-  - Local `npm start`: logs click metadata to `data/booking_clicks.jsonl`.
-  - Vercel deploy: logs best-effort to temporary serverless storage.
 - `POST /api/search`
   - Returns in-page booking result data for flights, hotels, experiences, and cars.
-- `POST /api/chat/stream`
-  - Streams chat responses (SSE) and returns booking action buttons.
 - `GET|POST /api/cms/content`
   - Returns CMS content grouped by section.
   - Query/body: `city`, `page`, optional `section`.
@@ -27,6 +21,17 @@ The app runs at `http://127.0.0.1:8080`.
     - `bookingMode`: `none` | `book` | `provider` | `info`
     - `bookingType`: `hotels` | `experiences` | `flights` | `cars`
     - `ctaLabel`, `ctaUrl`, `bookingInfo`
+- `GET /api/booking/inventory`
+  - Returns public booking inventory rows.
+- `GET|POST|PUT|DELETE /api/admin/booking-inventory`
+  - Full booking inventory CRUD for admin.
+- `POST /api/auth/login`
+- `POST /api/auth/signup`
+- `POST /api/auth/logout`
+- `POST /api/auth/forgot-password`
+- `POST /api/auth/reset-password`
+- `GET|PUT /api/auth/profile`
+- `GET /api/auth/bookings`
 
 ## Booking Affiliate Setup
 
@@ -64,10 +69,31 @@ RAG_API_URL=https://your-rag-endpoint/chat
 The site pages are served as static files, and APIs run from:
 
 - `/api/search`
-- `/api/book-link`
-- `/api/chat/stream`
 - `/api/cms/content`
 - `/api/cms/items`
+- `/api/booking/inventory`
+- `/api/admin/booking-inventory`
+- `/api/auth/login`
+- `/api/auth/signup`
+- `/api/auth/logout`
+- `/api/auth/forgot-password`
+- `/api/auth/reset-password`
+- `/api/auth/profile`
+- `/api/auth/bookings`
+
+## Vercel Free Tier API Limit (Max 12)
+
+This repo enforces a hard deployment cap of 12 API functions.
+
+- `npm run vercel-build` runs both:
+  - `npm run api:enforce-limit`
+  - `npm run check:vercel-api-limit`
+- If function count is above 12, deploy fails.
+- Overflow functions are auto-moved from `api/` to `api_disabled/` based on priority order.
+
+Policy and operations guide:
+
+- `docs/vercel-api-limit-policy.md`
 
 ## CMS Admin
 

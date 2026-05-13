@@ -4,6 +4,12 @@
   "private": true,
   "description": "Multi-city Philippines tourism site with tracked booking links and streaming chat API",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "check:vercel-api-limit": "node scripts/check-vercel-api-limit.js",
+    "api:functions": "node scripts/manage-vercel-api-functions.js status",
+    "api:disable": "node scripts/manage-vercel-api-functions.js disable",
+    "api:enable": "node scripts/manage-vercel-api-functions.js enable",
+    "api:enforce-limit": "node scripts/manage-vercel-api-functions.js enforce",
+    "vercel-build": "npm run api:enforce-limit && npm run check:vercel-api-limit"
   }
 }
