@@ -55,6 +55,55 @@ const ADMIN_TOKEN_KEY = "imagineph_admin_token";
 const ADMIN_REQUIRED_MESSAGE =
   "Admin access required. Sign in with an admin account in signin.html or set a valid ADMIN_TOKEN in this browser.";
 
+const PAGE_SECTION_OPTIONS = {
+  index: ["things", "events", "eat", "stay", "guides", "districts", "deals"],
+  now: ["hero", "curation", "stats", "events", "planning"],
+  things: ["hero", "spotlight", "newsletter", "topics", "cards"],
+  eat: ["hero", "curation", "stats", "cards", "planning"],
+  guides: ["hero", "spotlight", "newsletter", "topics", "cards"],
+  stay: ["hero", "intro", "zones", "curation", "stats", "cards", "planning"],
+  events: ["events"]
+};
+
+const SECTION_LABELS = {
+  hero: "Hero",
+  spotlight: "Spotlight",
+  newsletter: "Newsletter",
+  intro: "Intro",
+  curation: "Curation",
+  stats: "Stats",
+  topics: "Topics",
+  zones: "Zones",
+  cards: "Cards",
+  planning: "Planning",
+  events: "Events",
+  things: "Things To Do",
+  eat: "Eat & Drink",
+  stay: "Where to Stay",
+  guides: "Maps & Guides",
+  districts: "Districts",
+  deals: "Deals"
+};
+
+function allowedSectionsForPage(page) {
+  const key = String(page || "").toLowerCase();
+  if (Array.isArray(PAGE_SECTION_OPTIONS[key]) && PAGE_SECTION_OPTIONS[key].length) {
+    return PAGE_SECTION_OPTIONS[key];
+  }
+  return PAGE_SECTION_OPTIONS.index.slice();
+}
+
+function syncSectionOptions(preferredSection = "") {
+  const allowed = allowedSectionsForPage(filterPage.value);
+  const current = String(preferredSection || filterSection.value || "").toLowerCase();
+  const nextValue = allowed.includes(current) ? current : allowed[0];
+
+  filterSection.innerHTML = allowed
+    .map((section) => `<option value="${section}">${SECTION_LABELS[section] || section}</option>`)
+    .join("");
+  filterSection.value = nextValue;
+}
+
 function getAuthHeaders() {
   const headers = { "Content-Type": "application/json" };
   try {
@@ -465,7 +514,7 @@ bookingForm.addEventListener("submit", async (event) => {
   }
 });
 
-[filterCity, filterPage, filterSection].forEach((node) => {
+[filterCity, filterSection].forEach((node) => {
   node.addEventListener("change", () => {
     clearForm();
     clearBookingForm();
@@ -473,9 +522,18 @@ bookingForm.addEventListener("submit", async (event) => {
   });
 });
 
+filterPage.addEventListener("change", () => {
+  syncSectionOptions();
+  clearForm();
+  clearBookingForm();
+  loadBookingItems().catch((error) => setBookingStatus(error.message, true));
+});
+
 async function initAdminPage() {
   const allowed = await guardAdminAccess();
   if (!allowed) return;
+
+  syncSectionOptions(filterSection.value);
 
   Promise.all([loadItems(), loadBookingItems()]).then(
     () => {
