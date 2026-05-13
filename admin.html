@@ -109,10 +109,12 @@
 
     <section class="panel">
       <h2>Items</h2>
-      <div id="itemsGrid" class="items-grid"></div>
+      <div class="items-scroll" aria-live="polite">
+        <div id="itemsGrid" class="items-grid"></div>
+      </div>
     </section>
 
-    <section class="panel">
+    <section class="panel is-hidden" id="bookingInventoryEditorPanel" aria-hidden="true">
       <h2 id="bookingFormTitle">Booking Inventory (Affiliate Rows)</h2>
       <form id="bookingForm" class="form-grid">
         <input type="hidden" id="bookingItemId" />
@@ -150,7 +152,7 @@
       <p id="bookingStatusMsg" class="status" aria-live="polite"></p>
     </section>
 
-    <section class="panel">
+    <section class="panel is-hidden" id="bookingInventoryListPanel" aria-hidden="true">
       <h2>Booking Inventory Rows</h2>
       <div id="bookingItemsGrid" class="items-grid"></div>
     </section>
