@@ -24,6 +24,10 @@ body.inner-nav-open {
   overflow: hidden;
 }
 
+body.section-nav-open {
+  overflow: hidden;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -195,6 +199,96 @@ body.inner-nav-open {
   stroke-width: 1.9;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+
+.section-menu-btn {
+  display: none;
+  border: 1px solid var(--ink);
+  border-radius: 10px;
+  background: #fff;
+  width: 44px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.section-menu-btn span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--ink);
+}
+
+.section-nav-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(12, 10, 7, 0.4);
+  z-index: 89;
+}
+
+.section-nav-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: min(92vw, 430px);
+  height: 100vh;
+  background: var(--bg);
+  border-left: 1px solid var(--line);
+  z-index: 90;
+  transform: translateX(102%);
+  transition: transform 0.24s ease;
+  padding: 1.15rem 1.2rem;
+}
+
+.section-nav-drawer.open {
+  transform: translateX(0);
+}
+
+.section-nav-drawer-head {
+  display: flex;
+  justify-content: flex-end;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.8rem;
+}
+
+.section-nav-close {
+  border: none;
+  background: transparent;
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.section-nav-drawer-list {
+  display: grid;
+  margin-top: 0.75rem;
+}
+
+.section-nav-drawer-list a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  color: var(--ink);
+  padding: 0.98rem 0;
+  text-transform: uppercase;
+  font-size: 1.08rem;
+  letter-spacing: 0.03em;
+  font-weight: 800;
+}
+
+.section-nav-drawer-list a.is-active {
+  color: var(--primary);
+}
+
+.section-nav-drawer-list a strong {
+  font-size: 1.5rem;
+  line-height: 1;
 }
 
 .topbar {
@@ -692,21 +786,20 @@ textarea:focus-visible {
 
 @media (max-width: 900px) {
   .site-header .main-nav {
-    grid-template-columns: 1fr;
-    gap: 0.65rem;
-  }
-
-  .site-header .brand-mark {
-    justify-self: start;
+    grid-template-columns: 1fr auto auto;
+    gap: 0.8rem;
   }
 
   .site-header .main-nav ul {
-    justify-content: flex-start;
-    gap: 0.9rem;
+    display: none;
   }
 
   .site-header .search-btn {
     display: none;
+  }
+
+  .section-menu-btn {
+    display: inline-flex;
   }
 
   .hero { grid-template-columns: 1fr; }

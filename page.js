@@ -176,6 +176,87 @@ function makePickerFullyClickable(wrapper, selectEl) {
   });
 }
 
+function initSectionMobileMenu() {
+  const siteHeader = document.querySelector(".site-header");
+  const nav = siteHeader?.querySelector(".main-nav");
+  const navList = nav?.querySelector("ul");
+  if (!siteHeader || !nav || !navList || document.getElementById("sectionMenuBtn")) return;
+
+  const links = [...navList.querySelectorAll("a")].map((anchor) => ({
+    href: anchor.getAttribute("href") || "#",
+    label: anchor.textContent ? anchor.textContent.trim() : ""
+  }));
+  const current = (window.location.pathname.split("/").pop() || "index.html").toLowerCase();
+
+  const menuBtn = document.createElement("button");
+  menuBtn.type = "button";
+  menuBtn.className = "section-menu-btn";
+  menuBtn.id = "sectionMenuBtn";
+  menuBtn.setAttribute("aria-controls", "sectionNavDrawer");
+  menuBtn.setAttribute("aria-expanded", "false");
+  menuBtn.setAttribute("aria-label", "Open main menu");
+  menuBtn.innerHTML = "<span></span><span></span><span></span>";
+  nav.appendChild(menuBtn);
+
+  const backdrop = document.createElement("div");
+  backdrop.className = "section-nav-backdrop";
+  backdrop.id = "sectionNavBackdrop";
+  backdrop.hidden = true;
+
+  const drawer = document.createElement("aside");
+  drawer.className = "section-nav-drawer";
+  drawer.id = "sectionNavDrawer";
+  drawer.setAttribute("aria-hidden", "true");
+  drawer.innerHTML = `
+    <div class="section-nav-drawer-head">
+      <button type="button" class="section-nav-close" id="sectionNavClose" aria-label="Close menu">×</button>
+    </div>
+    <nav class="section-nav-drawer-list" aria-label="Mobile Main">
+      ${links
+        .map((item) => {
+          const isActive = current === item.href.toLowerCase();
+          return `<a href="${item.href}" class="${isActive ? "is-active" : ""}"${isActive ? ' aria-current="page"' : ""}><span>${item.label}</span><strong>›</strong></a>`;
+        })
+        .join("")}
+    </nav>
+  `;
+
+  document.body.append(backdrop, drawer);
+  const closeBtn = drawer.querySelector("#sectionNavClose");
+
+  const closeMenu = () => {
+    drawer.classList.remove("open");
+    drawer.setAttribute("aria-hidden", "true");
+    backdrop.hidden = true;
+    menuBtn.setAttribute("aria-expanded", "false");
+    document.body.classList.remove("section-nav-open");
+  };
+
+  const openMenu = () => {
+    drawer.classList.add("open");
+    drawer.setAttribute("aria-hidden", "false");
+    backdrop.hidden = false;
+    menuBtn.setAttribute("aria-expanded", "true");
+    document.body.classList.add("section-nav-open");
+  };
+
+  menuBtn.addEventListener("click", () => {
+    if (drawer.classList.contains("open")) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  });
+  closeBtn?.addEventListener("click", closeMenu);
+  backdrop.addEventListener("click", closeMenu);
+  drawer.addEventListener("click", (event) => {
+    if (event.target.closest("a")) closeMenu();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeMenu();
+  });
+}
+
 function initSectionHeaderLanguage() {
   const selectEl = document.getElementById("sectionLangSelect");
   if (!selectEl) return;
@@ -192,6 +273,7 @@ function initSectionHeaderLanguage() {
 }
 
 initSectionHeaderLanguage();
+initSectionMobileMenu();
 initSharedInnerNav();
 
 if (window.BookingApi && typeof window.BookingApi.attachChatWidget === "function") {
