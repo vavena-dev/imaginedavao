@@ -65,47 +65,30 @@
       />
       <div class="events-hero-overlay"></div>
       <div class="events-hero-copy">
-        <p class="events-kicker">City Calendar + Signature Festivals</p>
+        <p class="events-kicker" id="eventsHeroKicker">City Calendar + Signature Festivals</p>
         <h1 id="eventsHeroTitle">Experience Davao Through Its Events</h1>
-        <p class="events-hero-text">From major cultural festivals to curated weekend experiences, discover what is happening across the city and book your place in minutes.</p>
+        <p class="events-hero-text" id="eventsHeroText">From major cultural festivals to curated weekend experiences, discover what is happening across the city and book your place in minutes.</p>
         <div class="events-hero-actions">
-          <a class="events-btn" href="#eventsFeaturedGrid">Explore Events</a>
-          <a class="events-btn book" href="booking.html#experiences">Book Event Plans</a>
+          <a class="events-btn" id="eventsHeroPrimaryCta" href="#eventsFeaturedGrid">Explore Events</a>
+          <a class="events-btn book" id="eventsHeroSecondaryCta" href="booking.html#experiences">Book Event Plans</a>
         </div>
       </div>
     </section>
 
     <section class="events-curation" aria-label="Events curation summary">
       <article>
-        <p class="events-kicker">Curation Notes</p>
-        <h2>Built for travelers who want culture, rhythm, and easy planning.</h2>
-        <p>Each featured event includes atmosphere details, ideal timing, and direct booking access so you can plan with confidence around your Davao itinerary.</p>
+        <p class="events-kicker" id="eventsCurationKicker">Curation Notes</p>
+        <h2 id="eventsCurationTitle">Built for travelers who want culture, rhythm, and easy planning.</h2>
+        <p id="eventsCurationText">Each featured event includes atmosphere details, ideal timing, and direct booking access so you can plan with confidence around your Davao itinerary.</p>
       </article>
-      <dl>
-        <div><dt>5</dt><dd>Featured Events</dd></div>
-        <div><dt>4</dt><dd>District Zones</dd></div>
-        <div><dt>1</dt><dd>Booking Path</dd></div>
-      </dl>
+      <dl id="eventsStatsGrid"></dl>
     </section>
 
     <section id="eventsFeaturedGrid" class="events-grid" aria-label="Featured events in Davao"></section>
 
     <section class="events-planning" aria-labelledby="eventsPlanningTitle">
       <h2 id="eventsPlanningTitle">Plan A Stronger Events Weekend</h2>
-      <div class="events-planning-grid">
-        <article>
-          <h3>Mix Major + Local Picks</h3>
-          <p>Pair one large festival moment with one neighborhood-led event for a fuller view of Davao culture.</p>
-        </article>
-        <article>
-          <h3>Book Before Peak Hours</h3>
-          <p>Popular evening slots and festival access windows fill quickly, especially during long weekends.</p>
-        </article>
-        <article>
-          <h3>Bundle With Transport</h3>
-          <p>After selecting your events, secure transfer options in the same booking flow for smoother city movement.</p>
-        </article>
-      </div>
+      <div class="events-planning-grid" id="eventsPlanningGrid"></div>
     </section>
   </main>
 
@@ -119,6 +102,6 @@
   </div>
   <script src="api-client.js"></script>
   <script src="page.js"></script>
-  <script src="events.js"></script>
+  <script src="now.js"></script>
 </body>
 </html>
