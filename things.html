@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="page.css" />
   <link rel="stylesheet" href="things.css" />
+  <link rel="stylesheet" href="main-footer.css" />
 </head>
 <body data-page="things" data-section="things" class="things-page">
   <a class="skip-link" href="#sectionMain">Skip to main content</a>
@@ -63,24 +64,24 @@
         fetchpriority="high"
       />
       <div class="things-hero-overlay">
-        <p class="things-kicker">Things to Do</p>
+        <p class="things-kicker" id="thingsHeroKicker">Things to Do</p>
         <h1 id="thingsHeroTitle">Discover the Best Things to Do in Davao</h1>
-        <p class="things-hero-copy">From island escapes and mountain routes to chocolate farms and culture-rich neighborhoods, build a Davao itinerary that feels personal, local and unforgettable.</p>
+        <p class="things-hero-copy" id="thingsHeroText">From island escapes and mountain routes to chocolate farms and culture-rich neighborhoods, build a Davao itinerary that feels personal, local and unforgettable.</p>
       </div>
-      <p class="things-hero-credit">Photo: Davao Gulf viewpoint</p>
+      <p class="things-hero-credit" id="thingsHeroCredit">Photo: Davao Gulf viewpoint</p>
     </section>
 
     <section class="things-shell" aria-label="Featured and trip tools">
       <article class="spotlight-card" aria-labelledby="spotlightTitle">
-        <p class="spotlight-eyebrow">Seasonal Highlight</p>
+        <p class="spotlight-eyebrow" id="thingsSpotlightEyebrow">Seasonal Highlight</p>
         <h2 id="spotlightTitle">Kadayawan Cultural Week Routes</h2>
-        <p>Plan your week around floral floats, indigenous weaving showcases and curated food stops across downtown Davao.</p>
-        <a class="text-link" href="activity-kadayawan-culture-walk.html">Learn more</a>
+        <p id="thingsSpotlightText">Plan your week around floral floats, indigenous weaving showcases and curated food stops across downtown Davao.</p>
+        <a class="text-link" id="thingsSpotlightLink" href="activity-kadayawan-culture-walk.html">Learn more</a>
       </article>
 
       <aside class="newsletter-card" aria-labelledby="newsletterHeading">
         <h2 id="newsletterHeading">Trip Updates</h2>
-        <p>Receive curated guides on festivals, outdoor activities and weekend-ready itineraries in Davao.</p>
+        <p id="thingsNewsletterText">Receive curated guides on festivals, outdoor activities and weekend-ready itineraries in Davao.</p>
         <form class="newsletter-form" action="#" method="post">
           <label for="thingsNewsletterEmail" class="sr-only">Email address</label>
           <input id="thingsNewsletterEmail" type="email" name="email" placeholder="you@example.com…" autocomplete="email" required />
@@ -89,94 +90,9 @@
       </aside>
     </section>
 
-    <nav class="things-topics" aria-label="Activity categories">
-      <a href="#adventure">Adventure</a>
-      <a href="#culture">Culture</a>
-      <a href="#nature">Nature</a>
-      <a href="#food">Food Experiences</a>
-      <a href="#water">Waterfront</a>
-      <a href="#family">Family Friendly</a>
-    </nav>
+    <nav class="things-topics" id="thingsTopicsNav" aria-label="Activity categories"></nav>
 
-    <section class="things-grid" aria-label="Activity collection">
-      <article class="things-card" id="water">
-        <img src="https://images.unsplash.com/photo-1530973428-5bf2db2e4d71?auto=format&fit=crop&w=1280&q=80" alt="Boat tour near Samal Island" width="1280" height="760" loading="lazy" decoding="async" />
-        <div class="things-card-body">
-          <p class="things-card-tag">Waterfront</p>
-          <h3>Samal Island Hopping Day</h3>
-          <p>Snorkel over reef gardens, relax on powdery coves and visit marine sanctuaries just off Davao City.</p>
-          <div class="things-card-actions">
-            <a href="activity-samal-island-hopping.html">Learn more</a>
-            <a class="book-link" href="booking.html#experiences">Book</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="things-card" id="adventure">
-        <img src="https://images.unsplash.com/photo-1588841296836-ee6cd5d4ff0f?auto=format&fit=crop&w=1280&q=80" alt="Mountain trail overlooking forests" width="1280" height="760" loading="lazy" decoding="async" />
-        <div class="things-card-body">
-          <p class="things-card-tag">Adventure</p>
-          <h3>Mt. Apo Highland Trek</h3>
-          <p>Take a guided trek to dramatic volcanic ridges, mossy forests and sunrise viewpoints above Mindanao.</p>
-          <div class="things-card-actions">
-            <a href="activity-mt-apo-highland-trek.html">Learn more</a>
-            <a class="book-link" href="booking.html#experiences">Book</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="things-card" id="nature">
-        <img src="https://images.unsplash.com/photo-1516939884455-1445c8652f83?auto=format&fit=crop&w=1280&q=80" alt="Philippine Eagle in conservation sanctuary" width="1280" height="760" loading="lazy" decoding="async" />
-        <div class="things-card-body">
-          <p class="things-card-tag">Nature</p>
-          <h3>Philippine Eagle Center Visit</h3>
-          <p>Meet one of the world’s largest eagles and learn conservation stories through ranger-led experiences.</p>
-          <div class="things-card-actions">
-            <a href="activity-philippine-eagle-center.html">Learn more</a>
-            <a class="book-link" href="booking.html#experiences">Book</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="things-card" id="food">
-        <img src="https://images.unsplash.com/photo-1606312619070-d48b4c652a52?auto=format&fit=crop&w=1280&q=80" alt="Chocolate tasting table with cacao products" width="1280" height="760" loading="lazy" decoding="async" />
-        <div class="things-card-body">
-          <p class="things-card-tag">Food Experiences</p>
-          <h3>Malagos Chocolate & Farm Tour</h3>
-          <p>Follow bean-to-bar cacao making, then taste award-winning dark chocolate paired with local fruit.</p>
-          <div class="things-card-actions">
-            <a href="activity-malagos-chocolate-farm-tour.html">Learn more</a>
-            <a class="book-link" href="booking.html#experiences">Book</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="things-card" id="culture">
-        <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=1280&q=80" alt="Festival dancers in colorful costumes" width="1280" height="760" loading="lazy" decoding="async" />
-        <div class="things-card-body">
-          <p class="things-card-tag">Culture</p>
-          <h3>Kadayawan Heritage Walk</h3>
-          <p>Explore museums, local art hubs and indigenous craft studios with a route inspired by Kadayawan stories.</p>
-          <div class="things-card-actions">
-            <a href="activity-kadayawan-culture-walk.html">Learn more</a>
-            <a class="book-link" href="booking.html#experiences">Book</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="things-card" id="family">
-        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1280&q=80" alt="Boat sailing on calm sea at sunset" width="1280" height="760" loading="lazy" decoding="async" />
-        <div class="things-card-body">
-          <p class="things-card-tag">Family Friendly</p>
-          <h3>Davao Gulf Sunset Cruise</h3>
-          <p>End the day with skyline views, live acoustic music and local dinner plates while cruising the gulf.</p>
-          <div class="things-card-actions">
-            <a href="activity-davao-gulf-sunset-cruise.html">Learn more</a>
-            <a class="book-link" href="booking.html#experiences">Book</a>
-          </div>
-        </div>
-      </article>
-    </section>
+    <section class="things-grid" id="thingsGrid" aria-label="Activity collection"></section>
   </main>
 
   <div class="chat-widget" id="chatWidget">
@@ -189,6 +105,8 @@
   </div>
 
   <script src="api-client.js"></script>
+  <script src="main-footer.js"></script>
   <script src="page.js"></script>
+  <script src="things.js"></script>
 </body>
 </html>

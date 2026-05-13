@@ -43,8 +43,14 @@
       <label>Section
         <select id="filterSection">
           <option value="hero">Hero</option>
+          <option value="spotlight">Spotlight</option>
+          <option value="newsletter">Newsletter</option>
+          <option value="intro">Intro</option>
           <option value="curation">Curation</option>
           <option value="stats">Stats</option>
+          <option value="topics">Topics</option>
+          <option value="zones">Zones</option>
+          <option value="cards">Cards</option>
           <option value="planning">Planning</option>
           <option value="events">Events (Now in City)</option>
           <option value="things">Things To Do</option>
@@ -63,7 +69,7 @@
       <form id="itemForm" class="form-grid">
         <input type="hidden" id="itemId" />
         <label>Title <input id="title" name="title" autocomplete="off" required /></label>
-        <label>Image URL <input id="image" name="image" type="url" inputmode="url" autocomplete="off" required /></label>
+        <label>Image URL <input id="image" name="image" type="url" inputmode="url" autocomplete="off" /></label>
         <label>Meta <input id="meta" name="meta" autocomplete="off" /></label>
         <label>Tag <input id="tag" name="tag" autocomplete="off" /></label>
         <label>Sort Order <input id="sortOrder" type="number" value="1" /></label>
@@ -86,7 +92,7 @@
           </select>
         </label>
         <label>CTA Label <input id="ctaLabel" name="ctaLabel" autocomplete="off" /></label>
-        <label>CTA URL <input id="ctaUrl" name="ctaUrl" type="url" inputmode="url" autocomplete="off" /></label>
+        <label>CTA URL <input id="ctaUrl" name="ctaUrl" type="text" autocomplete="off" /></label>
         <label>Booking Info <textarea id="bookingInfo" name="bookingInfo" rows="2"></textarea></label>
         <div class="actions">
           <button class="btn" type="submit">Save Item</button>

@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;700;800&family=Prata&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="page.css" />
   <link rel="stylesheet" href="guides.css" />
+  <link rel="stylesheet" href="main-footer.css" />
 </head>
 <body data-page="guides" data-section="guides" class="guides-page">
   <a class="skip-link" href="#sectionMain">Skip to main content</a>
@@ -62,24 +63,24 @@
         fetchpriority="high"
       />
       <div class="guides-hero-overlay">
-        <p class="guides-kicker">Maps & Guides</p>
+        <p class="guides-kicker" id="guidesHeroKicker">Maps & Guides</p>
         <h1 id="guidesHeroTitle">Navigate Davao Like You Already Know the City</h1>
-        <p class="guides-hero-copy">Build smarter itineraries with district-by-district routes, walkable culture loops and practical day plans curated for first-time and returning travelers.</p>
+        <p class="guides-hero-copy" id="guidesHeroText">Build smarter itineraries with district-by-district routes, walkable culture loops and practical day plans curated for first-time and returning travelers.</p>
       </div>
-      <p class="guides-hero-credit">Photo: Coastal Davao skyline</p>
+      <p class="guides-hero-credit" id="guidesHeroCredit">Photo: Coastal Davao skyline</p>
     </section>
 
     <section class="guides-shell" aria-label="Featured and trip updates">
       <article class="spotlight-card" aria-labelledby="guideSpotlightTitle">
-        <p class="spotlight-eyebrow">Featured Planning Route</p>
+        <p class="spotlight-eyebrow" id="guidesSpotlightEyebrow">Featured Planning Route</p>
         <h2 id="guideSpotlightTitle">72 Hours in Davao: City + Highlands + Island Day</h2>
-        <p>Balance heritage stops in Poblacion, cacao trails in Calinan and a Samal coastal finale in one easy-to-follow three-day itinerary.</p>
-        <a class="text-link" href="guide-72-hours-davao.html">Learn more</a>
+        <p id="guidesSpotlightText">Balance heritage stops in Poblacion, cacao trails in Calinan and a Samal coastal finale in one easy-to-follow three-day itinerary.</p>
+        <a class="text-link" id="guidesSpotlightLink" href="guide-72-hours-davao.html">Learn more</a>
       </article>
 
       <aside class="newsletter-card" aria-labelledby="guidesNewsletterHeading">
         <h2 id="guidesNewsletterHeading">Guide Drops</h2>
-        <p>Get practical route edits, festival movement tips and seasonal planning maps before your travel dates.</p>
+        <p id="guidesNewsletterText">Get practical route edits, festival movement tips and seasonal planning maps before your travel dates.</p>
         <form class="newsletter-form" action="#" method="post">
           <label for="guidesNewsletterEmail" class="sr-only">Email address</label>
           <input id="guidesNewsletterEmail" type="email" name="email" placeholder="you@example.com…" autocomplete="email" required />
@@ -88,94 +89,9 @@
       </aside>
     </section>
 
-    <nav class="guides-topics" aria-label="Guide categories">
-      <a href="#first-timers">First Timers</a>
-      <a href="#culture">Culture Routes</a>
-      <a href="#nature">Nature & Outdoors</a>
-      <a href="#family">Family Friendly</a>
-      <a href="#food">Food Trails</a>
-      <a href="#weekend">Weekend Escapes</a>
-    </nav>
+    <nav class="guides-topics" id="guidesTopicsNav" aria-label="Guide categories"></nav>
 
-    <section class="guides-grid" aria-label="Davao guide collection">
-      <article class="guide-card" id="first-timers">
-        <img src="https://images.unsplash.com/photo-1561484930-998b6a7b22e8?auto=format&fit=crop&w=1400&q=80" alt="City boulevard in downtown Davao" width="1400" height="900" loading="lazy" decoding="async" />
-        <div class="guide-card-body">
-          <p class="guide-card-tag">First Timers</p>
-          <h3>72 Hours in Davao</h3>
-          <p>A complete three-day framework covering markets, museums, mountain air and seaside dining without overplanning your day.</p>
-          <div class="guide-card-actions">
-            <a href="guide-72-hours-davao.html">Learn more</a>
-            <a class="book-link" href="booking.html#experiences">Book</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="guide-card" id="culture">
-        <img src="https://images.unsplash.com/photo-1531501410720-c8d437636169?auto=format&fit=crop&w=1400&q=80" alt="Festival performers in colorful traditional attire" width="1400" height="900" loading="lazy" decoding="async" />
-        <div class="guide-card-body">
-          <p class="guide-card-tag">Culture Routes</p>
-          <h3>Kadayawan Culture Loop</h3>
-          <p>Follow a route through heritage spaces, weaving communities and local art stops shaped by Kadayawan stories and makers.</p>
-          <div class="guide-card-actions">
-            <a href="guide-kadayawan-culture-loop.html">Learn more</a>
-            <a class="book-link" href="booking.html#experiences">Book</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="guide-card" id="nature">
-        <img src="https://images.unsplash.com/photo-1519904981063-b0cf448d479e?auto=format&fit=crop&w=1400&q=80" alt="Forest trail leading toward highland viewpoints" width="1400" height="900" loading="lazy" decoding="async" />
-        <div class="guide-card-body">
-          <p class="guide-card-tag">Nature & Outdoors</p>
-          <h3>Highlands and Waterfalls Circuit</h3>
-          <p>A practical route for mountain viewpoints, ranger-led trails and cool-climate cafés in the uplands outside central Davao.</p>
-          <div class="guide-card-actions">
-            <a href="guide-highlands-waterfalls-circuit.html">Learn more</a>
-            <a class="book-link" href="booking.html#experiences">Book</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="guide-card" id="family">
-        <img src="https://images.unsplash.com/photo-1516550893923-42d28e5677af?auto=format&fit=crop&w=1400&q=80" alt="Family exploring coastal boardwalk at sunset" width="1400" height="900" loading="lazy" decoding="async" />
-        <div class="guide-card-body">
-          <p class="guide-card-tag">Family Friendly</p>
-          <h3>Family Day Planner</h3>
-          <p>Kid-friendly museums, wildlife encounters and soft-adventure stops grouped into a smooth full-day family route.</p>
-          <div class="guide-card-actions">
-            <a href="guide-family-day-planner.html">Learn more</a>
-            <a class="book-link" href="booking.html#experiences">Book</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="guide-card" id="food">
-        <img src="https://images.unsplash.com/photo-1526318472351-c75fcf070305?auto=format&fit=crop&w=1400&q=80" alt="Market food stalls and local dishes in Davao" width="1400" height="900" loading="lazy" decoding="async" />
-        <div class="guide-card-body">
-          <p class="guide-card-tag">Food Trails</p>
-          <h3>Davao Food Trail by District</h3>
-          <p>Track the city’s best breakfast starts, durian market stops, seafood dinners and late-night dessert corners by district.</p>
-          <div class="guide-card-actions">
-            <a href="guide-davao-food-trail.html">Learn more</a>
-            <a class="book-link" href="booking.html#experiences">Book</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="guide-card" id="weekend">
-        <img src="https://images.unsplash.com/photo-1473959383414-a1e0d001617f?auto=format&fit=crop&w=1400&q=80" alt="Island shoreline with boats near Samal" width="1400" height="900" loading="lazy" decoding="async" />
-        <div class="guide-card-body">
-          <p class="guide-card-tag">Weekend Escapes</p>
-          <h3>Samal & Gulf Weekend Escape</h3>
-          <p>Use this two-day map for ferry timing, beach sequencing and sunset dining along the Davao Gulf and Samal coast.</p>
-          <div class="guide-card-actions">
-            <a href="guide-samal-gulf-weekend.html">Learn more</a>
-            <a class="book-link" href="booking.html#hotels">Book</a>
-          </div>
-        </div>
-      </article>
-    </section>
+    <section class="guides-grid" id="guidesGrid" aria-label="Davao guide collection"></section>
   </main>
 
   <div class="chat-widget" id="chatWidget">
@@ -188,6 +104,8 @@
   </div>
 
   <script src="api-client.js"></script>
+  <script src="main-footer.js"></script>
   <script src="page.js"></script>
+  <script src="guides.js"></script>
 </body>
 </html>
