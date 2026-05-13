@@ -62,20 +62,25 @@
         </select>
       </label>
       <button id="reloadBtn" class="btn">Reload</button>
+      <button id="createItemBtn" class="btn ghost" type="button">Create Item</button>
     </section>
 
-    <section class="panel">
-      <h2 id="formTitle">Create Item</h2>
+    <section class="panel panel-editor is-hidden" id="itemEditorPanel">
+      <div class="panel-title-row">
+        <h2 id="formTitle">Create Item</h2>
+        <button class="btn ghost" id="closeEditorBtn" type="button">Close</button>
+      </div>
+      <p id="formContextHint" class="desc form-context-hint"></p>
       <form id="itemForm" class="form-grid">
         <input type="hidden" id="itemId" />
-        <label>Title <input id="title" name="title" autocomplete="off" required /></label>
-        <label>Image URL <input id="image" name="image" type="url" inputmode="url" autocomplete="off" /></label>
-        <label>Meta <input id="meta" name="meta" autocomplete="off" /></label>
-        <label>Tag <input id="tag" name="tag" autocomplete="off" /></label>
-        <label>Sort Order <input id="sortOrder" type="number" value="1" /></label>
-        <label>Text <textarea id="text" name="text" rows="3" required></textarea></label>
-        <label>Tags (comma-separated) <input id="tags" name="tags" placeholder="Nature, Family" autocomplete="off" /></label>
-        <label>Booking Mode
+        <label data-field="title"><span class="field-label">Title</span><input id="title" name="title" autocomplete="off" /></label>
+        <label data-field="image"><span class="field-label">Image URL</span><input id="image" name="image" type="url" inputmode="url" autocomplete="off" /></label>
+        <label data-field="meta"><span class="field-label">Meta</span><input id="meta" name="meta" autocomplete="off" /></label>
+        <label data-field="tag"><span class="field-label">Tag</span><input id="tag" name="tag" autocomplete="off" /></label>
+        <label data-field="sortOrder"><span class="field-label">Sort Order</span><input id="sortOrder" type="number" value="1" /></label>
+        <label data-field="text"><span class="field-label">Text</span><textarea id="text" name="text" rows="3"></textarea></label>
+        <label data-field="tags"><span class="field-label">Tags (comma or new line separated)</span><textarea id="tags" name="tags" rows="3" placeholder="Nature&#10;Family"></textarea></label>
+        <label data-field="bookingMode"><span class="field-label">Booking Mode</span>
           <select id="bookingMode">
             <option value="none">None</option>
             <option value="book">Book on this website</option>
@@ -83,7 +88,7 @@
             <option value="info">Booking instructions text</option>
           </select>
         </label>
-        <label>Booking Type
+        <label data-field="bookingType"><span class="field-label">Booking Type</span>
           <select id="bookingType">
             <option value="experiences">Experiences</option>
             <option value="hotels">Hotels</option>
@@ -91,9 +96,9 @@
             <option value="cars">Cars</option>
           </select>
         </label>
-        <label>CTA Label <input id="ctaLabel" name="ctaLabel" autocomplete="off" /></label>
-        <label>CTA URL <input id="ctaUrl" name="ctaUrl" type="text" autocomplete="off" /></label>
-        <label>Booking Info <textarea id="bookingInfo" name="bookingInfo" rows="2"></textarea></label>
+        <label data-field="ctaLabel"><span class="field-label">CTA Label</span><input id="ctaLabel" name="ctaLabel" autocomplete="off" /></label>
+        <label data-field="ctaUrl"><span class="field-label">CTA URL</span><input id="ctaUrl" name="ctaUrl" type="text" autocomplete="off" /></label>
+        <label data-field="bookingInfo"><span class="field-label">Booking Info</span><textarea id="bookingInfo" name="bookingInfo" rows="3"></textarea></label>
         <div class="actions">
           <button class="btn" type="submit">Save Item</button>
           <button class="btn ghost" id="resetBtn" type="button">Reset</button>

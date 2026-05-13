@@ -2,10 +2,14 @@ const filterCity = document.getElementById("filterCity");
 const filterPage = document.getElementById("filterPage");
 const filterSection = document.getElementById("filterSection");
 const reloadBtn = document.getElementById("reloadBtn");
+const createItemBtn = document.getElementById("createItemBtn");
+const itemEditorPanel = document.getElementById("itemEditorPanel");
+const closeEditorBtn = document.getElementById("closeEditorBtn");
 const itemsGrid = document.getElementById("itemsGrid");
 const statusEl = document.getElementById("status");
 const itemForm = document.getElementById("itemForm");
 const formTitle = document.getElementById("formTitle");
+const formContextHint = document.getElementById("formContextHint");
 const resetBtn = document.getElementById("resetBtn");
 
 const bookingItemsGrid = document.getElementById("bookingItemsGrid");
@@ -85,6 +89,93 @@ const SECTION_LABELS = {
   deals: "Deals"
 };
 
+const DEFAULT_FIELD_LABELS = {
+  title: "Title",
+  image: "Image URL",
+  text: "Text",
+  meta: "Meta",
+  tag: "Tag",
+  tags: "Tags (one per line or comma-separated)",
+  sortOrder: "Sort Order",
+  bookingMode: "Booking Mode",
+  bookingType: "Booking Type",
+  ctaLabel: "CTA Label",
+  ctaUrl: "CTA URL",
+  bookingInfo: "Booking Info"
+};
+
+const DEFAULT_FIELD_PROFILE = {
+  visible: ["title", "image", "text", "meta", "tag", "tags", "sortOrder", "bookingMode", "bookingType", "ctaLabel", "ctaUrl", "bookingInfo"],
+  required: ["title", "text"],
+  labels: DEFAULT_FIELD_LABELS,
+  hint: "Create and edit content for this section."
+};
+
+const FIELD_PROFILES = {
+  "index:things": {
+    visible: ["title", "image", "text", "meta", "tag", "tags", "sortOrder", "bookingMode", "bookingType", "ctaLabel", "ctaUrl", "bookingInfo"],
+    required: ["title", "text"],
+    labels: { ...DEFAULT_FIELD_LABELS, meta: "Anchor/Slug", tag: "Category", tags: "Badges (one per line)" },
+    hint: "Homepage feature cards support optional booking actions."
+  },
+  "index:events": {
+    visible: ["title", "image", "text", "meta", "tag", "tags", "sortOrder", "bookingMode", "bookingType", "ctaLabel", "ctaUrl", "bookingInfo"],
+    required: ["title", "text"],
+    labels: { ...DEFAULT_FIELD_LABELS, tag: "Event Type", meta: "Location / Program", tags: "Why Join (one point per line)", bookingInfo: "Best Timing (one point per line)", bookingType: "Suggested Pairing (Booking tab)", ctaLabel: "Primary Button Label", ctaUrl: "Detail Page URL" },
+    hint: "Event cards can capture Why Join, Best Timing, and Suggested Pairing."
+  },
+  "index:eat": { ...DEFAULT_FIELD_PROFILE, hint: "Homepage food cards and highlights." },
+  "index:stay": { ...DEFAULT_FIELD_PROFILE, hint: "Homepage accommodation highlights." },
+  "index:guides": { ...DEFAULT_FIELD_PROFILE, hint: "Homepage maps and guides highlights." },
+  "index:districts": { ...DEFAULT_FIELD_PROFILE, hint: "Homepage district cards." },
+  "index:deals": { ...DEFAULT_FIELD_PROFILE, hint: "Homepage promo/deals cards." },
+  "now:hero": {
+    visible: ["title", "image", "text", "meta", "tag", "sortOrder", "ctaLabel", "ctaUrl", "bookingInfo", "bookingType"],
+    required: ["title", "text"],
+    labels: { ...DEFAULT_FIELD_LABELS, meta: "Kicker", tag: "Credit", ctaLabel: "Primary CTA Label", ctaUrl: "Primary CTA URL", bookingInfo: "Secondary CTA Label", bookingType: "Secondary CTA Booking Tab" },
+    hint: "Controls the now.html hero block."
+  },
+  "now:curation": { visible: ["title", "text", "meta", "sortOrder"], required: ["title", "text"], labels: { ...DEFAULT_FIELD_LABELS, meta: "Kicker" }, hint: "Controls curation title and paragraph." },
+  "now:stats": { visible: ["title", "text", "sortOrder"], required: ["title", "text"], labels: { ...DEFAULT_FIELD_LABELS, title: "Stat Label", text: "Stat Value" }, hint: "One row per stat tile." },
+  "now:events": {
+    visible: ["title", "image", "text", "meta", "tag", "tags", "sortOrder", "ctaLabel", "ctaUrl", "bookingInfo", "bookingType"],
+    required: ["title", "text"],
+    labels: { ...DEFAULT_FIELD_LABELS, tag: "Event Type", meta: "Location / Program", tags: "Why Join (one point per line)", bookingInfo: "Best Timing (one point per line)", bookingType: "Suggested Pairing (Booking tab)", ctaLabel: "Primary Button Label", ctaUrl: "Detail Page URL" },
+    hint: "Event cards support Why Join, Best Timing, and Suggested Pairing."
+  },
+  "now:planning": { visible: ["title", "text", "meta", "sortOrder"], required: ["title", "text"], labels: { ...DEFAULT_FIELD_LABELS, meta: "Section Title" }, hint: "One row per planning tip." },
+  "things:hero": { visible: ["title", "image", "text", "meta", "tag", "sortOrder"], required: ["title", "text"], labels: { ...DEFAULT_FIELD_LABELS, meta: "Kicker", tag: "Photo Credit" }, hint: "Controls things page hero content." },
+  "things:spotlight": { visible: ["title", "text", "meta", "ctaLabel", "ctaUrl", "sortOrder"], required: ["title", "text"], labels: { ...DEFAULT_FIELD_LABELS, meta: "Eyebrow" }, hint: "Seasonal spotlight card." },
+  "things:newsletter": { visible: ["title", "text", "sortOrder"], required: ["title", "text"], labels: DEFAULT_FIELD_LABELS, hint: "Newsletter card content." },
+  "things:topics": { visible: ["title", "ctaUrl", "sortOrder"], required: ["title"], labels: { ...DEFAULT_FIELD_LABELS, title: "Topic Label", ctaUrl: "Anchor URL (e.g. #adventure)" }, hint: "Navigation chips for activity categories." },
+  "things:cards": { ...DEFAULT_FIELD_PROFILE, labels: { ...DEFAULT_FIELD_LABELS, tag: "Category", meta: "Anchor/Slug", tags: "Highlights (one per line)", ctaUrl: "Learn More URL", bookingInfo: "Book URL" }, hint: "Activity cards." },
+  "eat:hero": { visible: ["title", "image", "text", "meta", "sortOrder", "ctaLabel", "ctaUrl", "bookingInfo", "bookingType"], required: ["title", "text"], labels: { ...DEFAULT_FIELD_LABELS, meta: "Kicker", bookingInfo: "Secondary CTA Label", bookingType: "Secondary CTA Booking Tab" }, hint: "Eat page hero section." },
+  "eat:curation": { visible: ["title", "text", "meta", "sortOrder"], required: ["title", "text"], labels: { ...DEFAULT_FIELD_LABELS, meta: "Kicker" }, hint: "Curation content block." },
+  "eat:stats": { visible: ["title", "text", "sortOrder"], required: ["title", "text"], labels: { ...DEFAULT_FIELD_LABELS, title: "Stat Label", text: "Stat Value" }, hint: "One row per stat tile." },
+  "eat:cards": { ...DEFAULT_FIELD_PROFILE, labels: { ...DEFAULT_FIELD_LABELS, tag: "Place Type", meta: "District / Location", ctaUrl: "Learn More URL", bookingInfo: "Book URL" }, hint: "Featured places cards." },
+  "eat:planning": { visible: ["title", "text", "meta", "sortOrder"], required: ["title", "text"], labels: { ...DEFAULT_FIELD_LABELS, meta: "Section Title" }, hint: "Planning tips rows." },
+  "guides:hero": { visible: ["title", "image", "text", "meta", "tag", "sortOrder"], required: ["title", "text"], labels: { ...DEFAULT_FIELD_LABELS, meta: "Kicker", tag: "Photo Credit" }, hint: "Guides hero section." },
+  "guides:spotlight": { visible: ["title", "text", "meta", "ctaLabel", "ctaUrl", "sortOrder"], required: ["title", "text"], labels: { ...DEFAULT_FIELD_LABELS, meta: "Eyebrow" }, hint: "Featured route card." },
+  "guides:newsletter": { visible: ["title", "text", "sortOrder"], required: ["title", "text"], labels: DEFAULT_FIELD_LABELS, hint: "Newsletter card content." },
+  "guides:topics": { visible: ["title", "ctaUrl", "sortOrder"], required: ["title"], labels: { ...DEFAULT_FIELD_LABELS, title: "Topic Label", ctaUrl: "Anchor URL (e.g. #weekend)" }, hint: "Topic chips across guides page." },
+  "guides:cards": { ...DEFAULT_FIELD_PROFILE, labels: { ...DEFAULT_FIELD_LABELS, tag: "Guide Type", meta: "Anchor/Slug", ctaUrl: "Learn More URL", bookingInfo: "Book URL" }, hint: "Guide cards." },
+  "stay:hero": { visible: ["title", "image", "text", "meta", "sortOrder", "ctaLabel", "ctaUrl", "bookingInfo", "bookingType"], required: ["title", "text"], labels: { ...DEFAULT_FIELD_LABELS, meta: "Kicker / Credit", bookingInfo: "Secondary CTA Label", bookingType: "Secondary CTA Booking Tab" }, hint: "Stay page hero section." },
+  "stay:intro": { visible: ["title", "text", "meta", "sortOrder"], required: ["title", "text"], labels: { ...DEFAULT_FIELD_LABELS, meta: "Kicker" }, hint: "Intro heading and paragraph." },
+  "stay:zones": { visible: ["title", "ctaUrl", "sortOrder"], required: ["title"], labels: { ...DEFAULT_FIELD_LABELS, title: "Zone Label", ctaUrl: "Anchor URL" }, hint: "Zone chips under intro." },
+  "stay:curation": { visible: ["title", "text", "meta", "sortOrder"], required: ["title", "text"], labels: { ...DEFAULT_FIELD_LABELS, meta: "Kicker" }, hint: "Curation block." },
+  "stay:stats": { visible: ["title", "text", "sortOrder"], required: ["title", "text"], labels: { ...DEFAULT_FIELD_LABELS, title: "Stat Label", text: "Stat Value" }, hint: "One row per stat tile." },
+  "stay:cards": { ...DEFAULT_FIELD_PROFILE, labels: { ...DEFAULT_FIELD_LABELS, meta: "Location", tags: "Highlights (one per line)", ctaUrl: "Learn More URL", bookingInfo: "Book URL", bookingType: "Booking Tab" }, hint: "Hotel cards." },
+  "stay:planning": { visible: ["title", "text", "meta", "sortOrder"], required: ["title", "text"], labels: { ...DEFAULT_FIELD_LABELS, meta: "Section Title" }, hint: "Planning tips rows." },
+  "events:events": {
+    visible: ["title", "image", "text", "meta", "tag", "tags", "sortOrder", "ctaLabel", "ctaUrl", "bookingInfo", "bookingType"],
+    required: ["title", "text"],
+    labels: { ...DEFAULT_FIELD_LABELS, tag: "Event Type", meta: "Location / Program", tags: "Why Join (one point per line)", bookingInfo: "Best Timing (one point per line)", bookingType: "Suggested Pairing (Booking tab)", ctaLabel: "Primary Button Label", ctaUrl: "Detail Page URL" },
+    hint: "Standalone events page cards."
+  }
+};
+
+let editorOpen = false;
+
 function allowedSectionsForPage(page) {
   const key = String(page || "").toLowerCase();
   if (Array.isArray(PAGE_SECTION_OPTIONS[key]) && PAGE_SECTION_OPTIONS[key].length) {
@@ -102,6 +193,63 @@ function syncSectionOptions(preferredSection = "") {
     .map((section) => `<option value="${section}">${SECTION_LABELS[section] || section}</option>`)
     .join("");
   filterSection.value = nextValue;
+}
+
+function profileKey(page, section) {
+  return `${String(page || "").toLowerCase()}:${String(section || "").toLowerCase()}`;
+}
+
+function resolveFieldProfile() {
+  const key = profileKey(filterPage.value, filterSection.value);
+  return FIELD_PROFILES[key] || DEFAULT_FIELD_PROFILE;
+}
+
+function applyFieldProfile() {
+  const profile = resolveFieldProfile();
+  const visible = new Set(profile.visible || []);
+  const required = new Set(profile.required || []);
+  const labels = profile.labels || DEFAULT_FIELD_LABELS;
+
+  Object.entries(fields).forEach(([key, input]) => {
+    const labelNode = input.closest("label");
+    if (!labelNode) return;
+    const textNode = labelNode.querySelector(".field-label");
+    const isVisible = visible.has(key);
+    labelNode.classList.toggle("field-hidden", !isVisible);
+    if (textNode) textNode.textContent = labels[key] || DEFAULT_FIELD_LABELS[key] || key;
+
+    const mustRequire = isVisible && required.has(key);
+    if ("required" in input) input.required = mustRequire;
+  });
+
+  formContextHint.textContent = profile.hint || DEFAULT_FIELD_PROFILE.hint;
+}
+
+function showEditor(mode = "create") {
+  editorOpen = true;
+  itemEditorPanel.classList.remove("is-hidden");
+  formTitle.textContent = mode === "edit" ? "Edit Item" : "Create Item";
+  applyFieldProfile();
+}
+
+function hideEditor() {
+  editorOpen = false;
+  itemEditorPanel.classList.add("is-hidden");
+}
+
+function setItemsIdleState(message = "Choose filters and click Reload to load items.") {
+  currentItems = [];
+  itemsGrid.innerHTML = `<p>${message}</p>`;
+}
+
+function showToast(message) {
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  window.setTimeout(() => {
+    toast.remove();
+  }, 2300);
 }
 
 function getAuthHeaders() {
@@ -202,6 +350,11 @@ function getContext() {
 }
 
 function toPayload() {
+  const tags = fields.tags.value
+    .split(/[\n,]/)
+    .map((x) => x.trim())
+    .filter(Boolean);
+
   return {
     id: fields.id.value.trim() || undefined,
     ...getContext(),
@@ -210,10 +363,7 @@ function toPayload() {
     text: fields.text.value.trim(),
     meta: fields.meta.value.trim(),
     tag: fields.tag.value.trim(),
-    tags: fields.tags.value
-      .split(",")
-      .map((x) => x.trim())
-      .filter(Boolean),
+    tags,
     sortOrder: Number(fields.sortOrder.value || 0),
     bookingMode: fields.bookingMode.value,
     bookingType: fields.bookingType.value,
@@ -251,14 +401,14 @@ function fillForm(item) {
   fields.text.value = item.text || "";
   fields.meta.value = item.meta || "";
   fields.tag.value = item.tag || "";
-  fields.tags.value = (item.tags || []).join(", ");
+  fields.tags.value = (item.tags || []).join("\n");
   fields.sortOrder.value = String(item.sortOrder || 0);
   fields.bookingMode.value = item.bookingMode || "none";
   fields.bookingType.value = item.bookingType || "experiences";
   fields.ctaLabel.value = item.ctaLabel || "";
   fields.ctaUrl.value = item.ctaUrl || "";
   fields.bookingInfo.value = item.bookingInfo || "";
-  formTitle.textContent = "Update Item";
+  showEditor("edit");
 }
 
 function fillBookingForm(item) {
@@ -287,6 +437,7 @@ function clearForm() {
   fields.bookingMode.value = "none";
   fields.bookingType.value = "experiences";
   formTitle.textContent = "Create Item";
+  applyFieldProfile();
 }
 
 function clearBookingForm() {
@@ -394,8 +545,11 @@ async function saveItem(event) {
   });
   const data = await response.json();
   if (!response.ok) throw new Error(apiErrorMessage(response, data, "Failed to save item"));
-  setStatus(isUpdate ? "Item updated." : "Item created.");
+  const message = isUpdate ? "Item updated successfully." : "Item created successfully.";
+  setStatus(message);
   clearForm();
+  hideEditor();
+  showToast(message);
   await loadItems();
 }
 
@@ -482,6 +636,7 @@ reloadBtn.addEventListener("click", async () => {
     await Promise.all([loadItems(), loadBookingItems()]);
     setStatus("Items loaded.");
     setBookingStatus("Booking rows loaded.");
+    hideEditor();
   } catch (error) {
     setStatus(error.message, true);
     setBookingStatus(error.message, true);
@@ -491,6 +646,18 @@ reloadBtn.addEventListener("click", async () => {
 resetBtn.addEventListener("click", () => {
   clearForm();
   setStatus("Form reset.");
+});
+
+createItemBtn.addEventListener("click", () => {
+  clearForm();
+  showEditor("create");
+  setStatus("");
+});
+
+closeEditorBtn.addEventListener("click", () => {
+  hideEditor();
+  clearForm();
+  setStatus("Editor closed.");
 });
 
 bookingResetBtn.addEventListener("click", () => {
@@ -517,6 +684,9 @@ bookingForm.addEventListener("submit", async (event) => {
 [filterCity, filterSection].forEach((node) => {
   node.addEventListener("change", () => {
     clearForm();
+    applyFieldProfile();
+    hideEditor();
+    setItemsIdleState();
     clearBookingForm();
     loadBookingItems().catch((error) => setBookingStatus(error.message, true));
   });
@@ -525,6 +695,9 @@ bookingForm.addEventListener("submit", async (event) => {
 filterPage.addEventListener("change", () => {
   syncSectionOptions();
   clearForm();
+  applyFieldProfile();
+  hideEditor();
+  setItemsIdleState();
   clearBookingForm();
   loadBookingItems().catch((error) => setBookingStatus(error.message, true));
 });
@@ -534,17 +707,14 @@ async function initAdminPage() {
   if (!allowed) return;
 
   syncSectionOptions(filterSection.value);
-
-  Promise.all([loadItems(), loadBookingItems()]).then(
-    () => {
-      setStatus("Items loaded.");
-      setBookingStatus("Booking rows loaded.");
-    },
-    (error) => {
-      setStatus(error.message, true);
-      setBookingStatus(error.message, true);
-    }
+  applyFieldProfile();
+  hideEditor();
+  setItemsIdleState();
+  loadBookingItems().then(
+    () => setBookingStatus("Booking rows loaded."),
+    (error) => setBookingStatus(error.message, true)
   );
+  setStatus("Select Page/Section, then click Reload to view items.");
 }
 
 initAdminPage();

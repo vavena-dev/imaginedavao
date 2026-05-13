@@ -68,9 +68,22 @@ h1 {
   border-radius: 14px;
   padding: 0.9rem;
 }
+.panel.is-hidden {
+  display: none;
+}
+.panel-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+.form-context-hint {
+  margin: 0.2rem 0 0.8rem;
+  font-size: 0.85rem;
+}
 .filters {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 0.7rem;
   align-items: end;
 }
@@ -128,6 +141,9 @@ h2 {
 .form-grid .actions {
   grid-column: 1 / -1;
 }
+.form-grid label.field-hidden {
+  display: none;
+}
 .actions {
   display: flex;
   gap: 0.5rem;
@@ -182,6 +198,20 @@ h2 {
   margin-top: 0.6rem;
   display: flex;
   gap: 0.4rem;
+}
+
+.toast {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 999;
+  padding: 0.7rem 0.9rem;
+  border-radius: 10px;
+  background: #113a30;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 12px 24px rgba(17, 58, 48, 0.32);
+  font-size: 0.85rem;
 }
 
 @media (max-width: 900px) {
