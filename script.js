@@ -291,6 +291,7 @@ let activeLang = "en";
 let activeChip = "All";
 let heroIndex = 0;
 const CMS_OVERRIDES = {};
+const CMS_SOURCE_ITEMS = {};
 const storedLangPref = localStorage.getItem("imagineph_lang");
 if (storedLangPref === "en" || storedLangPref === "fil") {
   activeLang = storedLangPref;
@@ -654,30 +655,83 @@ function getCityData(cityKey) {
   return buildFallbackCity(city);
 }
 
+function parseCmsTags(tags = []) {
+  const userTags = [];
+  const system = {};
+  (Array.isArray(tags) ? tags : []).forEach((entry) => {
+    const token = String(entry || "").trim();
+    if (!token.startsWith("@sys.")) {
+      if (token) userTags.push(token);
+      return;
+    }
+    const body = token.slice(5);
+    const [key, ...rest] = body.split("=");
+    const value = rest.join("=").trim();
+    if (!key || !value) return;
+    system[key.trim()] = value;
+  });
+  return { userTags, system };
+}
+
 function normalizeCmsItem(item, section) {
+  const parsed = parseCmsTags(item.tags || []);
   return {
     title: item.title || "Untitled",
     text: item.text || "",
     image: item.image || "assets/fallback-travel.svg",
     meta: item.meta || "",
     tag: item.tag || "",
-    tags: Array.isArray(item.tags) ? item.tags : [],
+    tags: parsed.userTags,
     ctaLabel: item.ctaLabel || "",
     ctaUrl: item.ctaUrl || "",
     bookingMode: item.bookingMode || "none",
     bookingType: item.bookingType || (section === "stay" ? "hotels" : "experiences"),
-    bookingInfo: item.bookingInfo || ""
+    bookingInfo: item.bookingInfo || "",
+    _sys: parsed.system
   };
+}
+
+function hasOverride(value) {
+  if (Array.isArray(value)) return value.length > 0;
+  if (typeof value === "string") return value.trim().length > 0;
+  return value !== undefined && value !== null;
+}
+
+function resolveLinkedIndexItem(section, item, sourceItems) {
+  const parsed = parseCmsTags(item.tags || []);
+  const sourceMode = parsed.system.sourceMode || "custom";
+  if (sourceMode !== "linked" || !parsed.system.sourceId) {
+    return normalizeCmsItem({ ...item, tags: parsed.userTags }, section);
+  }
+
+  const source = sourceItems[parsed.system.sourceId];
+  const base = source ? { ...source } : normalizeCmsItem({ ...item, tags: parsed.userTags }, section);
+
+  const merged = { ...base };
+  ["title", "text", "image", "meta", "tag", "ctaLabel", "ctaUrl", "bookingInfo"].forEach((field) => {
+    if (hasOverride(item[field])) merged[field] = item[field];
+  });
+  if (hasOverride(item.bookingType)) merged.bookingType = item.bookingType;
+  if (hasOverride(item.bookingMode) && String(item.bookingMode).toLowerCase() !== "none") {
+    merged.bookingMode = item.bookingMode;
+  }
+  if (parsed.userTags.length) {
+    merged.tags = parsed.userTags;
+  } else if (section === "things" && hasOverride(merged.tag)) {
+    merged.tags = [merged.tag];
+  }
+  return merged;
 }
 
 function applyCmsOverrides(cityKey, baseCity) {
   const grouped = CMS_OVERRIDES[cityKey];
   if (!grouped) return baseCity;
 
+  const sourceItems = CMS_SOURCE_ITEMS[cityKey] || {};
   const next = { ...baseCity };
   ["things", "events", "eat", "stay", "guides", "districts", "deals"].forEach((section) => {
     if (Array.isArray(grouped[section]) && grouped[section].length) {
-      next[section] = grouped[section].map((item) => normalizeCmsItem(item, section));
+      next[section] = grouped[section].map((item) => resolveLinkedIndexItem(section, item, sourceItems));
     }
   });
   return next;
@@ -688,13 +742,27 @@ function resolveCityContent(cityKey) {
   return applyCmsOverrides(cityKey, base);
 }
 
+async function fetchCmsPage(cityKey, page) {
+  const response = await fetch(`/api/cms/content?city=${encodeURIComponent(cityKey)}&page=${encodeURIComponent(page)}`);
+  if (!response.ok) return null;
+  return response.json().catch(() => null);
+}
+
 async function fetchCmsOverrides(cityKey) {
   try {
-    const response = await fetch(`/api/cms/content?city=${encodeURIComponent(cityKey)}&page=index`);
-    if (!response.ok) return;
-    const data = await response.json();
-    if (!data || !data.grouped) return;
-    CMS_OVERRIDES[cityKey] = data.grouped;
+    const pages = ["index", "things", "eat", "stay", "guides", "now", "events"];
+    const payloads = await Promise.all(pages.map((page) => fetchCmsPage(cityKey, page)));
+    const indexPayload = payloads[0];
+    CMS_OVERRIDES[cityKey] = indexPayload?.grouped || {};
+
+    const sourceMap = {};
+    payloads.slice(1).forEach((payload) => {
+      const items = payload?.items || [];
+      items.forEach((item) => {
+        sourceMap[item.id] = normalizeCmsItem(item, item.section || payload.page || "things");
+      });
+    });
+    CMS_SOURCE_ITEMS[cityKey] = sourceMap;
   } catch {
     // Keep local defaults when API is unavailable.
   }

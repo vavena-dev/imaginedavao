@@ -6,6 +6,7 @@ const createItemBtn = document.getElementById("createItemBtn");
 const itemEditorPanel = document.getElementById("itemEditorPanel");
 const closeEditorBtn = document.getElementById("closeEditorBtn");
 const itemsGrid = document.getElementById("itemsGrid");
+const itemsCountEl = document.getElementById("itemsCount");
 const statusEl = document.getElementById("status");
 const itemForm = document.getElementById("itemForm");
 const formTitle = document.getElementById("formTitle");
@@ -27,6 +28,9 @@ const fields = {
   tag: document.getElementById("tag"),
   tags: document.getElementById("tags"),
   sortOrder: document.getElementById("sortOrder"),
+  sourceMode: document.getElementById("sourceMode"),
+  sourcePage: document.getElementById("sourcePage"),
+  sourceItemId: document.getElementById("sourceItemId"),
   bookingMode: document.getElementById("bookingMode"),
   bookingType: document.getElementById("bookingType"),
   ctaLabel: document.getElementById("ctaLabel"),
@@ -97,6 +101,9 @@ const DEFAULT_FIELD_LABELS = {
   tag: "Tag",
   tags: "Tags (one per line or comma-separated)",
   sortOrder: "Sort Order",
+  sourceMode: "Content Source",
+  sourcePage: "Source Page",
+  sourceItemId: "Linked Item",
   bookingMode: "Booking Mode",
   bookingType: "Booking Type",
   ctaLabel: "CTA Label",
@@ -113,20 +120,20 @@ const DEFAULT_FIELD_PROFILE = {
 
 const FIELD_PROFILES = {
   "index:things": {
-    visible: ["title", "image", "text", "meta", "tag", "tags", "sortOrder", "bookingMode", "bookingType", "ctaLabel", "ctaUrl", "bookingInfo"],
-    required: ["title", "text"],
+    visible: ["title", "image", "text", "meta", "tag", "tags", "sortOrder", "sourceMode", "sourcePage", "sourceItemId", "bookingMode", "bookingType", "ctaLabel", "ctaUrl", "bookingInfo"],
+    required: [],
     labels: { ...DEFAULT_FIELD_LABELS, meta: "Anchor/Slug", tag: "Category", tags: "Badges (one per line)" },
-    hint: "Homepage feature cards support optional booking actions."
+    hint: "Homepage cards can be linked from Things page or customized."
   },
   "index:events": {
-    visible: ["title", "image", "text", "meta", "tag", "tags", "sortOrder", "bookingMode", "bookingType", "ctaLabel", "ctaUrl", "bookingInfo"],
-    required: ["title", "text"],
+    visible: ["title", "image", "text", "meta", "tag", "tags", "sortOrder", "sourceMode", "sourcePage", "sourceItemId", "bookingMode", "bookingType", "ctaLabel", "ctaUrl", "bookingInfo"],
+    required: [],
     labels: { ...DEFAULT_FIELD_LABELS, tag: "Event Type", meta: "Location / Program", tags: "Why Join (one point per line)", bookingInfo: "Best Timing (one point per line)", bookingType: "Suggested Pairing (Booking tab)", ctaLabel: "Primary Button Label", ctaUrl: "Detail Page URL" },
-    hint: "Event cards can capture Why Join, Best Timing, and Suggested Pairing."
+    hint: "Link from Now in City events and optionally override event details."
   },
-  "index:eat": { ...DEFAULT_FIELD_PROFILE, hint: "Homepage food cards and highlights." },
-  "index:stay": { ...DEFAULT_FIELD_PROFILE, hint: "Homepage accommodation highlights." },
-  "index:guides": { ...DEFAULT_FIELD_PROFILE, hint: "Homepage maps and guides highlights." },
+  "index:eat": { ...DEFAULT_FIELD_PROFILE, visible: [...DEFAULT_FIELD_PROFILE.visible, "sourceMode", "sourcePage", "sourceItemId"], required: [], hint: "Link from Eat page cards or create custom homepage-only cards." },
+  "index:stay": { ...DEFAULT_FIELD_PROFILE, visible: [...DEFAULT_FIELD_PROFILE.visible, "sourceMode", "sourcePage", "sourceItemId"], required: [], hint: "Link from Stay cards or keep custom homepage cards." },
+  "index:guides": { ...DEFAULT_FIELD_PROFILE, visible: [...DEFAULT_FIELD_PROFILE.visible, "sourceMode", "sourcePage", "sourceItemId"], required: [], hint: "Link from Guides cards or keep custom homepage cards." },
   "index:districts": { ...DEFAULT_FIELD_PROFILE, hint: "Homepage district cards." },
   "index:deals": { ...DEFAULT_FIELD_PROFILE, hint: "Homepage promo/deals cards." },
   "now:hero": {
@@ -175,6 +182,62 @@ const FIELD_PROFILES = {
 };
 
 let editorOpen = false;
+const sourceOptionsCache = new Map();
+
+const LINKABLE_INDEX_SOURCE_PAGE_BY_SECTION = {
+  things: "things",
+  events: "now",
+  eat: "eat",
+  stay: "stay",
+  guides: "guides"
+};
+
+const SOURCE_ITEM_SECTIONS_BY_PAGE = {
+  things: ["cards"],
+  now: ["events"],
+  eat: ["cards"],
+  stay: ["cards"],
+  guides: ["cards"],
+  events: ["events"]
+};
+
+const SYSTEM_TAG_PREFIX = "@sys.";
+
+function defaultSourcePageForSection(section) {
+  return LINKABLE_INDEX_SOURCE_PAGE_BY_SECTION[String(section || "").toLowerCase()] || "things";
+}
+
+function isLinkableIndexSection(page, section) {
+  return String(page || "").toLowerCase() === "index" &&
+    Boolean(LINKABLE_INDEX_SOURCE_PAGE_BY_SECTION[String(section || "").toLowerCase()]);
+}
+
+function parseCmsTags(tags = []) {
+  const userTags = [];
+  const system = {};
+  (Array.isArray(tags) ? tags : []).forEach((entry) => {
+    const token = String(entry || "").trim();
+    if (!token.startsWith(SYSTEM_TAG_PREFIX)) {
+      if (token) userTags.push(token);
+      return;
+    }
+    const body = token.slice(SYSTEM_TAG_PREFIX.length);
+    const [key, ...rest] = body.split("=");
+    const value = rest.join("=").trim();
+    if (!key || !value) return;
+    system[key.trim()] = value;
+  });
+  return { userTags, system };
+}
+
+function buildCmsTags(userTags = [], system = {}) {
+  const out = (Array.isArray(userTags) ? userTags : []).filter(Boolean);
+  Object.entries(system).forEach(([key, value]) => {
+    if (!value) return;
+    out.push(`${SYSTEM_TAG_PREFIX}${key}=${String(value).trim()}`);
+  });
+  return out;
+}
 
 function allowedSectionsForPage(page) {
   const key = String(page || "").toLowerCase();
@@ -223,6 +286,95 @@ function applyFieldProfile() {
   });
 
   formContextHint.textContent = profile.hint || DEFAULT_FIELD_PROFILE.hint;
+  updateSourceFieldState();
+}
+
+function setFieldHidden(fieldKey, hidden) {
+  const input = fields[fieldKey];
+  if (!input) return;
+  const labelNode = input.closest("label");
+  if (!labelNode) return;
+  labelNode.classList.toggle("field-hidden", hidden);
+}
+
+function allowedSourcePageOptions() {
+  const section = String(filterSection.value || "").toLowerCase();
+  const defaultPage = defaultSourcePageForSection(section);
+  if (!isLinkableIndexSection(filterPage.value, section)) return [];
+  const preferred = [defaultPage];
+  const extras = ["things", "now", "eat", "stay", "guides"];
+  return [...new Set([...preferred, ...extras])];
+}
+
+function syncSourcePageOptions() {
+  const allowed = allowedSourcePageOptions();
+  if (!allowed.length) return;
+  const current = fields.sourcePage.value;
+  const next = allowed.includes(current) ? current : allowed[0];
+  fields.sourcePage.innerHTML = allowed
+    .map((page) => `<option value="${page}">${SECTION_LABELS[page] || page}</option>`)
+    .join("");
+  fields.sourcePage.value = next;
+}
+
+async function loadSourceItemsForPage(page) {
+  const city = filterCity.value;
+  const key = `${city}:${page}`;
+  if (sourceOptionsCache.has(key)) return sourceOptionsCache.get(key);
+
+  const response = await fetch(`/api/cms/content?city=${encodeURIComponent(city)}&page=${encodeURIComponent(page)}`, {
+    headers: getAuthHeaders()
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(apiErrorMessage(response, data, "Failed to load linked source items"));
+  const sections = SOURCE_ITEM_SECTIONS_BY_PAGE[page] || [];
+  const items = (data.items || []).filter((item) => !sections.length || sections.includes(String(item.section || "").toLowerCase()));
+  sourceOptionsCache.set(key, items);
+  return items;
+}
+
+async function populateSourceItemOptions(selectedId = "") {
+  const page = fields.sourcePage.value;
+  if (!page) return;
+
+  const previous = selectedId || fields.sourceItemId.value || "";
+  try {
+    const items = await loadSourceItemsForPage(page);
+    fields.sourceItemId.innerHTML = [
+      '<option value="">Select a source item…</option>',
+      ...items.map((item) => `<option value="${item.id}">${item.title || "Untitled"} • ${SECTION_LABELS[item.section] || item.section}</option>`)
+    ].join("");
+    if (previous && items.some((item) => item.id === previous)) {
+      fields.sourceItemId.value = previous;
+    }
+  } catch (error) {
+    fields.sourceItemId.innerHTML = '<option value="">Unable to load source items</option>';
+    setStatus(error.message, true);
+  }
+}
+
+function updateSourceFieldState() {
+  const canLink = isLinkableIndexSection(filterPage.value, filterSection.value);
+  if (!canLink) {
+    fields.sourceMode.value = "custom";
+    setFieldHidden("sourceMode", true);
+    setFieldHidden("sourcePage", true);
+    setFieldHidden("sourceItemId", true);
+    fields.sourceItemId.required = false;
+    return;
+  }
+
+  setFieldHidden("sourceMode", false);
+  syncSourcePageOptions();
+  const linked = fields.sourceMode.value === "linked";
+  setFieldHidden("sourcePage", !linked);
+  setFieldHidden("sourceItemId", !linked);
+  fields.sourceItemId.required = linked;
+  if (linked) {
+    populateSourceItemOptions();
+  } else {
+    fields.sourceItemId.value = "";
+  }
 }
 
 function showEditor(mode = "create") {
@@ -240,6 +392,7 @@ function hideEditor() {
 function setItemsIdleState(message = "Choose filters and click Reload to load items.") {
   currentItems = [];
   itemsGrid.innerHTML = `<p>${message}</p>`;
+  itemsCountEl.textContent = "0 items loaded";
 }
 
 function showToast(message) {
@@ -350,10 +503,27 @@ function getContext() {
 }
 
 function toPayload() {
-  const tags = fields.tags.value
+  const userTags = fields.tags.value
     .split(/[\n,]/)
     .map((x) => x.trim())
     .filter(Boolean);
+  const canLink = isLinkableIndexSection(filterPage.value, filterSection.value);
+  const sourceMode = canLink ? (fields.sourceMode.value === "linked" ? "linked" : "custom") : "custom";
+
+  if (canLink && sourceMode === "linked" && !fields.sourceItemId.value) {
+    throw new Error("Select a linked source item or switch Content Source to Custom.");
+  }
+  if (canLink && sourceMode === "custom" && !fields.title.value.trim()) {
+    throw new Error("Custom homepage items require a title.");
+  }
+
+  const tags = buildCmsTags(userTags, canLink
+    ? {
+        sourceMode,
+        sourcePage: sourceMode === "linked" ? fields.sourcePage.value : "",
+        sourceId: sourceMode === "linked" ? fields.sourceItemId.value : ""
+      }
+    : {});
 
   return {
     id: fields.id.value.trim() || undefined,
@@ -395,19 +565,26 @@ function toBookingPayload() {
 }
 
 function fillForm(item) {
+  const parsedTags = parseCmsTags(item.tags || []);
   fields.id.value = item.id || "";
   fields.title.value = item.title || "";
   fields.image.value = item.image || "";
   fields.text.value = item.text || "";
   fields.meta.value = item.meta || "";
   fields.tag.value = item.tag || "";
-  fields.tags.value = (item.tags || []).join("\n");
+  fields.tags.value = parsedTags.userTags.join("\n");
   fields.sortOrder.value = String(item.sortOrder || 0);
+  fields.sourceMode.value = parsedTags.system.sourceMode === "linked" ? "linked" : "custom";
+  fields.sourcePage.value = parsedTags.system.sourcePage || defaultSourcePageForSection(filterSection.value);
   fields.bookingMode.value = item.bookingMode || "none";
   fields.bookingType.value = item.bookingType || "experiences";
   fields.ctaLabel.value = item.ctaLabel || "";
   fields.ctaUrl.value = item.ctaUrl || "";
   fields.bookingInfo.value = item.bookingInfo || "";
+  applyFieldProfile();
+  if (fields.sourceMode.value === "linked") {
+    populateSourceItemOptions(parsedTags.system.sourceId || "");
+  }
   showEditor("edit");
 }
 
@@ -434,6 +611,9 @@ function clearForm() {
   fields.id.value = "";
   itemForm.reset();
   fields.sortOrder.value = "1";
+  fields.sourceMode.value = "custom";
+  fields.sourcePage.value = defaultSourcePageForSection(filterSection.value);
+  fields.sourceItemId.innerHTML = '<option value="">Select a source item…</option>';
   fields.bookingMode.value = "none";
   fields.bookingType.value = "experiences";
   formTitle.textContent = "Create Item";
@@ -460,6 +640,7 @@ async function loadItems() {
   const data = await response.json();
   if (!response.ok) throw new Error(apiErrorMessage(response, data, "Failed to load items"));
   currentItems = data.items || [];
+  itemsCountEl.textContent = `${currentItems.length} item${currentItems.length === 1 ? "" : "s"} loaded`;
   renderItems();
 }
 
@@ -646,6 +827,14 @@ reloadBtn.addEventListener("click", async () => {
 resetBtn.addEventListener("click", () => {
   clearForm();
   setStatus("Form reset.");
+});
+
+fields.sourceMode.addEventListener("change", () => {
+  updateSourceFieldState();
+});
+
+fields.sourcePage.addEventListener("change", () => {
+  populateSourceItemOptions();
 });
 
 createItemBtn.addEventListener("click", () => {

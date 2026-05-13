@@ -78,6 +78,26 @@
         <label data-field="meta"><span class="field-label">Meta</span><input id="meta" name="meta" autocomplete="off" /></label>
         <label data-field="tag"><span class="field-label">Tag</span><input id="tag" name="tag" autocomplete="off" /></label>
         <label data-field="sortOrder"><span class="field-label">Sort Order</span><input id="sortOrder" type="number" value="1" /></label>
+        <label data-field="sourceMode"><span class="field-label">Content Source</span>
+          <select id="sourceMode">
+            <option value="custom">Custom</option>
+            <option value="linked">Linked from another page</option>
+          </select>
+        </label>
+        <label data-field="sourcePage"><span class="field-label">Source Page</span>
+          <select id="sourcePage">
+            <option value="things">Things To Do</option>
+            <option value="now">Now in City</option>
+            <option value="eat">Eat & Drink</option>
+            <option value="stay">Where to Stay</option>
+            <option value="guides">Maps & Guides</option>
+          </select>
+        </label>
+        <label data-field="sourceItemId"><span class="field-label">Linked Item</span>
+          <select id="sourceItemId">
+            <option value="">Select a source item…</option>
+          </select>
+        </label>
         <label data-field="text"><span class="field-label">Text</span><textarea id="text" name="text" rows="3"></textarea></label>
         <label data-field="tags"><span class="field-label">Tags (comma or new line separated)</span><textarea id="tags" name="tags" rows="3" placeholder="Nature&#10;Family"></textarea></label>
         <label data-field="bookingMode"><span class="field-label">Booking Mode</span>
@@ -108,7 +128,10 @@
     </section>
 
     <section class="panel">
-      <h2>Items</h2>
+      <div class="panel-title-row">
+        <h2>Items</h2>
+        <p id="itemsCount" class="items-count" aria-live="polite">0 items loaded</p>
+      </div>
       <div class="items-scroll" aria-live="polite">
         <div id="itemsGrid" class="items-grid"></div>
       </div>
