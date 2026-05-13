@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Davao Food Trail by District | ImaginePhilippines</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Prata&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="page.css" />
+  <link rel="stylesheet" href="guide-page.css" />
+</head>
+<body data-page="guides" data-section="guides" class="guide-detail-page">
+  <a class="skip-link" href="#guideMain">Skip to main content</a>
+  <header class="site-header">
+    <div class="utility-bar"><div class="utility-meta"><label class="lang-select" for="sectionLangSelect" aria-label="Language"><span class="lang-select-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"></path></svg></span><select id="sectionLangSelect" name="language" aria-label="Language"><option value="en">EN</option><option value="fil">FIL</option></select><span class="lang-select-caret" aria-hidden="true">▾</span></label></div></div>
+    <nav class="main-nav" aria-label="Main"><a href="index.html" class="brand-mark"><span class="brand-kicker">Imagine</span><span class="brand-city">Davao</span></a><ul><li><a href="now.html">Now in City</a></li><li><a href="booking.html">Book</a></li><li><a href="things.html">Things To Do</a></li><li><a href="eat.html">Eat & Drink</a></li><li><a href="stay.html">Where to Stay</a></li><li><a href="guides.html" aria-current="page">Maps & Guides</a></li></ul><a class="search-btn" href="index.html#search" aria-label="Search"><svg class="search-icon" viewBox="0 0 24 24" focusable="false" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M16.5 16.5L21 21"></path></svg></a></nav>
+  </header>
+
+  <main class="guide-main" id="guideMain">
+    <section class="guide-detail-hero" aria-labelledby="guideTitle">
+      <img src="https://images.unsplash.com/photo-1526318472351-c75fcf070305?auto=format&fit=crop&w=1800&q=80" alt="Street food stalls and local market in Davao" width="1800" height="1000" fetchpriority="high" />
+      <div class="guide-detail-copy">
+        <p>Food Trails</p>
+        <h1 id="guideTitle">Davao Food Trail by District</h1>
+        <p class="lead">Move through breakfast, market, seafood and dessert neighborhoods with a district-sequenced route for a full day of local flavor.</p>
+      </div>
+    </section>
+
+    <section class="guide-layout" aria-label="Guide details">
+      <article class="guide-section">
+        <h2>Suggested Route</h2>
+        <ul>
+          <li><strong>Breakfast:</strong> Bankerohan morning bites and fresh fruit market tasting.</li>
+          <li><strong>Lunch:</strong> Downtown heritage district dining and local coffee pause.</li>
+          <li><strong>Dinner:</strong> Seafront seafood strip followed by dessert crawl in Poblacion.</li>
+        </ul>
+        <div class="guide-actions">
+          <a class="primary" href="booking.html#experiences">Book This Route</a>
+          <a class="secondary" href="guides.html">Back to Guides</a>
+        </div>
+      </article>
+      <aside class="guide-aside">
+        <h2>Trip Snapshot</h2>
+        <ul>
+          <li><strong>Best for:</strong> Culinary explorers</li>
+          <li><strong>Pace:</strong> Relaxed with frequent stops</li>
+          <li><strong>Transport:</strong> Short district transfers</li>
+          <li><strong>Ideal season:</strong> Year-round</li>
+        </ul>
+      </aside>
+    </section>
+  </main>
+
+  <script src="api-client.js"></script>
+  <script src="page.js"></script>
+</body>
+</html>

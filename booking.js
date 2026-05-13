@@ -77,6 +77,7 @@ const CITY_BOOKING = {
 
 let activeCity = "davao";
 let activeResults = [];
+let activeCategory = "hotels";
 
 const tabRow = document.getElementById("tabRow");
 const bookingResult = document.getElementById("bookingResult");
@@ -106,6 +107,30 @@ const bookingLangSelect = document.getElementById("bookingLangSelect");
 let closeBookingMenu = () => {};
 
 const DEMO_MODE_KEY = "imaginephilippines_demo_mode";
+const CURRENCY_RATES_TO_USD = {
+  USD: 1,
+  AUD: 0.66,
+  PHP: 0.018,
+  EUR: 1.09,
+  GBP: 1.27,
+  CAD: 0.74,
+  INR: 0.012,
+  THB: 0.027,
+  JPY: 0.0065,
+  KRW: 0.00073,
+  SGD: 0.74,
+  HKD: 0.13,
+  CNY: 0.14,
+  MYR: 0.21,
+  IDR: 0.000061,
+  VND: 0.000039,
+  AED: 0.27,
+  CHF: 1.1,
+  SEK: 0.093,
+  NOK: 0.091,
+  DKK: 0.15,
+  NZD: 0.61
+};
 const DEMO_SCENARIOS = {
   "weekend-escape": { tab: "flights", flights: { origin: "MNL", adults: "2" }, hotels: { adults: "2", rooms: "1" }, experiences: { interest: "island hopping" } },
   "family-leisure": { tab: "hotels", flights: { origin: "CEB", adults: "4" }, hotels: { adults: "4", rooms: "2" }, experiences: { interest: "family attractions" } },
@@ -180,6 +205,18 @@ function initBookingLanguage() {
     const next = bookingLangSelect.value === "fil" ? "fil" : "en";
     localStorage.setItem("imagineph_lang", next);
     document.documentElement.lang = next;
+  });
+}
+
+function initBookingCurrencyPicker() {
+  if (!window.ImagineCurrency || typeof window.ImagineCurrency.init !== "function") return;
+  window.ImagineCurrency.init({
+    triggerId: "bookingCurrencyTrigger",
+    modalId: "bookingCurrencyModal",
+    backdropId: "bookingCurrencyBackdrop",
+    closeId: "bookingCurrencyClose",
+    pinnedContainerId: "bookingPinnedCurrencies",
+    allContainerId: "bookingAllCurrencies"
   });
 }
 
@@ -346,11 +383,28 @@ function writeResult(message) {
   bookingResult.innerHTML = `<p>${message}</p>`;
 }
 
+function getActiveCurrencyCode() {
+  if (window.ImagineCurrency && typeof window.ImagineCurrency.getSelectedCurrency === "function") {
+    return window.ImagineCurrency.getSelectedCurrency();
+  }
+  return "AUD";
+}
+
+function convertCurrencyAmount(amount, fromCurrency, toCurrency) {
+  const fromRate = CURRENCY_RATES_TO_USD[fromCurrency];
+  const toRate = CURRENCY_RATES_TO_USD[toCurrency];
+  if (!fromRate || !toRate || typeof amount !== "number") return amount;
+  const usdValue = amount * fromRate;
+  return usdValue / toRate;
+}
+
 function formatCurrency(amount, currency = "PHP") {
+  const selectedCurrency = getActiveCurrencyCode();
+  const converted = convertCurrencyAmount(amount, currency, selectedCurrency);
   try {
-    return new Intl.NumberFormat("en-PH", { style: "currency", currency, maximumFractionDigits: 0 }).format(amount);
+    return new Intl.NumberFormat("en", { style: "currency", currency: selectedCurrency, maximumFractionDigits: 0 }).format(converted);
   } catch {
-    return `${currency} ${amount}`;
+    return `${selectedCurrency} ${Math.round(converted)}`;
   }
 }
 
@@ -425,6 +479,7 @@ function buildLocalDemoResults(category, city, payload = {}) {
 }
 
 function renderSearchResults(category, results, context = {}) {
+  activeCategory = category;
   activeResults = results;
   const cityName = CITY_BOOKING[activeCity].cityLabel;
   resultsTitle.textContent = `${results.length} ${category[0].toUpperCase()}${category.slice(1)} Options in ${cityName}`;
@@ -643,6 +698,7 @@ document.addEventListener("keydown", (event) => {
 
 initBookingMobileMenu();
 initBookingLanguage();
+initBookingCurrencyPicker();
 renderCity("davao");
 switchCityFromQuery();
 switchTabFromHash();
@@ -662,3 +718,8 @@ if (window.BookingApi && typeof window.BookingApi.initWhiteLabelAdmin === "funct
 }
 
 window.addEventListener("hashchange", switchTabFromHash);
+document.addEventListener("imagineph:currency-change", () => {
+  if (activeResults.length) {
+    renderSearchResults(activeCategory, activeResults);
+  }
+});

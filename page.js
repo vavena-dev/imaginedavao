@@ -2,7 +2,6 @@ const SHARED_NAV_LINKS = [
   { href: "now.html", label: "Now in City" },
   { href: "booking.html", label: "Book" },
   { href: "things.html", label: "Things To Do" },
-  { href: "events.html", label: "Events" },
   { href: "eat.html", label: "Eat & Drink" },
   { href: "stay.html", label: "Where to Stay" },
   { href: "guides.html", label: "Maps & Guides" }
@@ -177,6 +176,22 @@ function makePickerFullyClickable(wrapper, selectEl) {
   });
 }
 
+function initSectionHeaderLanguage() {
+  const selectEl = document.getElementById("sectionLangSelect");
+  if (!selectEl) return;
+  const stored = localStorage.getItem("imagineph_lang");
+  const next = stored === "fil" ? "fil" : "en";
+  selectEl.value = next;
+  document.documentElement.lang = next;
+  makePickerFullyClickable(document.querySelector(".site-header .lang-select"), selectEl);
+  selectEl.addEventListener("change", () => {
+    const selected = selectEl.value === "fil" ? "fil" : "en";
+    localStorage.setItem("imagineph_lang", selected);
+    document.documentElement.lang = selected;
+  });
+}
+
+initSectionHeaderLanguage();
 initSharedInnerNav();
 
 if (window.BookingApi && typeof window.BookingApi.attachChatWidget === "function") {

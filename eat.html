@@ -6,26 +6,186 @@
   <title>Eat & Drink | ImaginePhilippines</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="page.css" />
+  <link rel="stylesheet" href="eat.css" />
 </head>
-<body data-page="eat" data-section="eat">
+<body data-page="eat" data-section="eat" class="eat-page">
   <a class="skip-link" href="#sectionMain">Skip to main content</a>
-  <div class="wrap" id="sectionMain">
-    <header class="topbar">
-      <a class="brand" href="index.html"><span class="kicker">Imagine</span><span class="city">Davao</span></a>
-      <a class="back" href="index.html">Back to City Guide</a>
-    </header>
-    <section class="hero">
-      <div class="hero-copy">
-        <p>Flavor Routes</p>
-        <h1 id="heroTitle">Savor Davao</h1>
-        <p class="desc" id="heroText">Food routes, market picks, and culinary experiences in one page.</p>
+  <header class="site-header">
+    <div class="utility-bar">
+      <div class="utility-meta">
+        <label class="lang-select" for="sectionLangSelect" aria-label="Language">
+          <span class="lang-select-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"></path>
+            </svg>
+          </span>
+          <select id="sectionLangSelect" name="language" aria-label="Language">
+            <option value="en">EN</option>
+            <option value="fil">FIL</option>
+          </select>
+          <span class="lang-select-caret" aria-hidden="true">▾</span>
+        </label>
       </div>
-      <img id="heroImage" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Fruit_market_in_Magsaysay_Davao_City.jpg/1920px-Fruit_market_in_Magsaysay_Davao_City.jpg" alt="Eat and drink in Davao" width="1920" height="1080" fetchpriority="high" decoding="async" />
+    </div>
+    <nav class="main-nav" aria-label="Main">
+      <a href="index.html" class="brand-mark">
+        <span class="brand-kicker">Imagine</span>
+        <span class="brand-city">Davao</span>
+      </a>
+      <ul>
+        <li><a href="now.html">Now in City</a></li>
+        <li><a href="booking.html">Book</a></li>
+        <li><a href="things.html">Things To Do</a></li>
+        
+        <li><a href="eat.html" aria-current="page">Eat & Drink</a></li>
+        <li><a href="stay.html">Where to Stay</a></li>
+        <li><a href="guides.html">Maps & Guides</a></li>
+      </ul>
+      <a class="search-btn" href="index.html#search" aria-label="Search">
+        <svg class="search-icon" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle>
+          <path d="M16.5 16.5L21 21"></path>
+        </svg>
+      </a>
+    </nav>
+  </header>
+
+  <main class="wrap eat-main" id="sectionMain">
+    <section class="eat-hero" aria-labelledby="eatHeroTitle">
+      <img src="https://images.unsplash.com/photo-1579027989536-b7b1f875659b?auto=format&fit=crop&w=1980&q=80" alt="Chef plating grilled seafood in Davao" width="1980" height="1120" fetchpriority="high" />
+      <div class="eat-hero-overlay"></div>
+      <div class="eat-hero-copy">
+        <p class="eat-kicker">Eat + Drink in Davao</p>
+        <h1 id="eatHeroTitle">Explore Davao Through Its Tables, Markets, and Night Kitchens</h1>
+        <p class="eat-hero-text">From heritage cooking houses to modern rooftop grills, this guide helps you map where to dine, what to order, and how to book your next meal-led city experience.</p>
+        <div class="eat-hero-actions">
+          <a href="#eatFeaturedGrid" class="eat-btn">Discover Places</a>
+          <a href="booking.html#experiences" class="eat-btn book">Book Dining Experiences</a>
+        </div>
+      </div>
     </section>
-    <section class="grid" id="cardsGrid"></section>
-  </div>
+
+    <section class="eat-curation" aria-label="Curation summary">
+      <article>
+        <p class="eat-kicker">Curation Notes</p>
+        <h2>Every pick is selected for flavor, setting, and travel convenience.</h2>
+        <p>These featured spots are strong options for first-time visitors, returning food lovers, and groups planning a full day around Davao's food scene.</p>
+      </article>
+      <dl>
+        <div><dt>6</dt><dd>Featured Places</dd></div>
+        <div><dt>4</dt><dd>Dining Districts</dd></div>
+        <div><dt>1</dt><dd>Booking Hub</dd></div>
+      </dl>
+    </section>
+
+    <section id="eatFeaturedGrid" class="eat-grid" aria-label="Featured food and drink places">
+      <article class="eat-card">
+        <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1280&q=80" alt="Fine plated dishes at a Davao heritage restaurant" loading="lazy" decoding="async" />
+        <div class="eat-card-body">
+          <p class="eat-card-type">Filipino Heritage Dining</p>
+          <h3>Tiny Kitchen & Dulce Vida</h3>
+          <p>Chef-led tasting sets highlighting Mindanao ingredients, served in a warm heritage-inspired dining room.</p>
+          <p class="eat-card-meta">Bajada District</p>
+          <div class="eat-card-actions">
+            <a class="eat-card-link" href="eat-tiny-kitchen-dulce-vida.html">Learn more</a>
+            <a class="eat-card-link book" href="booking.html#experiences">Book</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="eat-card">
+        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=1280&q=80" alt="Fresh kinilaw and grilled seafood spread" loading="lazy" decoding="async" />
+        <div class="eat-card-body">
+          <p class="eat-card-type">Seafood + Kinilaw</p>
+          <h3>Luz Kinilaw House</h3>
+          <p>Bright, citrus-forward seafood plates and local-style kinilaw prepared daily with seasonal gulf catch.</p>
+          <p class="eat-card-meta">Poblacion Waterfront</p>
+          <div class="eat-card-actions">
+            <a class="eat-card-link" href="eat-luz-kinilaw-house.html">Learn more</a>
+            <a class="eat-card-link book" href="booking.html#experiences">Book</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="eat-card">
+        <img src="https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=1280&q=80" alt="Rooftop grill dinner overlooking the city lights" loading="lazy" decoding="async" />
+        <div class="eat-card-body">
+          <p class="eat-card-type">Skyline Grill</p>
+          <h3>Madayaw Rooftop Grill</h3>
+          <p>Evening grill sessions, city skyline views, and craft mocktails designed for long group dinners.</p>
+          <p class="eat-card-meta">Lanang</p>
+          <div class="eat-card-actions">
+            <a class="eat-card-link" href="eat-madayaw-rooftop-grill.html">Learn more</a>
+            <a class="eat-card-link book" href="booking.html#experiences">Book</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="eat-card">
+        <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1280&q=80" alt="Cafe counter with specialty coffee and pastries" loading="lazy" decoding="async" />
+        <div class="eat-card-body">
+          <p class="eat-card-type">Cafe Culture</p>
+          <h3>Poblacion Coffee Social</h3>
+          <p>Single-origin Mindanao brews, all-day pastries, and laid-back lounge corners for remote or casual catch-ups.</p>
+          <p class="eat-card-meta">Poblacion</p>
+          <div class="eat-card-actions">
+            <a class="eat-card-link" href="eat-poblacion-coffee-social.html">Learn more</a>
+            <a class="eat-card-link book" href="booking.html#experiences">Book</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="eat-card">
+        <img src="https://images.unsplash.com/photo-1611599538934-74f0ba6f58ad?auto=format&fit=crop&w=1280&q=80" alt="Market breakfast spread with local fruits and dishes" loading="lazy" decoding="async" />
+        <div class="eat-card-body">
+          <p class="eat-card-type">Morning Market Trail</p>
+          <h3>Bankerohan Breakfast Route</h3>
+          <p>A guided early route through fruit stalls, native rice cakes, and comfort-food counters beloved by locals.</p>
+          <p class="eat-card-meta">Bankerohan Public Market</p>
+          <div class="eat-card-actions">
+            <a class="eat-card-link" href="eat-bankerohan-breakfast-route.html">Learn more</a>
+            <a class="eat-card-link book" href="booking.html#experiences">Book</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="eat-card">
+        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1280&q=80" alt="Seafood dinner beside the coast at sunset" loading="lazy" decoding="async" />
+        <div class="eat-card-body">
+          <p class="eat-card-type">Sunset Dining</p>
+          <h3>Davao Gulf Sundown Seafood</h3>
+          <p>Freshly grilled platters by the coast with sunset seating and easy transfer options from the city center.</p>
+          <p class="eat-card-meta">Coastal Davao Gulf</p>
+          <div class="eat-card-actions">
+            <a class="eat-card-link" href="eat-davao-gulf-sundown-seafood.html">Learn more</a>
+            <a class="eat-card-link book" href="booking.html#experiences">Book</a>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="eat-planning" aria-labelledby="eatPlanningTitle">
+      <h2 id="eatPlanningTitle">Plan Your Food-First Itinerary</h2>
+      <div class="eat-planning-grid">
+        <article>
+          <h3>Start With District Pairing</h3>
+          <p>Pair Bajada and Lanang for modern dining, then add Poblacion and Bankerohan for local flavor and market energy.</p>
+        </article>
+        <article>
+          <h3>Reserve Peak Dinner Slots Early</h3>
+          <p>Rooftop and waterfront tables fill quickly on weekends and festival periods, so lock in your timing in advance.</p>
+        </article>
+        <article>
+          <h3>Bundle With Activities</h3>
+          <p>After choosing your dining stops, continue to experiences or transport inside one booking flow for easier trip planning.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
   <div class="chat-widget" id="chatWidget">
     <button class="chat-fab" id="chatFab"><span>AI</span><small>Ask Imagine AI</small></button>
     <section class="chat-panel">
@@ -34,8 +194,8 @@
       <form class="chat-input-row" id="chatForm"><label for="chatInput" class="sr-only">Message Imagine AI</label><input id="chatInput" name="chatMessage" type="text" autocomplete="off" placeholder="Ask for itineraries, stays, or activities" /><button type="submit">Send</button></form>
     </section>
   </div>
+
   <script src="api-client.js"></script>
   <script src="page.js"></script>
-  <script src="section-page.js"></script>
 </body>
 </html>

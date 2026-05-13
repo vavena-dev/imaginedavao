@@ -6,36 +6,132 @@
   <title>Where to Stay | ImaginePhilippines</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="page.css" />
+  <link rel="stylesheet" href="stay.css" />
 </head>
 <body data-page="stay" data-section="stay">
   <a class="skip-link" href="#sectionMain">Skip to main content</a>
-  <div class="wrap" id="sectionMain">
-    <header class="topbar">
-      <a class="brand" href="index.html"><span class="kicker">Imagine</span><span class="city">Davao</span></a>
-      <a class="back" href="index.html">Back to City Guide</a>
-    </header>
-    <section class="hero">
-      <div class="hero-copy">
-        <p>Accommodation</p>
-        <h1 id="heroTitle">Stay in Davao</h1>
-        <p class="desc" id="heroText">Hotels, resorts, and boutique properties matched to your trip style.</p>
+  <header class="site-header">
+    <div class="utility-bar">
+      <div class="utility-meta">
+        <label class="lang-select" for="sectionLangSelect" aria-label="Language">
+          <span class="lang-select-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"></path>
+            </svg>
+          </span>
+          <select id="sectionLangSelect" name="language" aria-label="Language">
+            <option value="en">EN</option>
+            <option value="fil">FIL</option>
+          </select>
+          <span class="lang-select-caret" aria-hidden="true">▾</span>
+        </label>
       </div>
-      <img id="heroImage" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Davao_City_skyline_at_night_01.jpg/1920px-Davao_City_skyline_at_night_01.jpg" alt="Where to stay in Davao" width="1920" height="1080" fetchpriority="high" decoding="async" />
+    </div>
+    <nav class="main-nav" aria-label="Main">
+      <a href="index.html" class="brand-mark">
+        <span class="brand-kicker">Imagine</span>
+        <span class="brand-city">Davao</span>
+      </a>
+      <ul>
+        <li><a href="now.html">Now in City</a></li>
+        <li><a href="booking.html">Book</a></li>
+        <li><a href="things.html">Things To Do</a></li>
+        
+        <li><a href="eat.html">Eat & Drink</a></li>
+        <li><a href="stay.html">Where to Stay</a></li>
+        <li><a href="guides.html">Maps & Guides</a></li>
+      </ul>
+      <a class="search-btn" href="index.html#search" aria-label="Search">
+        <svg class="search-icon" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle>
+          <path d="M16.5 16.5L21 21"></path>
+        </svg>
+      </a>
+    </nav>
+  </header>
+
+  <main class="wrap stay-main" id="sectionMain">
+    <section class="stay-hero" aria-labelledby="stayHeroTitle">
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Davao_City_Samual_Island_view.jpg/1920px-Davao_City_Samual_Island_view.jpg"
+        alt="Sunset skyline and shoreline in Davao"
+        width="1920"
+        height="1080"
+        fetchpriority="high"
+        decoding="async"
+      />
+      <div class="stay-hero-overlay"></div>
+      <div class="stay-hero-copy">
+        <p class="stay-hero-kicker">Dusit Thani Residence Davao. Photo: Patrickroque01 via Wikimedia</p>
+        <h1 id="stayHeroTitle">Stay in Davao</h1>
+        <p class="stay-hero-text">Choose your base in the city center, by the gulf, or steps from culture and nightlife. Find a stay that matches your pace and book it in minutes.</p>
+        <div class="stay-hero-actions">
+          <a href="#stayHotelGrid" class="stay-btn book">Explore Hotels</a>
+          <a href="booking.html#hotels" class="stay-btn">Book Your Stay</a>
+        </div>
+      </div>
     </section>
-    <section class="grid" id="cardsGrid"></section>
-  </div>
+
+    <section class="stay-intro" aria-label="Stay introduction">
+      <p class="stay-section-kicker">Find Your Next Stay</p>
+      <h2>Hotels and resorts for every kind of trip</h2>
+      <p>From business-ready towers in Lanang to island-style escapes with sunrise views, these curated stays help you plan with confidence.</p>
+      <div class="stay-zone-chips" aria-label="Davao stay zones">
+        <a href="#stayHotelGrid">Bajada</a>
+        <a href="#stayHotelGrid">Lanang</a>
+        <a href="#stayHotelGrid">Poblacion</a>
+        <a href="#stayHotelGrid">Samal Island</a>
+      </div>
+    </section>
+
+    <section class="stay-curation" aria-label="Stay curation">
+      <article>
+        <p class="stay-section-kicker">Curation Notes</p>
+        <h3>Curated for location, comfort, and planning speed</h3>
+        <p>Each featured stay is selected for reliable service, strong neighborhood access, and easy transfer routes to attractions, dining, and airport links.</p>
+      </article>
+      <dl>
+        <div><dt>4</dt><dd>Featured Hotels</dd></div>
+        <div><dt>1</dt><dd>Direct Booking Path</dd></div>
+        <div><dt>24/7</dt><dd>Concierge Chat Access</dd></div>
+      </dl>
+    </section>
+
+    <section id="stayHotelGrid" class="stay-grid" aria-label="Featured stays"></section>
+
+    <section class="stay-planning" aria-labelledby="stayPlanningTitle">
+      <h2 id="stayPlanningTitle">Plan A Better Hotel Match</h2>
+      <div class="stay-planning-grid">
+        <article>
+          <h3>Choose By District</h3>
+          <p>Stay near Bajada and Lanang for city access, or move toward Samal routes for a more resort-forward escape.</p>
+        </article>
+        <article>
+          <h3>Book Around Your Schedule</h3>
+          <p>For festival periods and long weekends, reserve early and compare room categories before final booking.</p>
+        </article>
+        <article>
+          <h3>Bundle Your Trip</h3>
+          <p>After locking your hotel, continue to flights, experiences, and car rental inside the same booking flow.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
   <div class="chat-widget" id="chatWidget">
     <button class="chat-fab" id="chatFab"><span>AI</span><small>Ask Imagine AI</small></button>
     <section class="chat-panel">
       <header class="chat-header"><div><h4>Imagine AI Concierge</h4><p>Live AI Travel Assistant</p></div><button id="closeChat" class="close-btn">Close</button></header>
       <div class="chat-body"><article class="chat-msg ai">Ask for itinerary planning, hotel picks, flight routes, and activity recommendations.</article></div>
-      <form class="chat-input-row" id="chatForm"><label for="chatInput" class="sr-only">Message Imagine AI</label><input id="chatInput" name="chatMessage" type="text" autocomplete="off" placeholder="Ask for itineraries, stays, or activities" /><button type="submit">Send</button></form>
+      <form class="chat-input-row" id="chatForm"><label for="chatInput" class="sr-only">Message Imagine AI</label><input id="chatInput" name="chatMessage" type="text" autocomplete="off" placeholder="Ask for itineraries, stays, or activities…" /><button type="submit">Send</button></form>
     </section>
   </div>
+
   <script src="api-client.js"></script>
   <script src="page.js"></script>
-  <script src="section-page.js"></script>
+  <script src="stay.js"></script>
 </body>
 </html>

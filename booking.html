@@ -8,15 +8,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="currency-picker.css" />
   <link rel="stylesheet" href="booking.css" />
 </head>
 <body>
   <div class="texture" aria-hidden="true"></div>
 
-  <header class="shell">
+  <header class="shell site-header">
     <div class="utility-bar booking-utility">
-      <div class="utility-spacer" aria-hidden="true"></div>
       <div class="utility-meta">
+        <button class="currency-trigger" id="bookingCurrencyTrigger" type="button" aria-haspopup="dialog" aria-controls="bookingCurrencyModal">AUD</button>
         <label class="lang-select" for="bookingLangSelect" aria-label="Language">
           <span class="lang-select-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
@@ -32,19 +33,21 @@
         </label>
       </div>
     </div>
-    <div class="topbar">
-      <a href="index.html" class="brand">
-        <span class="kicker">Imagine</span>
-        <span class="city" id="brandCity">Davao</span>
+    <div class="topbar main-nav">
+      <a href="index.html" class="brand brand-mark">
+        <span class="kicker brand-kicker">Imagine</span>
+        <span class="city brand-city" id="brandCity">Davao</span>
       </a>
       <nav class="booking-main-nav">
-        <a href="now.html">Now in City</a>
-        <a href="booking.html">Book</a>
-        <a href="things.html">Things To Do</a>
-        <a href="events.html">Events</a>
-        <a href="eat.html">Eat & Drink</a>
-        <a href="stay.html">Where to Stay</a>
-        <a href="guides.html">Maps & Guides</a>
+        <ul>
+          <li><a href="now.html">Now in City</a></li>
+          <li><a href="booking.html">Book</a></li>
+          <li><a href="things.html">Things To Do</a></li>
+          
+          <li><a href="eat.html">Eat & Drink</a></li>
+          <li><a href="stay.html">Where to Stay</a></li>
+          <li><a href="guides.html">Maps & Guides</a></li>
+        </ul>
       </nav>
       <a class="booking-search-btn" href="index.html#search" aria-label="Search">
         <svg class="search-icon" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
@@ -240,6 +243,25 @@
     </section>
   </main>
 
+  <div class="currency-modal-backdrop" id="bookingCurrencyBackdrop" hidden></div>
+  <section class="currency-modal" id="bookingCurrencyModal" role="dialog" aria-modal="true" aria-labelledby="bookingCurrencyTitle" hidden>
+    <div class="currency-modal-head">
+      <h2 id="bookingCurrencyTitle">Select your currency</h2>
+      <button class="currency-modal-close" id="bookingCurrencyClose" type="button" aria-label="Close currency selector">×</button>
+    </div>
+    <p class="currency-modal-copy">
+      Where applicable, prices will be converted to the currency you select. Final payment currency may vary by reservation.
+    </p>
+    <div class="currency-group">
+      <h3>Pinned currencies</h3>
+      <div class="currency-grid" id="bookingPinnedCurrencies"></div>
+    </div>
+    <div class="currency-group">
+      <h3>All currencies</h3>
+      <div class="currency-grid" id="bookingAllCurrencies"></div>
+    </div>
+  </section>
+
   <div class="chat-widget" id="chatWidget">
     <button class="chat-fab" id="chatFab" aria-label="Open AI chat">
       <span>AI</span>
@@ -264,6 +286,7 @@
   </div>
 
   <script src="api-client.js"></script>
+  <script src="currency-picker.js"></script>
   <script src="booking.js"></script>
 </body>
 </html>

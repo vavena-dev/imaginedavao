@@ -3,29 +3,122 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Now in Davao | ImagineDavao · ImaginePhilippines</title>
+  <title>Now in City | ImaginePhilippines</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="page.css" />
+  <link rel="stylesheet" href="events.css" />
 </head>
-<body>
-  <div class="wrap">
-    <header class="topbar">
-      <a class="brand" href="index.html"><span class="kicker">Imagine</span><span class="city">Davao</span></a>
-      <a class="back" href="index.html">Back to City Guide</a>
-    </header>
-    <section class="hero">
-      <div class="hero-copy"><p>Now in City</p><h1>Davao Right Now</h1><p class="desc">Live campaign highlights, seasonal picks, and what travelers should prioritize this week.</p></div>
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Kadayawan_Festival.jpg/1920px-Kadayawan_Festival.jpg" alt="Festival crowd" />
+<body data-page="now" data-section="now">
+  <a class="skip-link" href="#sectionMain">Skip to main content</a>
+  <header class="site-header">
+    <div class="utility-bar">
+      <div class="utility-meta">
+        <label class="lang-select" for="sectionLangSelect" aria-label="Language">
+          <span class="lang-select-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"></path>
+            </svg>
+          </span>
+          <select id="sectionLangSelect" name="language" aria-label="Language">
+            <option value="en">EN</option>
+            <option value="fil">FIL</option>
+          </select>
+          <span class="lang-select-caret" aria-hidden="true">▾</span>
+        </label>
+      </div>
+    </div>
+    <nav class="main-nav" aria-label="Main">
+      <a href="index.html" class="brand-mark">
+        <span class="brand-kicker">Imagine</span>
+        <span class="brand-city">Davao</span>
+      </a>
+      <ul>
+        <li><a href="now.html" aria-current="page">Now in City</a></li>
+        <li><a href="booking.html">Book</a></li>
+        <li><a href="things.html">Things To Do</a></li>
+        
+        <li><a href="eat.html">Eat & Drink</a></li>
+        <li><a href="stay.html">Where to Stay</a></li>
+        <li><a href="guides.html">Maps & Guides</a></li>
+      </ul>
+      <a class="search-btn" href="index.html#search" aria-label="Search">
+        <svg class="search-icon" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle>
+          <path d="M16.5 16.5L21 21"></path>
+        </svg>
+      </a>
+    </nav>
+  </header>
+
+  <main class="wrap events-main" id="sectionMain">
+    <section class="events-hero" aria-labelledby="eventsHeroTitle">
+      <img
+        src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1920&q=80"
+        alt="Evening festival crowd celebrating in Davao"
+        width="1920"
+        height="1080"
+        fetchpriority="high"
+        decoding="async"
+      />
+      <div class="events-hero-overlay"></div>
+      <div class="events-hero-copy">
+        <p class="events-kicker">City Calendar + Signature Festivals</p>
+        <h1 id="eventsHeroTitle">Experience Davao Through Its Events</h1>
+        <p class="events-hero-text">From major cultural festivals to curated weekend experiences, discover what is happening across the city and book your place in minutes.</p>
+        <div class="events-hero-actions">
+          <a class="events-btn" href="#eventsFeaturedGrid">Explore Events</a>
+          <a class="events-btn book" href="booking.html#experiences">Book Event Plans</a>
+        </div>
+      </div>
     </section>
-    <section class="grid">
-      <article class="card"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Celebrating_Kadayawan_Festival.jpg/1920px-Celebrating_Kadayawan_Festival.jpg" alt="Creative fair" /><div class="body"><h3>Kadayawan Highlights</h3><p>Top event zones and best-time schedules for major festival moments.</p></div></article>
-      <article class="card"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Roxas_Ave_Night_Market_001.jpg/1920px-Roxas_Ave_Night_Market_001.jpg" alt="Night market" /><div class="body"><h3>Night Market Pulse</h3><p>Tonight's food strips, shopping lanes, and busking corners.</p></div></article>
-      <article class="card"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Davao_City_Coastal_Road.jpg/1920px-Davao_City_Coastal_Road.jpg" alt="Tourist with map" /><div class="body"><h3>Weekend Starter Plan</h3><p>Fast way to assemble a 2-day city + nature itinerary.</p></div></article>
+
+    <section class="events-curation" aria-label="Events curation summary">
+      <article>
+        <p class="events-kicker">Curation Notes</p>
+        <h2>Built for travelers who want culture, rhythm, and easy planning.</h2>
+        <p>Each featured event includes atmosphere details, ideal timing, and direct booking access so you can plan with confidence around your Davao itinerary.</p>
+      </article>
+      <dl>
+        <div><dt>5</dt><dd>Featured Events</dd></div>
+        <div><dt>4</dt><dd>District Zones</dd></div>
+        <div><dt>1</dt><dd>Booking Path</dd></div>
+      </dl>
+    </section>
+
+    <section id="eventsFeaturedGrid" class="events-grid" aria-label="Featured events in Davao"></section>
+
+    <section class="events-planning" aria-labelledby="eventsPlanningTitle">
+      <h2 id="eventsPlanningTitle">Plan A Stronger Events Weekend</h2>
+      <div class="events-planning-grid">
+        <article>
+          <h3>Mix Major + Local Picks</h3>
+          <p>Pair one large festival moment with one neighborhood-led event for a fuller view of Davao culture.</p>
+        </article>
+        <article>
+          <h3>Book Before Peak Hours</h3>
+          <p>Popular evening slots and festival access windows fill quickly, especially during long weekends.</p>
+        </article>
+        <article>
+          <h3>Bundle With Transport</h3>
+          <p>After selecting your events, secure transfer options in the same booking flow for smoother city movement.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <div class="chat-widget" id="chatWidget">
+    <button class="chat-fab" id="chatFab"><span>AI</span><small>Ask Imagine AI</small></button>
+    <section class="chat-panel">
+      <header class="chat-header"><div><h4>Imagine AI Concierge</h4><p>Live AI Travel Assistant</p></div><button id="closeChat" class="close-btn">Close</button></header>
+      <div class="chat-body"><article class="chat-msg ai">Ask for itinerary planning, hotel picks, flight routes, and activity recommendations.</article></div>
+      <form class="chat-input-row" id="chatForm"><label for="chatInput" class="sr-only">Message Imagine AI</label><input id="chatInput" name="chatMessage" type="text" autocomplete="off" placeholder="Ask for itineraries, stays, or activities…" /><button type="submit">Send</button></form>
     </section>
   </div>
-  <div class="chat-widget" id="chatWidget"><button class="chat-fab" id="chatFab"><span>AI</span><small>Ask Imagine AI</small></button><section class="chat-panel"><header class="chat-header"><div><h4>Imagine AI Concierge</h4><p>Live AI Travel Assistant</p></div><button id="closeChat" class="close-btn">Close</button></header><div class="chat-body"><article class="chat-msg ai">Ask for itinerary planning, hotel picks, flight routes, and activity recommendations.</article></div><form class="chat-input-row" id="chatForm"><input id="chatInput" type="text" /><button type="submit">Send</button></form></section></div>
-  <script src="api-client.js"></script><script src="page.js"></script>
+  <script src="api-client.js"></script>
+  <script src="page.js"></script>
+  <script src="events.js"></script>
 </body>
 </html>

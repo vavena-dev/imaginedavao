@@ -30,8 +30,8 @@ function initGlobalImageFallback() {
 
 const WHITE_LABEL_KEY = "imaginephilippines_white_label";
 const WHITE_LABEL_DEFAULTS = {
-  brandKicker: "ImaginePhilippines",
-  brandCity: "ImagineDavao",
+  brandKicker: "Imagine",
+  brandCity: "Davao",
   primaryColor: "#0f6b57",
   secondaryColor: "#e56e1f",
   defaultCity: "davao"
@@ -40,7 +40,11 @@ const WHITE_LABEL_DEFAULTS = {
 function loadWhiteLabel() {
   try {
     const parsed = JSON.parse(localStorage.getItem(WHITE_LABEL_KEY) || "{}");
-    return { ...WHITE_LABEL_DEFAULTS, ...parsed };
+    const merged = { ...WHITE_LABEL_DEFAULTS, ...parsed };
+    // Keep header logo copy consistent across pages.
+    merged.brandKicker = "Imagine";
+    merged.brandCity = "Davao";
+    return merged;
   } catch {
     return { ...WHITE_LABEL_DEFAULTS };
   }
@@ -143,9 +147,11 @@ function ensureWhiteLabelStyles() {
 function applyWhiteLabel(config) {
   document.documentElement.style.setProperty("--primary", config.primaryColor);
   document.documentElement.style.setProperty("--secondary", config.secondaryColor);
+  const logoKicker = "Imagine";
+  const logoCity = "Davao";
 
   document.querySelectorAll(".brand-kicker, .kicker").forEach((el) => {
-    el.textContent = config.brandKicker;
+    el.textContent = logoKicker;
   });
 
   document.querySelectorAll(".brand-city, .city").forEach((el) => {
@@ -153,9 +159,9 @@ function applyWhiteLabel(config) {
     const genericCity = ["things to do", "events", "eat & drink", "where to stay", "maps & guides", "districts", "deals & passes", "partnerships"];
     if (genericCity.includes(text)) return;
     if (el.id === "brandCity" || el.classList.contains("brand-city")) {
-      el.textContent = config.brandCity;
+      el.textContent = logoCity;
     } else if (!el.closest(".topbar")) {
-      el.textContent = config.brandCity;
+      el.textContent = logoCity;
     }
   });
 }

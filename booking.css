@@ -36,16 +36,19 @@ body.booking-nav-open {
 }
 
 .shell {
-  width: min(1140px, 92vw);
+  width: min(1180px, 92vw);
   margin: 0 auto;
 }
 
 .utility-bar {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   padding: 0.55rem 0 0.6rem;
   border-bottom: 1px solid var(--line);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
 }
 
 .booking-utility {
@@ -109,7 +112,7 @@ body.booking-nav-open {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1.55rem;
   padding: 0.7rem 0 1.05rem;
 }
 
@@ -122,18 +125,28 @@ body.booking-nav-open {
 
 .kicker {
   text-transform: uppercase;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.18em;
   font-size: 0.72rem;
+  font-weight: 700;
   color: var(--muted);
 }
 
 .city {
   font-family: var(--font-display);
   font-size: clamp(2.6rem, 4vw, 3rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
   line-height: 0.9;
 }
 
 .topbar nav {
+  margin: 0;
+}
+
+.topbar nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: flex;
   gap: 1.35rem;
   flex-wrap: wrap;
@@ -786,7 +799,7 @@ textarea:focus-visible {
     gap: 0.8rem;
   }
 
-  .topbar nav {
+  .topbar nav ul {
     display: none;
   }
 
