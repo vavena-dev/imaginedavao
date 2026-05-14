@@ -79,9 +79,39 @@
     curationText.textContent = item.text || curationText.textContent;
   }
 
-  function renderStats(items) {
-    statsGrid.innerHTML = items
-      .map((item) => `<div><dt>${item.text || "0"}</dt><dd>${item.title || "Metric"}</dd></div>`)
+  function extractRating(card) {
+    if (!Array.isArray(card.tags)) return null;
+    for (const tag of card.tags) {
+      const match = String(tag).match(/rating\s+(\d+(\.\d+)?)/i);
+      if (match) return Number(match[1]);
+    }
+    return null;
+  }
+
+  function renderStats(cards, zones) {
+    const cardList = Array.isArray(cards) ? cards : [];
+    const zoneList = Array.isArray(zones) ? zones : [];
+    const bookingPaths = new Set(
+      cardList
+        .map((card) => String(card.bookingInfo || card.bookingType || "").trim().toLowerCase())
+        .filter(Boolean)
+    );
+    const ratings = cardList
+      .map((card) => extractRating(card))
+      .filter((value) => Number.isFinite(value));
+    const avgRating = ratings.length
+      ? (ratings.reduce((sum, value) => sum + value, 0) / ratings.length).toFixed(1)
+      : "0.0";
+
+    const metrics = [
+      { value: String(cardList.length), label: "Featured Hotels" },
+      { value: String(zoneList.length), label: "Davao Stay Zones" },
+      { value: `${avgRating}/10`, label: "Average Rating" },
+      { value: String(bookingPaths.size), label: "Booking Paths" }
+    ];
+
+    statsGrid.innerHTML = metrics
+      .map((item) => `<div><dt>${item.value}</dt><dd>${item.label}</dd></div>`)
       .join("");
   }
 
@@ -134,7 +164,7 @@
       renderIntro(sections.intro[0]);
       renderZones(sections.zones);
       renderCuration(sections.curation[0]);
-      renderStats(sections.stats);
+      renderStats(sections.cards, sections.zones);
       renderCards(sections.cards);
       renderPlanning(sections.planning);
     } catch {
