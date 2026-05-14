@@ -314,6 +314,10 @@ body.guides-page {
   border-color: transparent;
 }
 
+.guide-card-actions .download-link {
+  border-style: dashed;
+}
+
 .guide-card-actions a:hover {
   background: rgba(15, 100, 88, 0.09);
 }

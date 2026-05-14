@@ -33,6 +33,17 @@
     });
   }
 
+  function findTagValue(item, prefix) {
+    const tags = Array.isArray(item.tags) ? item.tags : [];
+    const match = tags.find((tag) => String(tag).toLowerCase().startsWith(prefix));
+    if (!match) return "";
+    return String(match).slice(prefix.length).trim();
+  }
+
+  function isExternalUrl(url) {
+    return /^https?:\/\//i.test(String(url || ""));
+  }
+
   function group(items) {
     const grouped = { hero: [], spotlight: [], newsletter: [], topics: [], cards: [] };
     items.forEach((item) => {
@@ -87,6 +98,12 @@
         const learnLabel = item.ctaLabel || "Learn more";
         const learnUrl = item.ctaUrl || "#";
         const bookUrl = item.bookingInfo || `booking#${item.bookingType || "experiences"}`;
+        const downloadUrl = findTagValue(item, "download:");
+        const downloadLabel = findTagValue(item, "download_label:") || "Download guide";
+        const learnExternalAttrs = isExternalUrl(learnUrl) ? ' target="_blank" rel="noopener"' : "";
+        const downloadAction = downloadUrl
+          ? `<a class="download-link" href="${downloadUrl}" target="_blank" rel="noopener">${downloadLabel}</a>`
+          : "";
         return `
           <article class="guide-card" id="${anchorId}">
             <img src="${item.image || "assets/fallback-davao.svg"}" alt="${item.title || "Guide"}" width="1400" height="900" loading="lazy" decoding="async" />
@@ -95,7 +112,8 @@
               <h3>${item.title || "Untitled"}</h3>
               <p>${item.text || ""}</p>
               <div class="guide-card-actions">
-                <a href="${learnUrl}">${learnLabel}</a>
+                <a href="${learnUrl}"${learnExternalAttrs}>${learnLabel}</a>
+                ${downloadAction}
                 <a class="book-link" href="${bookUrl}">Book</a>
               </div>
             </div>
