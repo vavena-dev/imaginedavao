@@ -72,13 +72,63 @@
     curationText.textContent = item.text || curationText.textContent;
   }
 
-  function renderStats(items) {
+  function normalizeLabel(value) {
+    return String(value || "")
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, " ");
+  }
+
+  function parseDistrict(card) {
+    if (Array.isArray(card.tags)) {
+      const districtTag = card.tags.find((tag) => String(tag).toLowerCase().startsWith("district:"));
+      if (districtTag) {
+        return String(districtTag).split(":").slice(1).join(":").trim().toLowerCase();
+      }
+    }
+
+    const meta = String(card.meta || "").toLowerCase();
+    const known = ["lanang", "poblacion", "ecoland", "matina", "shrine hills", "bajada", "bankerohan"];
+    const hit = known.find((needle) => meta.includes(needle));
+    return hit || "";
+  }
+
+  function deriveStats(cards) {
+    const featuredPlaces = cards.length;
+    const districts = new Set(cards.map(parseDistrict).filter(Boolean));
+    const bookingHubs = new Set(
+      cards
+        .filter((card) => card.bookingMode === "book" || card.bookingMode === "provider")
+        .map((card) => String(card.bookingType || "experiences").toLowerCase())
+        .filter(Boolean)
+    );
+
+    return {
+      featuredPlaces,
+      diningDistricts: districts.size,
+      bookingHub: bookingHubs.size || 1
+    };
+  }
+
+  function renderStats(items, cards) {
+    const dynamic = deriveStats(cards);
     const source = items.length ? items : [
       { title: "Featured Places", text: "6" },
       { title: "Dining Districts", text: "4" },
       { title: "Booking Hub", text: "1" }
     ];
-    statsGrid.innerHTML = source.map((item) => `<div><dt>${item.text || "0"}</dt><dd>${item.title || "Metric"}</dd></div>`).join("");
+    statsGrid.innerHTML = source
+      .map((item) => {
+        const label = normalizeLabel(item.title);
+        let value = item.text || "0";
+
+        if (label.includes("featured") && label.includes("place")) value = String(dynamic.featuredPlaces);
+        if (label.includes("district")) value = String(dynamic.diningDistricts);
+        if (label.includes("booking")) value = String(dynamic.bookingHub);
+
+        return `<div><dt>${value}</dt><dd>${item.title || "Metric"}</dd></div>`;
+      })
+      .join("");
   }
 
   function renderCards(items) {
@@ -126,12 +176,12 @@
       const sections = group(await loadCms());
       renderHero(sections.hero[0]);
       renderCuration(sections.curation[0]);
-      renderStats(sections.stats);
+      renderStats(sections.stats, sections.cards);
       renderCards(sections.cards);
       renderPlanning(sections.planning);
     } catch {
       renderHero(null);
-      renderStats([]);
+      renderStats([], []);
       renderCards([]);
       renderPlanning([]);
     }
