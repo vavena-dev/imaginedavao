@@ -1,11 +1,11 @@
 const AFFILIATE = {
   bookingAid: "YOUR_BOOKING_AID",
-  label: "imaginephilippines",
+  label: "imaginedavao",
   endpoints: {
     flights: "https://flights.booking.com/",
     hotels: "https://www.booking.com/searchresults.html",
     experiences: "https://www.booking.com/attractions/",
-    cars: "https://www.booking.com/cars/index.html"
+    cars: "https://www.booking.com/cars//"
   }
 };
 
@@ -106,7 +106,7 @@ const scenarioButtons = [...document.querySelectorAll(".scenario-btn")];
 const bookingLangSelect = document.getElementById("bookingLangSelect");
 let closeBookingMenu = () => {};
 
-const DEMO_MODE_KEY = "imaginephilippines_demo_mode";
+const DEMO_MODE_KEY = "imaginedavao_demo_mode";
 const CURRENCY_RATES_TO_USD = {
   USD: 1,
   AUD: 0.66,
@@ -256,7 +256,7 @@ function initBookingMobileMenu() {
     href: anchor.getAttribute("href") || "#",
     label: anchor.textContent ? anchor.textContent.trim() : ""
   }));
-  const current = (window.location.pathname.split("/").pop() || "booking.html").toLowerCase();
+  const current = (window.location.pathname.split("/").pop() || "booking").toLowerCase();
 
   const menuBtn = document.createElement("button");
   menuBtn.type = "button";
@@ -579,7 +579,7 @@ function openPartnerCheckout(item, trackedUrl, category) {
   if (!partnerCheckout || !partnerCheckoutTitle || !partnerCheckoutText || !partnerCheckoutLink) return;
   partnerCheckout.hidden = false;
   partnerCheckoutTitle.textContent = `${item.title} · ${category[0].toUpperCase()}${category.slice(1)} Checkout`;
-  partnerCheckoutText.textContent = `Your selection is prepared on ImaginePhilippines. Continue to secure partner checkout to finalize reservation details and payment.`;
+  partnerCheckoutText.textContent = `Your selection is prepared on Imagine Davao. Continue to secure partner checkout to finalize reservation details and payment.`;
   partnerCheckoutLink.href = trackedUrl;
   partnerCheckout.scrollIntoView({ behavior: "smooth", block: "start" });
 }
@@ -688,7 +688,7 @@ demoResultsBtn.addEventListener("click", runInstantDemoResults);
 if (window.BookingApi && typeof window.BookingApi.attachChatWidget === "function") {
   window.BookingApi.attachChatWidget({
     cityResolver: () => CITY_BOOKING[activeCity].cityLabel,
-    bookingPath: "booking.html"
+    bookingPath: "booking"
   });
 }
 

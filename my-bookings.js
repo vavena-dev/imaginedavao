@@ -44,7 +44,7 @@ async function init() {
   const token = window.BookingApi.getAuthToken();
   if (!token) {
     bookingsSub.textContent = "Please sign in to view your bookings.";
-    setStatus("Not signed in. Go to signin.html first.", true);
+    setStatus("Not signed in. Go to signin first.", true);
     return;
   }
 

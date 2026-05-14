@@ -40,7 +40,7 @@
   function actionMarkup(item) {
     if (item.bookingMode === "book") {
       const tab = item.bookingType || (section === "stay" ? "hotels" : "experiences");
-      return `<p><a class="card-link-btn" href="${item.ctaUrl || `booking.html#${tab}`}">${item.ctaLabel || "Open Booking"}</a></p>`;
+      return `<p><a class="card-link-btn" href="${item.ctaUrl || `booking#${tab}`}">${item.ctaLabel || "Open Booking"}</a></p>`;
     }
     if (item.bookingMode === "provider") {
       return `<p><a class="card-link-btn" href="${item.ctaUrl || "#"}" target="_blank" rel="noopener">${item.ctaLabel || "Open Booking"}</a></p>`;
@@ -84,7 +84,7 @@
     .map(
       (item) => `
       <article class="card">
-        <img src="${item.image || "assets/fallback-travel.svg"}" alt="${item.title || "Item"}" loading="lazy" decoding="async" />
+        <img src="${item.image || "assets/fallback-davao.svg"}" alt="${item.title || "Item"}" loading="lazy" decoding="async" />
         <div class="body">
           <h3>${item.title || "Untitled"}</h3>
           <p>${item.text || ""}</p>

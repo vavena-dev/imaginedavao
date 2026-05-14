@@ -3,7 +3,7 @@ async function postTrackedBooking(payload) {
 }
 
 function initGlobalImageFallback() {
-  const fallbackSrc = "assets/fallback-travel.svg";
+  const fallbackSrc = "assets/fallback-davao.svg";
 
   function applyFallback(img) {
     if (!img || img.dataset.fallbackApplied === "1") return;
@@ -28,7 +28,7 @@ function initGlobalImageFallback() {
   );
 }
 
-const WHITE_LABEL_KEY = "imaginephilippines_white_label";
+const WHITE_LABEL_KEY = "imagine_davao_white_label";
 const WHITE_LABEL_DEFAULTS = {
   brandKicker: "Imagine",
   brandCity: "Davao",
@@ -303,7 +303,7 @@ function buildActionButtons(actions, city, bookingPath) {
   return wrap;
 }
 
-function attachChatWidget({ cityResolver, bookingPath = "booking.html" } = {}) {
+function attachChatWidget({ cityResolver, bookingPath = "booking" } = {}) {
   const chatWidget = document.getElementById("chatWidget");
   const chatFab = document.getElementById("chatFab");
   const closeChat = document.getElementById("closeChat");
@@ -701,11 +701,16 @@ function syncAdminOnlyVisibility(user) {
 function initAuthWidget() {
   const pathName = (window.location.pathname || "").toLowerCase();
   if (
+    pathName.endsWith("/account") ||
     pathName.endsWith("/account.html") ||
+    pathName.endsWith("/my-bookings") ||
     pathName.endsWith("/my-bookings.html") ||
+    pathName.endsWith("/signin") ||
     pathName.endsWith("/signin.html") ||
+    pathName.endsWith("/forgot-password") ||
     pathName.endsWith("/forgot-password.html") ||
-    pathName.endsWith("/reset-password.html")
+    pathName.endsWith("/reset-password")
+    || pathName.endsWith("/reset-password.html")
   ) return;
   if (document.getElementById("authWidget")) return;
   ensureAuthStyles();
@@ -715,8 +720,8 @@ function initAuthWidget() {
   widget.id = "authWidget";
   widget.innerHTML = `
     <div class="auth-guest-links" id="authGuestLinks">
-      <a class="auth-guest-link" href="signin.html">Login</a>
-      <a class="auth-guest-link auth-guest-link--primary" href="signin.html?mode=signup">Sign Up</a>
+      <a class="auth-guest-link" href="signin">Login</a>
+      <a class="auth-guest-link auth-guest-link--primary" href="signin?mode=signup">Sign Up</a>
     </div>
     <button class="auth-chip" id="authChip" type="button">
       <span class="auth-avatar" id="authAvatar">A</span>
@@ -762,16 +767,16 @@ function initAuthWidget() {
     const loggedIn = Boolean(user);
     if (!loggedIn) {
       menu.innerHTML = `
-        <a class="auth-menu-item" href="signin.html"><span class="auth-menu-icon">→</span> Sign in or create account</a>
+        <a class="auth-menu-item" href="signin"><span class="auth-menu-icon">→</span> Sign in or create account</a>
       `;
       return;
     }
     const adminMenuItem = isAdminUser(user)
-      ? '<a class="auth-menu-item" href="admin.html"><span class="auth-menu-icon">C</span> Admin CMS</a>'
+      ? '<a class="auth-menu-item" href="admin"><span class="auth-menu-icon">C</span> Admin CMS</a>'
       : "";
     menu.innerHTML = `
-      <a class="auth-menu-item" href="account.html"><span class="auth-menu-icon">A</span> My account</a>
-      <a class="auth-menu-item" href="my-bookings.html"><span class="auth-menu-icon">B</span> Bookings</a>
+      <a class="auth-menu-item" href="account"><span class="auth-menu-icon">A</span> My account</a>
+      <a class="auth-menu-item" href="my-bookings"><span class="auth-menu-icon">B</span> Bookings</a>
       ${adminMenuItem}
       <button class="auth-menu-item" id="authSignOutBtn" type="button"><span class="auth-menu-icon">S</span> Sign out</button>
     `;
@@ -818,7 +823,7 @@ function initAuthWidget() {
     const session = readAuthSession();
     if (!session?.user) {
       const returnTo = encodeURIComponent(window.location.pathname + window.location.search + window.location.hash);
-      window.location.href = `signin.html?returnTo=${returnTo}`;
+      window.location.href = `signin?returnTo=${returnTo}`;
       return;
     }
     widget.classList.toggle("open");

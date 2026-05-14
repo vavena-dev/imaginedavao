@@ -1,10 +1,10 @@
 const SHARED_NAV_LINKS = [
-  { href: "now.html", label: "Now in City" },
-  { href: "booking.html", label: "Book" },
-  { href: "things.html", label: "Things To Do" },
-  { href: "eat.html", label: "Eat & Drink" },
-  { href: "stay.html", label: "Where to Stay" },
-  { href: "guides.html", label: "Maps & Guides" }
+  { href: "now", label: "Now in City" },
+  { href: "booking", label: "Book" },
+  { href: "things", label: "Things To Do" },
+  { href: "eat", label: "Eat & Drink" },
+  { href: "stay", label: "Where to Stay" },
+  { href: "guides", label: "Maps & Guides" }
 ];
 
 function currentPageName() {
@@ -77,7 +77,7 @@ function initSharedInnerNav() {
   const navRow = document.createElement("div");
   navRow.className = "inner-nav-row";
   navRow.innerHTML = `
-    <a class="inner-search-btn" href="index.html#search" aria-label="Search">
+    <a class="inner-search-btn" href="/#search" aria-label="Search">
       <svg class="search-icon" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
         <circle cx="11" cy="11" r="7"></circle>
         <path d="M16.5 16.5L21 21"></path>
@@ -186,7 +186,7 @@ function initSectionMobileMenu() {
     href: anchor.getAttribute("href") || "#",
     label: anchor.textContent ? anchor.textContent.trim() : ""
   }));
-  const current = (window.location.pathname.split("/").pop() || "index.html").toLowerCase();
+  const current = (window.location.pathname.split("/").pop() || "/").toLowerCase();
 
   const menuBtn = document.createElement("button");
   menuBtn.type = "button";
@@ -272,6 +272,19 @@ function initSectionHeaderLanguage() {
   });
 }
 
+function normalizeBrandingText() {
+  document.querySelectorAll(".brand-kicker").forEach((node) => {
+    const text = String(node.textContent || "").trim();
+    if (/imagine\s*philippines/i.test(text)) node.textContent = "Imagine";
+  });
+
+  document.querySelectorAll(".brand-city").forEach((node) => {
+    const text = String(node.textContent || "").trim();
+    if (!text || /philippines/i.test(text)) node.textContent = "Davao";
+  });
+}
+
+normalizeBrandingText();
 initSectionHeaderLanguage();
 initSectionMobileMenu();
 initSharedInnerNav();
@@ -279,7 +292,7 @@ initSharedInnerNav();
 if (window.BookingApi && typeof window.BookingApi.attachChatWidget === "function") {
   window.BookingApi.attachChatWidget({
     cityResolver: () => "Davao",
-    bookingPath: "booking.html"
+    bookingPath: "booking"
   });
 }
 

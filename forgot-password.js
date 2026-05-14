@@ -17,7 +17,7 @@ async function sendResetLink() {
 
   try {
     setStatus("Sending reset link...");
-    const redirectTo = `${window.location.origin}/reset-password.html`;
+    const redirectTo = `${window.location.origin}/reset-password`;
     const message = await window.BookingApi.requestPasswordReset(email, redirectTo);
     setStatus(message, false, true);
   } catch (error) {

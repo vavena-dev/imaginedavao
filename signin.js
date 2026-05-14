@@ -7,8 +7,8 @@ const passwordVisibilityBtn = document.getElementById("passwordVisibilityBtn");
 const authTitle = document.getElementById("authTitle");
 const authIntro = document.getElementById("authIntro");
 const forgotPasswordLink = document.getElementById("forgotPasswordLink");
-const authCornerLoginLink = document.querySelector(".auth-corner-link[href='signin.html']");
-const authCornerSignupLink = document.querySelector(".auth-corner-link[href='signin.html?mode=signup']");
+const authCornerLoginLink = document.querySelector(".auth-corner-link[href='signin']");
+const authCornerSignupLink = document.querySelector(".auth-corner-link[href='signin?mode=signup']");
 
 function setStatus(text, isError = false, isSuccess = false) {
   signInStatus.textContent = text || "";
@@ -21,7 +21,7 @@ function setSignInMode(mode) {
 
   if (isSignup) {
     authTitle.textContent = "Create your account";
-    authIntro.textContent = "Use your email and password to start your ImaginePhilippines account.";
+    authIntro.textContent = "Use your email and password to start your Imagine Davao account.";
     continueEmailBtn.textContent = "Sign in";
     createAccountBtn.textContent = "Create account";
     createAccountBtn.classList.remove("ghost");
@@ -48,7 +48,7 @@ function setSignInMode(mode) {
 
 function returnUrl() {
   const params = new URLSearchParams(window.location.search);
-  return params.get("returnTo") || "index.html";
+  return params.get("returnTo") || "/";
 }
 
 function syncForgotLink() {

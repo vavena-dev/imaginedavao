@@ -86,10 +86,10 @@
         const anchorId = slug(item.meta || item.tag || item.title);
         const learnLabel = item.ctaLabel || "Learn more";
         const learnUrl = item.ctaUrl || "#";
-        const bookUrl = item.bookingInfo || `booking.html#${item.bookingType || "experiences"}`;
+        const bookUrl = item.bookingInfo || `booking#${item.bookingType || "experiences"}`;
         return `
           <article class="guide-card" id="${anchorId}">
-            <img src="${item.image || "assets/fallback-travel.svg"}" alt="${item.title || "Guide"}" width="1400" height="900" loading="lazy" decoding="async" />
+            <img src="${item.image || "assets/fallback-davao.svg"}" alt="${item.title || "Guide"}" width="1400" height="900" loading="lazy" decoding="async" />
             <div class="guide-card-body">
               <p class="guide-card-tag">${item.tag || "Guide"}</p>
               <h3>${item.title || "Untitled"}</h3>

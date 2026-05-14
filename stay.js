@@ -56,7 +56,7 @@
     heroPrimaryCta.href = item.ctaUrl || "#stayHotelGrid";
     const bookingType = String(item.bookingType || "hotels").toLowerCase();
     heroSecondaryCta.textContent = item.bookingInfo || "Book Your Stay";
-    heroSecondaryCta.href = `booking.html#${bookingType}`;
+    heroSecondaryCta.href = `booking#${bookingType}`;
   }
 
   function renderIntro(item) {
@@ -90,10 +90,10 @@
       .map((hotel) => {
         const highlights = Array.isArray(hotel.tags) ? hotel.tags : [];
         const learnUrl = hotel.ctaUrl || "#";
-        const bookUrl = hotel.bookingInfo || `booking.html#${hotel.bookingType || "hotels"}`;
+        const bookUrl = hotel.bookingInfo || `booking#${hotel.bookingType || "hotels"}`;
         return `
           <article class="stay-card">
-            <img class="stay-card-image" src="${hotel.image || "assets/fallback-travel.svg"}" alt="${hotel.title || "Stay"}" width="1400" height="933" loading="lazy" decoding="async" />
+            <img class="stay-card-image" src="${hotel.image || "assets/fallback-davao.svg"}" alt="${hotel.title || "Stay"}" width="1400" height="933" loading="lazy" decoding="async" />
             <div class="stay-card-body">
               <p class="stay-card-location">${hotel.meta || "Davao"}</p>
               <h3 class="stay-card-title">${hotel.title || "Untitled"}</h3>

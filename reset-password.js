@@ -43,7 +43,7 @@ updatePasswordBtn.addEventListener("click", async () => {
     const message = await window.BookingApi.resetPassword(accessToken, password);
     setStatus(message, false, true);
     window.setTimeout(() => {
-      window.location.href = "signin.html";
+      window.location.href = "signin";
     }, 1200);
   } catch (error) {
     setStatus(error.message || "Unable to update password.", true);

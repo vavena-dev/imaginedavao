@@ -1,21 +1,21 @@
 (function () {
   const MAIN_FOOTER_PAGES = new Set([
-    "index.html",
-    "booking.html",
-    "now.html",
-    "things.html",
-    "eat.html",
-    "stay.html",
-    "guides.html",
-    "districts.html",
-    "deals.html",
-    "partner.html"
+    "/",
+    "booking",
+    "now",
+    "things",
+    "eat",
+    "stay",
+    "guides",
+    "districts",
+    "deals",
+    "partner"
   ]);
 
   function currentPage() {
     const pathname = String(window.location.pathname || "").toLowerCase();
     const segments = pathname.split("/").filter(Boolean);
-    return segments.length ? segments[segments.length - 1] : "index.html";
+    return segments.length ? segments[segments.length - 1] : "/";
   }
 
   function buildFooterMarkup(isIndexPage) {
@@ -53,7 +53,7 @@
       <hr class="imagine-main-footer__divider" />
       <section class="imagine-main-footer__bottom" aria-label="Footer links and city resources">
         <div class="imagine-main-footer__brand">
-          <p class="imagine-main-footer__parent">ImaginePhilippines Network</p>
+          <p class="imagine-main-footer__parent">Imagine Davao Network</p>
           <p class="imagine-main-footer__city">ImagineDavao</p>
           <p class="imagine-main-footer__tagline">Client-ready city guide built for discovery, planning, and booking in one polished flow.</p>
           ${controlsMarkup}
@@ -62,34 +62,34 @@
           <nav class="imagine-main-footer__col" aria-label="Explore Davao">
             <h3>Explore Davao</h3>
             <ul>
-              <li><a href="things.html">Things To Do</a></li>
-              <li><a href="eat.html">Eat & Drink</a></li>
-              <li><a href="stay.html">Where to Stay</a></li>
-              <li><a href="now.html">Now in City</a></li>
+              <li><a href="things">Things To Do</a></li>
+              <li><a href="eat">Eat & Drink</a></li>
+              <li><a href="stay">Where to Stay</a></li>
+              <li><a href="now">Now in City</a></li>
             </ul>
           </nav>
           <nav class="imagine-main-footer__col" aria-label="Plan Your Trip">
             <h3>Plan Your Trip</h3>
             <ul>
-              <li><a href="booking.html">Book Flights & Hotels</a></li>
-              <li><a href="guides.html">Maps & Guides</a></li>
-              <li><a href="districts.html">Districts</a></li>
-              <li><a href="deals.html">Deals & Passes</a></li>
+              <li><a href="booking">Book Flights & Hotels</a></li>
+              <li><a href="guides">Maps & Guides</a></li>
+              <li><a href="districts">Districts</a></li>
+              <li><a href="deals">Deals & Passes</a></li>
             </ul>
           </nav>
           <nav class="imagine-main-footer__col" aria-label="About and Partnerships">
             <h3>About & Partners</h3>
             <ul>
-              <li><a href="partner.html">Partner With Tourism</a></li>
-              <li><a href="index.html#planner">Trip Planner</a></li>
-              <li><a href="index.html#events">Event Calendar</a></li>
-              <li><a href="index.html#map">Region Map</a></li>
+              <li><a href="partner">Partner With Tourism</a></li>
+              <li><a href="/#planner">Trip Planner</a></li>
+              <li><a href="/#events">Event Calendar</a></li>
+              <li><a href="/#map">Region Map</a></li>
             </ul>
           </nav>
         </div>
       </section>
       <section class="imagine-main-footer__legal" aria-label="Legal and social links">
-        <p>© <span id="mainFooterYear"></span> ImagineDavao · ImaginePhilippines. All rights reserved.</p>
+        <p>© <span id="mainFooterYear"></span> ImagineDavao · Imagine Davao. All rights reserved.</p>
         <div class="imagine-main-footer__social">
           <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="ImagineDavao on Instagram">Instagram</a>
           <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="ImagineDavao on Facebook">Facebook</a>
@@ -133,7 +133,7 @@
     const footer = document.createElement("footer");
     footer.className = "imagine-main-footer";
     footer.setAttribute("data-imagine-footer", "main");
-    footer.innerHTML = buildFooterMarkup(page === "index.html");
+    footer.innerHTML = buildFooterMarkup(page === "/");
 
     const chatWidget = document.querySelector(".chat-widget");
     if (chatWidget && chatWidget.parentNode) {

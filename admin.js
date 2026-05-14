@@ -61,7 +61,7 @@ let bookingItems = [];
 
 const ADMIN_TOKEN_KEY = "imagineph_admin_token";
 const ADMIN_REQUIRED_MESSAGE =
-  "Admin access required. Sign in with an admin account in signin.html or set a valid ADMIN_TOKEN in this browser.";
+  "Admin access required. Sign in with an admin account in signin or set a valid ADMIN_TOKEN in this browser.";
 
 const PAGE_SECTION_OPTIONS = {
   index: ["things", "events", "eat", "stay", "guides", "districts", "deals"],
@@ -140,7 +140,7 @@ const FIELD_PROFILES = {
     visible: ["title", "image", "text", "meta", "tag", "sortOrder", "ctaLabel", "ctaUrl", "bookingInfo", "bookingType"],
     required: ["title", "text"],
     labels: { ...DEFAULT_FIELD_LABELS, meta: "Kicker", tag: "Credit", ctaLabel: "Primary CTA Label", ctaUrl: "Primary CTA URL", bookingInfo: "Secondary CTA Label", bookingType: "Secondary CTA Booking Tab" },
-    hint: "Controls the now.html hero block."
+    hint: "Controls the now hero block."
   },
   "now:curation": { visible: ["title", "text", "meta", "sortOrder"], required: ["title", "text"], labels: { ...DEFAULT_FIELD_LABELS, meta: "Kicker" }, hint: "Controls curation title and paragraph." },
   "now:stats": { visible: ["title", "text", "sortOrder"], required: ["title", "text"], labels: { ...DEFAULT_FIELD_LABELS, title: "Stat Label", text: "Stat Value" }, hint: "One row per stat tile." },
@@ -460,7 +460,7 @@ async function guardAdminAccess() {
   const token = session?.accessToken || "";
   if (!token) {
     const returnTo = encodeURIComponent(window.location.pathname + window.location.search + window.location.hash);
-    window.location.href = `signin.html?returnTo=${returnTo}`;
+    window.location.href = `signin?returnTo=${returnTo}`;
     return false;
   }
 
@@ -472,14 +472,14 @@ async function guardAdminAccess() {
     const user = data?.user || data?.profile || null;
     if (!response.ok || !isAdminRole(user)) {
       alert("Admin access is required to open the CMS.");
-      window.location.href = "index.html";
+      window.location.href = "/";
       return false;
     }
     localStorage.setItem("imagineph_auth_session", JSON.stringify({ ...session, user: { ...(session?.user || {}), ...user } }));
     return true;
   } catch {
     alert("Unable to verify admin session right now.");
-    window.location.href = "index.html";
+    window.location.href = "/";
     return false;
   }
 }
@@ -663,7 +663,7 @@ function renderItems() {
     .map(
       (item) => `
       <article class="item">
-        <img src="${item.image || "assets/fallback-travel.svg"}" alt="${item.title || "Item"}" />
+        <img src="${item.image || "assets/fallback-davao.svg"}" alt="${item.title || "Item"}" />
         <div class="item-body">
           <h3>${item.title || "Untitled"}</h3>
           <p>${item.text || ""}</p>
@@ -695,7 +695,7 @@ function renderBookingItems() {
     .map(
       (item) => `
       <article class="item">
-        <img src="${item.thumbnailUrl || "assets/fallback-travel.svg"}" alt="${item.title || "Booking item"}" />
+        <img src="${item.thumbnailUrl || "assets/fallback-davao.svg"}" alt="${item.title || "Booking item"}" />
         <div class="item-body">
           <h3>${item.title || "Untitled"}</h3>
           <p>${item.description || ""}</p>

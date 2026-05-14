@@ -47,8 +47,8 @@
         image: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=1400&q=80",
         tags: ["Full-day parade route", "Traditional dance showcases", "Best for first-time visitors"],
         ctaLabel: "Learn more",
-        ctaUrl: "event-kadayawan-grand-parade.html",
-        bookingInfo: "booking.html#experiences"
+        ctaUrl: "event-kadayawan-grand-parade",
+        bookingInfo: "booking#experiences"
       },
       {
         tag: "Night Culture",
@@ -58,8 +58,8 @@
         image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1400&q=80",
         tags: ["Sunset-to-night schedule", "Family-friendly route", "Easy transfer options"],
         ctaLabel: "Learn more",
-        ctaUrl: "event-lanterns-on-the-gulf.html",
-        bookingInfo: "booking.html#experiences"
+        ctaUrl: "event-lanterns-on-the-gulf",
+        bookingInfo: "booking#experiences"
       },
       {
         tag: "Music + Food Weekend",
@@ -69,8 +69,8 @@
         image: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=1400&q=80",
         tags: ["Small-stage local artists", "Coffee tasting lanes", "Strong for groups and couples"],
         ctaLabel: "Learn more",
-        ctaUrl: "event-mindanao-coffee-music-social.html",
-        bookingInfo: "booking.html#experiences"
+        ctaUrl: "event-mindanao-coffee-music-social",
+        bookingInfo: "booking#experiences"
       },
       {
         tag: "Active City Series",
@@ -80,8 +80,8 @@
         image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1400&q=80",
         tags: ["Timed and non-timed tracks", "Community run format", "Beginner-friendly pacing"],
         ctaLabel: "Learn more",
-        ctaUrl: "event-davao-river-night-run.html",
-        bookingInfo: "booking.html#experiences"
+        ctaUrl: "event-davao-river-night-run",
+        bookingInfo: "booking#experiences"
       },
       {
         tag: "Neighborhood Culture",
@@ -91,8 +91,8 @@
         image: "https://images.unsplash.com/photo-1523451190197-94e8f8ce2f76?auto=format&fit=crop&w=1400&q=80",
         tags: ["Guided bilingual hosts", "Local heritage narration", "Includes tasting credits"],
         ctaLabel: "Learn more",
-        ctaUrl: "event-poblacion-food-culture-walk.html",
-        bookingInfo: "booking.html#experiences"
+        ctaUrl: "event-poblacion-food-culture-walk",
+        bookingInfo: "booking#experiences"
       }
     ],
     planning: {
@@ -162,7 +162,7 @@
 
     const bookingType = String(source.bookingType || fallback.hero.bookingType || "experiences").toLowerCase();
     heroSecondaryCta.textContent = source.bookingInfo || fallback.hero.bookingInfo;
-    heroSecondaryCta.href = `booking.html#${bookingType}`;
+    heroSecondaryCta.href = `booking#${bookingType}`;
   }
 
   function renderCuration(item) {
@@ -190,12 +190,12 @@
         const highlights = Array.isArray(item.tags) ? item.tags : [];
         const learnLabel = item.ctaLabel || "Learn more";
         const learnUrl = item.ctaUrl || "#";
-        const bookUrl = item.bookingInfo || "booking.html#experiences";
+        const bookUrl = item.bookingInfo || "booking#experiences";
         return `
           <article class="events-card">
             <img
               class="events-card-image"
-              src="${item.image || "assets/fallback-travel.svg"}"
+              src="${item.image || "assets/fallback-davao.svg"}"
               alt="${item.title || "Event"}"
               width="1400"
               height="933"

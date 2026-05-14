@@ -366,42 +366,42 @@ const CITY_MAP_DATA = {
         title: "Davao City Metro Core",
         text: "Major parts: Poblacion District, Buhangin, Toril, Calinan, and Marilog uplands. This is the main urban gateway with ports, museums, food corridors, and city-to-island transfers.",
         tip: "Start here for mixed culture, food, and transport-connected itineraries.",
-        href: "districts.html#davao-city"
+        href: "districts#davao-city"
       },
       davao_del_norte: {
         label: "Davao del Norte",
         title: "Davao del Norte",
         text: "Major parts: Tagum City, Panabo City, Samal Island (IGaCoS), and Carmen coastal corridor. Great for beach links, agri-tour routes, and city-side resorts.",
         tip: "Best for Samal beach days and Tagum-based overnights.",
-        href: "districts.html#davao-del-norte"
+        href: "districts#davao-del-norte"
       },
       davao_de_oro: {
         label: "Davao de Oro",
         title: "Davao de Oro",
         text: "Major parts: Nabunturan, Monkayo, Maragusan, and Pantukan mountain-to-coast stretch. Known for waterfalls, inland nature loops, and highland road adventures.",
         tip: "Best for upland nature drives and eco-focused day circuits.",
-        href: "districts.html#davao-de-oro"
+        href: "districts#davao-de-oro"
       },
       davao_oriental: {
         label: "Davao Oriental",
         title: "Davao Oriental",
         text: "Major parts: Mati City, Cateel, Baganga, and Governor Generoso Pacific coastlines. Signature destination for surf, hidden coves, and sunrise beach routes.",
         tip: "Best for coastal adventures and surf-forward itineraries.",
-        href: "districts.html#davao-oriental"
+        href: "districts#davao-oriental"
       },
       davao_del_sur: {
         label: "Davao del Sur",
         title: "Davao del Sur",
         text: "Major parts: Digos City, Hagonoy, Bansalan, and Matanao. A practical base for Mt. Apo gateway journeys, farm tourism, and countryside food trails.",
         tip: "Best for Mt. Apo gateway prep and heritage-town routes.",
-        href: "districts.html#davao-del-sur"
+        href: "districts#davao-del-sur"
       },
       davao_occidental: {
         label: "Davao Occidental",
         title: "Davao Occidental",
         text: "Major parts: Malita, Santa Maria, Don Marcelino, and Sarangani Island gateway. The southernmost arc with quiet coasts, marine biodiversity, and slow-travel escapes.",
         tip: "Best for remote coastal stays and marine-focused exploration.",
-        href: "districts.html#davao-occidental"
+        href: "districts#davao-occidental"
       }
     }
   },
@@ -414,42 +414,42 @@ const CITY_MAP_DATA = {
         title: "Central Business Core",
         text: "Commercial center with premium hotels, malls, and business travel convenience.",
         tip: "Best for corporate travel and short premium stays.",
-        href: "districts.html"
+        href: "districts"
       },
       davao_del_norte: {
         label: "North Corridor",
         title: "North Urban Corridor",
         text: "Mixed-use district with city growth zones and new dining clusters.",
         tip: "Best for modern city exploration.",
-        href: "districts.html"
+        href: "districts"
       },
       davao_de_oro: {
         label: "South Heritage",
         title: "South Heritage Belt",
         text: "Gateway to heritage stops and cultural landmarks.",
         tip: "Best for history and architecture routes.",
-        href: "districts.html"
+        href: "districts"
       },
       davao_oriental: {
         label: "Coastal Access",
         title: "Coastal Access Zone",
         text: "Convenient jump-off for shoreline and island-linked activities.",
         tip: "Best for coast-focused itineraries.",
-        href: "districts.html"
+        href: "districts"
       },
       davao_del_sur: {
         label: "Highland Loop",
         title: "Highland Loop",
         text: "Mountain and inland loop for cooler climate routes and countryside drives.",
         tip: "Best for scenic routes and upland stays.",
-        href: "districts.html"
+        href: "districts"
       },
       davao_occidental: {
         label: "Island Link",
         title: "Island Link Zone",
         text: "Airport and island-facing access point for beach stays and marine activities.",
         tip: "Best for transfer-efficient resort itineraries.",
-        href: "districts.html"
+        href: "districts"
       }
     }
   },
@@ -462,42 +462,42 @@ const CITY_MAP_DATA = {
         title: "Heritage Core",
         text: "Historic district with signature architecture and key cultural assets.",
         tip: "Best for heritage storytelling routes.",
-        href: "districts.html"
+        href: "districts"
       },
       davao_del_norte: {
         label: "Commercial North",
         title: "Commercial North",
         text: "Business and lifestyle zone with broad dining options.",
         tip: "Best for city convenience and modern stays.",
-        href: "districts.html"
+        href: "districts"
       },
       davao_de_oro: {
         label: "South Community",
         title: "South Community Strip",
         text: "Balanced local district with market access and residential charm.",
         tip: "Best for neighborhood food exploration.",
-        href: "districts.html"
+        href: "districts"
       },
       davao_oriental: {
         label: "Riverfront Arc",
         title: "Riverfront Arc",
         text: "Scenic corridor for leisure walks and relaxed urban pacing.",
         tip: "Best for slow-travel evenings.",
-        href: "districts.html"
+        href: "districts"
       },
       davao_del_sur: {
         label: "Upland Arc",
         title: "Upland Arc",
         text: "Inland route with farm landscapes, river systems, and local town stops.",
         tip: "Best for day-drive explorers and nature-focused stays.",
-        href: "districts.html"
+        href: "districts"
       },
       davao_occidental: {
         label: "Port Gateway",
         title: "Port Gateway Zone",
         text: "Water-linked district that supports ferry transfers and coastal day plans.",
         tip: "Best for waterfront transitions and island side trips.",
-        href: "districts.html"
+        href: "districts"
       }
     }
   }
@@ -514,7 +514,7 @@ function renderCards(target, items, type) {
           <p>${item.text}</p>
           ${
             item.bookingMode === "book"
-              ? `<p class="card-action-row"><a class="card-link-btn" href="${item.ctaUrl || `booking.html#${item.bookingType || "experiences"}`}">${item.ctaLabel || "Open Booking"}</a></p>`
+              ? `<p class="card-action-row"><a class="card-link-btn" href="${item.ctaUrl || `booking#${item.bookingType || "experiences"}`}">${item.ctaLabel || "Open Booking"}</a></p>`
               : item.bookingMode === "provider"
               ? `<p class="card-action-row"><a class="card-link-btn" href="${item.ctaUrl || "#"}" target="_blank" rel="noopener">${item.ctaLabel || "Open Booking"}</a></p>`
               : item.bookingMode === "info" && item.bookingInfo
@@ -678,7 +678,7 @@ function normalizeCmsItem(item, section) {
   return {
     title: item.title || "Untitled",
     text: item.text || "",
-    image: item.image || "assets/fallback-travel.svg",
+    image: item.image || "assets/fallback-davao.svg",
     meta: item.meta || "",
     tag: item.tag || "",
     tags: parsed.userTags,
@@ -822,7 +822,7 @@ function setActiveMapRegion(regionKey) {
   mapZoneTitle.textContent = region.title;
   mapZoneText.textContent = region.text;
   mapZoneTip.textContent = `Tip: ${region.tip}`;
-  mapZoneLink.href = region.href || "districts.html";
+  mapZoneLink.href = region.href || "districts";
 
   mapRegions.forEach((node) => {
     node.classList.toggle("active", node.dataset.region === selectedKey);
@@ -867,7 +867,7 @@ function initIndexMobileMenu() {
     href: anchor.getAttribute("href") || "#",
     label: anchor.textContent ? anchor.textContent.trim() : ""
   }));
-  const current = (window.location.pathname.split("/").pop() || "index.html").toLowerCase();
+  const current = (window.location.pathname.split("/").pop() || "/").toLowerCase();
 
   const menuBtn = document.createElement("button");
   menuBtn.type = "button";
@@ -1125,7 +1125,7 @@ document.addEventListener("keydown", (event) => {
 if (window.BookingApi && typeof window.BookingApi.attachChatWidget === "function") {
   window.BookingApi.attachChatWidget({
     cityResolver: () => resolveCityContent(activeCity).cityLabel,
-    bookingPath: "booking.html"
+    bookingPath: "booking"
   });
 }
 

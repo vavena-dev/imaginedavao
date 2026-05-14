@@ -363,30 +363,58 @@ async function handleChatStream(req, res) {
 
 async function serveStatic(req, res, pathname) {
   const safePath = path.normalize(pathname).replace(/^\/+/g, "");
-  let filePath = path.join(ROOT, safePath);
+  const basePath = path.join(ROOT, safePath);
+  const candidates = [];
 
   if (pathname === "/") {
-    filePath = path.join(ROOT, "index.html");
+    candidates.push(path.join(ROOT, "index.html"));
+  } else {
+    candidates.push(basePath);
+    candidates.push(path.join(basePath, "index.html"));
+
+    // Allow extensionless routes like /eat to resolve to /eat.html.
+    if (!path.extname(basePath)) {
+      candidates.push(`${basePath}.html`);
+    }
   }
 
-  if (!filePath.startsWith(ROOT)) {
-    sendJson(res, 403, { error: "Forbidden" });
-    return;
-  }
-
-  try {
-    const stat = await fsp.stat(filePath);
-    if (stat.isDirectory()) {
-      filePath = path.join(filePath, "index.html");
+  for (const candidate of candidates) {
+    if (!candidate.startsWith(ROOT)) {
+      sendJson(res, 403, { error: "Forbidden" });
+      return;
     }
 
-    const ext = path.extname(filePath).toLowerCase();
-    const type = MIME[ext] || "application/octet-stream";
-    res.writeHead(200, { "Content-Type": type });
-    fs.createReadStream(filePath).pipe(res);
-  } catch {
-    sendJson(res, 404, { error: "Not found" });
+    try {
+      const stat = await fsp.stat(candidate);
+      let filePath = candidate;
+
+      if (stat.isDirectory()) {
+        filePath = path.join(candidate, "index.html");
+        const indexStat = await fsp.stat(filePath);
+        if (!indexStat.isFile()) {
+          continue;
+        }
+      } else if (!stat.isFile()) {
+        continue;
+      }
+
+      const ext = path.extname(filePath).toLowerCase();
+      const type = MIME[ext] || "application/octet-stream";
+      res.writeHead(200, { "Content-Type": type });
+
+      if (req.method === "HEAD") {
+        res.end();
+        return;
+      }
+
+      fs.createReadStream(filePath).pipe(res);
+      return;
+    } catch {
+      // Try next candidate.
+    }
   }
+
+  sendJson(res, 404, { error: "Not found" });
 }
 
 const server = http.createServer(async (req, res) => {
@@ -467,9 +495,32 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  if (reqUrl.pathname.endsWith(".html")) {
+    const safePath = path.normalize(reqUrl.pathname).replace(/^\/+/g, "");
+    const candidate = path.join(ROOT, safePath);
+
+    if (!candidate.startsWith(ROOT)) {
+      sendJson(res, 403, { error: "Forbidden" });
+      return;
+    }
+
+    try {
+      const stat = await fsp.stat(candidate);
+      if (stat.isFile()) {
+        const canonicalPath = reqUrl.pathname === "/index.html" ? "/" : reqUrl.pathname.slice(0, -5);
+        const location = `${canonicalPath}${reqUrl.search}`;
+        res.writeHead(308, { Location: location });
+        res.end();
+        return;
+      }
+    } catch {
+      // Fall through to normal static handling.
+    }
+  }
+
   await serveStatic(req, res, reqUrl.pathname);
 });
 
 server.listen(PORT, HOST, () => {
-  console.log(`ImaginePhilippines server running at http://${HOST}:${PORT}`);
+  console.log(`Imagine Davao server running at http://${HOST}:${PORT}`);
 });

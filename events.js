@@ -12,8 +12,8 @@
       highlights: ["Full-day parade route", "Traditional dance showcases", "Best for first-time visitors"],
       imageWidth: 1400,
       imageHeight: 933,
-      learnMoreUrl: "event-kadayawan-grand-parade.html",
-      bookUrl: "booking.html#experiences"
+      learnMoreUrl: "event-kadayawan-grand-parade",
+      bookUrl: "booking#experiences"
     },
     {
       type: "Night Culture",
@@ -24,8 +24,8 @@
       highlights: ["Sunset-to-night schedule", "Family-friendly route", "Easy transfer options"],
       imageWidth: 1400,
       imageHeight: 933,
-      learnMoreUrl: "event-lanterns-on-the-gulf.html",
-      bookUrl: "booking.html#experiences"
+      learnMoreUrl: "event-lanterns-on-the-gulf",
+      bookUrl: "booking#experiences"
     },
     {
       type: "Music + Food Weekend",
@@ -36,8 +36,8 @@
       highlights: ["Small-stage local artists", "Coffee tasting lanes", "Strong for groups and couples"],
       imageWidth: 1400,
       imageHeight: 933,
-      learnMoreUrl: "event-mindanao-coffee-music-social.html",
-      bookUrl: "booking.html#experiences"
+      learnMoreUrl: "event-mindanao-coffee-music-social",
+      bookUrl: "booking#experiences"
     },
     {
       type: "Active City Series",
@@ -48,8 +48,8 @@
       highlights: ["Timed and non-timed tracks", "Community run format", "Beginner-friendly pacing"],
       imageWidth: 1400,
       imageHeight: 933,
-      learnMoreUrl: "event-davao-river-night-run.html",
-      bookUrl: "booking.html#experiences"
+      learnMoreUrl: "event-davao-river-night-run",
+      bookUrl: "booking#experiences"
     },
     {
       type: "Neighborhood Culture",
@@ -60,8 +60,8 @@
       highlights: ["Guided bilingual hosts", "Local heritage narration", "Includes tasting credits"],
       imageWidth: 1400,
       imageHeight: 933,
-      learnMoreUrl: "event-poblacion-food-culture-walk.html",
-      bookUrl: "booking.html#experiences"
+      learnMoreUrl: "event-poblacion-food-culture-walk",
+      bookUrl: "booking#experiences"
     }
   ];
 

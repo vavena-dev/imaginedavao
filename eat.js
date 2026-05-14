@@ -62,7 +62,7 @@
     heroPrimaryCta.href = source.ctaUrl || fallback.hero.ctaUrl;
     const bookingType = String(source.bookingType || fallback.hero.bookingType || "experiences").toLowerCase();
     heroSecondaryCta.textContent = source.bookingInfo || fallback.hero.bookingInfo;
-    heroSecondaryCta.href = `booking.html#${bookingType}`;
+    heroSecondaryCta.href = `booking#${bookingType}`;
   }
 
   function renderCuration(item) {
@@ -86,10 +86,10 @@
       .map((item) => {
         const learnLabel = item.ctaLabel || "Learn more";
         const learnUrl = item.ctaUrl || "#";
-        const bookUrl = item.bookingInfo || `booking.html#${item.bookingType || "experiences"}`;
+        const bookUrl = item.bookingInfo || `booking#${item.bookingType || "experiences"}`;
         return `
           <article class="eat-card">
-            <img src="${item.image || "assets/fallback-travel.svg"}" alt="${item.title || "Place"}" loading="lazy" decoding="async" />
+            <img src="${item.image || "assets/fallback-davao.svg"}" alt="${item.title || "Place"}" loading="lazy" decoding="async" />
             <div class="eat-card-body">
               <p class="eat-card-type">${item.tag || "Featured"}</p>
               <h3>${item.title || "Untitled"}</h3>

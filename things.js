@@ -23,15 +23,15 @@
       meta: "Things to Do",
       title: "Discover the Best Things to Do in Davao",
       text: "From island escapes and mountain routes to chocolate farms and culture-rich neighborhoods, build a Davao itinerary that feels personal, local and unforgettable.",
-      image: "https://images.unsplash.com/photo-1646940413673-e935f5ab9756?auto=format&fit=crop&w=1960&q=80",
-      tag: "Photo: Davao Gulf viewpoint"
+      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Roxas_Ave_Night_Market_001.jpg/1920px-Roxas_Ave_Night_Market_001.jpg",
+      tag: "Photo: Roxas Ave Night Market (Wikimedia Commons)"
     },
     spotlight: {
       meta: "Seasonal Highlight",
       title: "Kadayawan Cultural Week Routes",
       text: "Plan your week around floral floats, indigenous weaving showcases and curated food stops across downtown Davao.",
       ctaLabel: "Learn more",
-      ctaUrl: "activity-kadayawan-culture-walk.html"
+      ctaUrl: "activity-kadayawan-culture-walk"
     },
     newsletter: {
       title: "Trip Updates",
@@ -112,10 +112,10 @@
         const anchorId = slug(item.meta || item.tag || item.title);
         const learnLabel = item.ctaLabel || "Learn more";
         const learnUrl = item.ctaUrl || "#";
-        const bookUrl = item.bookingInfo || `booking.html#${item.bookingType || "experiences"}`;
+        const bookUrl = item.bookingInfo || `booking#${item.bookingType || "experiences"}`;
         return `
           <article class="things-card" id="${anchorId}">
-            <img src="${item.image || "assets/fallback-travel.svg"}" alt="${item.title || "Activity"}" width="1280" height="760" loading="lazy" decoding="async" />
+            <img src="${item.image || "assets/fallback-davao.svg"}" alt="${item.title || "Activity"}" width="1280" height="760" loading="lazy" decoding="async" />
             <div class="things-card-body">
               <p class="things-card-tag">${item.tag || "Featured"}</p>
               <h3>${item.title || "Untitled"}</h3>
