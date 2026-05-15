@@ -20,24 +20,24 @@ function setSignInMode(mode) {
   const isSignup = mode === "signup";
 
   if (isSignup) {
-    authTitle.textContent = "Create your account";
-    authIntro.textContent = "Use your email and password to start your Imagine Davao account.";
+    authTitle.textContent = "Register as a Partner";
+    authIntro.textContent = "Create a business account for hotels, restaurants, events, and other places that want to be promoted on Imagine Davao.";
     continueEmailBtn.textContent = "Sign in";
-    createAccountBtn.textContent = "Create account";
+    createAccountBtn.textContent = "Create partner account";
     createAccountBtn.classList.remove("ghost");
     createAccountBtn.classList.add("btn");
     continueEmailBtn.classList.remove("btn");
     continueEmailBtn.classList.add("btn", "ghost");
     if (authCornerSignupLink) authCornerSignupLink.classList.add("is-active");
     if (authCornerLoginLink) authCornerLoginLink.classList.remove("is-active");
-    setStatus("Create your account with email and password.");
+    setStatus("Register your partner account with email and password.");
     return;
   }
 
-  authTitle.textContent = "Sign in or create an account";
-  authIntro.textContent = "Continue with your email and password.";
+  authTitle.textContent = "Partner & Admin Sign In";
+  authIntro.textContent = "Use your email and password to access admin tools or manage your business listing profile.";
   continueEmailBtn.textContent = "Sign in";
-  createAccountBtn.textContent = "Sign up";
+  createAccountBtn.textContent = "Register partner";
   continueEmailBtn.classList.remove("ghost");
   continueEmailBtn.classList.add("btn");
   createAccountBtn.classList.remove("btn");
@@ -48,7 +48,14 @@ function setSignInMode(mode) {
 
 function returnUrl() {
   const params = new URLSearchParams(window.location.search);
-  return params.get("returnTo") || "/";
+  const value = String(params.get("returnTo") || "").trim();
+  if (!value) return "";
+  if (value.startsWith("/")) return value;
+  return "/";
+}
+
+function postAuthDestination() {
+  return returnUrl() || "/account";
 }
 
 function syncForgotLink() {
@@ -82,7 +89,7 @@ async function handleEmailSignIn() {
     await window.BookingApi.loginUser(email, password);
     await hydrateProfile();
     setStatus("Signed in.", false, true);
-    window.location.href = returnUrl();
+    window.location.href = postAuthDestination();
   } catch (error) {
     setStatus(error.message || "Unable to sign in.", true);
   }
@@ -92,22 +99,22 @@ async function handleSignUp() {
   const email = emailInput.value.trim().toLowerCase();
   const password = passwordInput.value;
   if (!email || !password) {
-    setStatus("Enter email and password to create your account.", true);
+    setStatus("Enter email and password to create a partner account.", true);
     return;
   }
 
   try {
-    setStatus("Creating account...");
+    setStatus("Creating partner account...");
     const result = await window.BookingApi.signupUser(email, password);
     if (result.needsEmailConfirmation) {
-      setStatus("Account created. Confirm your email, then sign in.", false, true);
+      setStatus("Partner account created. Confirm your email, then sign in.", false, true);
       return;
     }
     await hydrateProfile();
-    setStatus("Account created and signed in.", false, true);
-    window.location.href = returnUrl();
+    setStatus("Partner account created and signed in.", false, true);
+    window.location.href = postAuthDestination();
   } catch (error) {
-    setStatus(error.message || "Unable to create account.", true);
+    setStatus(error.message || "Unable to create partner account.", true);
   }
 }
 
@@ -115,7 +122,7 @@ async function initializeFromOauthHash() {
   const sessionRestored = window.BookingApi.completeOAuthFromHash();
   if (!sessionRestored) return false;
   await hydrateProfile();
-  window.location.href = returnUrl();
+  window.location.href = postAuthDestination();
   return true;
 }
 
@@ -157,6 +164,12 @@ passwordInput.addEventListener("keydown", (event) => {
 
   const user = await hydrateProfile();
   if (user) {
-    window.location.href = returnUrl();
+    const redirectPath = returnUrl();
+    if (redirectPath) {
+      window.location.href = redirectPath;
+      return;
+    }
+    const email = user.email || "this account";
+    setStatus(`You're already signed in as ${email}.`, false, true);
   }
 })();

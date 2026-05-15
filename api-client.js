@@ -167,6 +167,9 @@ function applyWhiteLabel(config) {
 }
 
 function initWhiteLabelAdmin({ onCityChange, cityResolver } = {}) {
+  const currentUser = readAuthSession()?.user || null;
+  if (!canAdminCms(currentUser)) return;
+
   ensureWhiteLabelStyles();
   const config = loadWhiteLabel();
   applyWhiteLabel(config);
@@ -175,11 +178,15 @@ function initWhiteLabelAdmin({ onCityChange, cityResolver } = {}) {
   launch.type = "button";
   launch.className = "wl-admin-launch";
   launch.id = "wlAdminLaunch";
+  launch.dataset.accessResource = "nav:admin_cms";
+  launch.hidden = true;
   launch.textContent = "Brand Admin";
 
   const panel = document.createElement("section");
   panel.className = "wl-admin-panel";
   panel.id = "wlAdminPanel";
+  panel.dataset.accessResource = "nav:admin_cms";
+  panel.hidden = true;
   panel.innerHTML = `
     <h5>White-Label Controls</h5>
     <p>Update brand visuals and default city instantly.</p>
@@ -214,6 +221,7 @@ function initWhiteLabelAdmin({ onCityChange, cityResolver } = {}) {
     </div>
   `;
   document.body.append(panel, launch);
+  syncAccessVisibility(currentUser);
 
   panel.querySelector("#wlDefaultCity").value = config.defaultCity;
 
@@ -618,10 +626,6 @@ function ensureAuthStyles() {
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    .auth-level {
-      font-size: 0.67rem;
-      color: #665e55;
-    }
     .auth-menu {
       position: absolute;
       right: 0;
@@ -689,13 +693,27 @@ function isAdminUser(user) {
   return String(user?.role || "").toLowerCase() === "admin";
 }
 
-function syncAdminOnlyVisibility(user) {
-  const showAdmin = isAdminUser(user);
-  const nodes = document.querySelectorAll("[data-admin-only]");
+function hasAccess(user, resourceKey) {
+  if (isAdminUser(user)) return true;
+  return Boolean(user?.access?.resources?.[resourceKey]);
+}
+
+function canAdminCms(user) {
+  return isAdminUser(user) || Boolean(user?.access?.canAdminCms) || hasAccess(user, "nav:admin_cms") || hasAccess(user, "page:admin");
+}
+
+function syncAccessVisibility(user) {
+  const nodes = document.querySelectorAll("[data-access-resource], [data-admin-only]");
   nodes.forEach((node) => {
-    node.hidden = !showAdmin;
-    node.setAttribute("aria-hidden", showAdmin ? "false" : "true");
+    const resourceKey = node.dataset.accessResource || (node.hasAttribute("data-admin-only") ? "nav:admin_cms" : "");
+    const allowed = resourceKey ? hasAccess(user, resourceKey) : true;
+    node.hidden = !allowed;
+    node.setAttribute("aria-hidden", allowed ? "false" : "true");
   });
+}
+
+function syncAdminOnlyVisibility(user) {
+  syncAccessVisibility(user);
 }
 
 function initAuthWidget() {
@@ -721,13 +739,12 @@ function initAuthWidget() {
   widget.innerHTML = `
     <div class="auth-guest-links" id="authGuestLinks">
       <a class="auth-guest-link" href="signin">Login</a>
-      <a class="auth-guest-link auth-guest-link--primary" href="signin?mode=signup">Sign Up</a>
+      <a class="auth-guest-link auth-guest-link--primary" href="signin?mode=signup">Join as Partner</a>
     </div>
     <button class="auth-chip" id="authChip" type="button">
       <span class="auth-avatar" id="authAvatar">A</span>
       <span class="auth-label">
-        <span class="auth-name" id="authName">Account</span>
-        <span class="auth-level" id="authLevel">Sign in</span>
+        <span class="auth-name" id="authName">Partner Account</span>
       </span>
     </button>
     <div class="auth-menu" id="authMenu"></div>
@@ -747,7 +764,6 @@ function initAuthWidget() {
   const guestLinks = widget.querySelector("#authGuestLinks");
   const avatar = widget.querySelector("#authAvatar");
   const nameLabel = widget.querySelector("#authName");
-  const levelLabel = widget.querySelector("#authLevel");
   const menu = widget.querySelector("#authMenu");
 
   const getDisplayName = (user) => {
@@ -767,16 +783,15 @@ function initAuthWidget() {
     const loggedIn = Boolean(user);
     if (!loggedIn) {
       menu.innerHTML = `
-        <a class="auth-menu-item" href="signin"><span class="auth-menu-icon">→</span> Sign in or create account</a>
+        <a class="auth-menu-item" href="signin"><span class="auth-menu-icon">→</span> Sign in or register</a>
       `;
       return;
     }
-    const adminMenuItem = isAdminUser(user)
-      ? '<a class="auth-menu-item" href="admin"><span class="auth-menu-icon">C</span> Admin CMS</a>'
+    const adminMenuItem = canAdminCms(user)
+      ? '<a class="auth-menu-item" href="admin" data-access-resource="nav:admin_cms"><span class="auth-menu-icon">C</span> ADMIN CMS</a>'
       : "";
     menu.innerHTML = `
-      <a class="auth-menu-item" href="account"><span class="auth-menu-icon">A</span> My account</a>
-      <a class="auth-menu-item" href="my-bookings"><span class="auth-menu-icon">B</span> Bookings</a>
+      <a class="auth-menu-item" href="account"><span class="auth-menu-icon">A</span> Partner account</a>
       ${adminMenuItem}
       <button class="auth-menu-item" id="authSignOutBtn" type="button"><span class="auth-menu-icon">S</span> Sign out</button>
     `;
@@ -791,30 +806,18 @@ function initAuthWidget() {
     });
   };
 
-  const loadLevel = async () => {
-    const token = getAuthToken();
-    if (!token) return null;
-    try {
-      const response = await fetch("/api/auth/bookings", { headers: { Authorization: `Bearer ${token}` } });
-      if (!response.ok) return null;
-      const data = await response.json();
-      return data?.stats?.level || null;
-    } catch {
-      return null;
-    }
-  };
+  syncAccessVisibility(null);
 
   const setChipState = () => {
     const session = readAuthSession();
     const user = session?.user || null;
     const loggedIn = Boolean(user);
-    const displayName = loggedIn ? getDisplayName(user) : "Account";
+    const displayName = loggedIn ? getDisplayName(user) : "Partner Account";
     guestLinks.style.display = loggedIn ? "none" : "inline-flex";
     chip.style.display = loggedIn ? "inline-flex" : "none";
     avatar.textContent = getInitial(displayName);
-    nameLabel.textContent = loggedIn ? displayName : "Account";
-    levelLabel.textContent = loggedIn ? "Signed in" : "Sign in";
-    chip.title = loggedIn ? user.email || "Signed in" : "Sign in or create account";
+    nameLabel.textContent = loggedIn ? displayName : "Partner Account";
+    chip.title = loggedIn ? user.email || "Signed in" : "Sign in or register";
     buildMenu(user);
     syncAdminOnlyVisibility(user);
   };
@@ -842,13 +845,8 @@ function initAuthWidget() {
         writeAuthSession({ ...session, user: { ...(session.user || {}), ...profile } });
       }
     })
-    .then(async () => {
+    .then(() => {
       setChipState();
-      const session = readAuthSession();
-      if (session?.user) {
-        const level = await loadLevel();
-        levelLabel.textContent = level ? `Level ${level}` : "Signed in";
-      }
     })
     .finally(() => {
       emitAuthEvent();
@@ -870,6 +868,7 @@ window.BookingApi = {
   resetPassword,
   signupUser,
   updateUserProfile,
+  hasAccess,
   streamAssistantChat,
   attachChatWidget,
   initWhiteLabelAdmin

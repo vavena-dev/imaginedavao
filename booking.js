@@ -549,12 +549,6 @@ async function runInstantDemoResults() {
 }
 
 async function trackSelection(item, category) {
-  const session = window.BookingApi && typeof window.BookingApi.readAuthSession === "function" ? window.BookingApi.readAuthSession() : null;
-  if (!session || !session.user) {
-    writeResult("Please sign in from the Account button (top-right) before selecting and saving booking preferences.");
-    return null;
-  }
-
   const sourceUrl = addAffiliateParams(item.affiliateUrl || AFFILIATE.endpoints[category] || AFFILIATE.endpoints.hotels);
   if (window.BookingApi && typeof window.BookingApi.postTrackedBooking === "function") {
     const tracked = await window.BookingApi.postTrackedBooking({
@@ -564,9 +558,7 @@ async function trackSelection(item, category) {
       payload: {
         selectedId: item.id,
         selectedTitle: item.title,
-        price: item.price,
-        userId: session.user.id || "",
-        userEmail: session.user.email || ""
+        price: item.price
       },
       title: `${category} selection`
     });
@@ -659,7 +651,7 @@ document.body.addEventListener("click", async (event) => {
     const trackedUrl = await trackSelection(item, category);
     if (trackedUrl) {
       openPartnerCheckout(item, trackedUrl, category);
-      writeResult(`Selected <strong>${item.title}</strong>. This preference has been saved for concierge follow-up and booking confirmation.`);
+      writeResult(`Selected <strong>${item.title}</strong>. Continue to secure partner checkout to complete your booking.`);
     }
   }
 });

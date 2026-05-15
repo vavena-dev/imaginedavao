@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Booking Account | ImagineDavao · Imagine Davao</title>
+  <title>Partner Account | Imagine Davao</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -47,93 +47,98 @@
       <div class="account-hero-profile">
         <div class="avatar" id="avatarBadge" aria-hidden="true">I</div>
         <div>
-          <p class="eyebrow">Booking Account</p>
-          <h1 id="accountHeading">Hi, traveler</h1>
-          <p class="account-lead" id="accountMessage">Sign in to manage bookings, traveler details, and rewards.</p>
+          <p class="eyebrow">Partner Portal</p>
+          <h1 id="accountHeading">Hi, partner</h1>
+          <p class="account-lead" id="accountMessage">Sign in to manage your business profile and promotional opportunities on Imagine Davao.</p>
         </div>
       </div>
       <div class="account-hero-actions">
-        <a class="card-link-btn" href="booking">Open Booking</a>
-        <a class="card-link-btn" href="my-bookings">My Bookings</a>
-        <a class="card-link-btn" id="goToSignIn" href="signin">Sign In</a>
+        <a class="card-link-btn" href="partner">Partner Page</a>
       </div>
     </section>
 
-    <section class="account-grid" aria-label="Booking account dashboard">
+    <section class="account-grid" aria-label="Partner account dashboard">
       <article class="account-card account-card-wide">
-        <p class="eyebrow">Rewards</p>
-        <h2>Booking rewards status</h2>
-        <p class="muted">Booking-related rewards only, aligned with stays, cars, and flight alerts.</p>
+        <p class="eyebrow">Featured Listings</p>
+        <h2>Grow your visibility on Imagine Davao</h2>
+        <p class="muted">Use this account to prepare listing details and coordinate campaigns for hotels, restaurants, events, and destination experiences.</p>
         <div class="reward-row" role="list" aria-label="Reward benefits">
           <div class="reward-item" role="listitem">
-            <p class="reward-value">10% Off</p>
-            <p class="reward-label">Selected stays</p>
+            <p class="reward-value">Listing</p>
+            <p class="reward-label">Feature your place profile</p>
           </div>
           <div class="reward-item" role="listitem">
-            <p class="reward-value">10% Off</p>
-            <p class="reward-label">Rental cars</p>
+            <p class="reward-value">Campaign</p>
+            <p class="reward-label">Request marketing support</p>
           </div>
           <div class="reward-item" role="listitem">
-            <p class="reward-value">Alerts</p>
-            <p class="reward-label">Flight price drops</p>
+            <p class="reward-value">Admin</p>
+            <p class="reward-label">Manage content approvals</p>
           </div>
         </div>
       </article>
 
       <article class="account-card">
-        <p class="eyebrow">Progress</p>
-        <h2>Next reward level</h2>
-        <p class="muted">5 completed bookings away from the next level.</p>
-        <a class="account-link" href="my-bookings">Check progress</a>
+        <p class="eyebrow">Use Case</p>
+        <h2>Who this account is for</h2>
+        <p class="muted">Admins and businesses that want to be advertised, promoted, or featured on Imagine Davao.</p>
       </article>
 
       <article class="account-card">
-        <p class="eyebrow">Credits</p>
-        <h2>Travel credits</h2>
-        <p class="credit-value">0 credits</p>
-        <p class="muted">Credits and vouchers appear after eligible bookings.</p>
+        <p class="eyebrow">Revenue Stream</p>
+        <h2>Partner-ready platform</h2>
+        <p class="muted">As traction grows, this portal supports paid feature placements and campaign partnerships.</p>
       </article>
 
-      <section class="account-card account-card-wide" id="profilePanel" hidden aria-label="Traveler details">
+      <section class="account-card account-card-wide" aria-label="Partner programs">
+        <p class="eyebrow">Income Stream</p>
+        <h2>Current partner programs</h2>
+        <p class="muted">Choose the model that matches how your business earns from travellers: visibility, seasonal campaigns, affiliate bookings, or qualified leads.</p>
+        <div class="account-program-list" id="accountPartnerPrograms" aria-live="polite">
+          <p class="muted">Loading partner programs.</p>
+        </div>
+      </section>
+
+      <section class="account-card account-card-wide" id="profilePanel" hidden aria-label="Partner details">
         <p class="eyebrow">Profile</p>
-        <h2>Traveler details</h2>
+        <h2>Business details</h2>
         <div class="profile-grid">
           <label>
-            Full Name
+            Business Name
             <input id="fullName" name="full_name" type="text" autocomplete="name" />
           </label>
           <label>
-            Phone
+            Contact Number
             <input id="phone" name="phone" type="tel" autocomplete="tel" />
           </label>
           <label class="full">
-            Avatar URL
+            Website or Listing URL
             <input id="avatarUrl" name="avatar_url" type="url" inputmode="url" autocomplete="url" />
           </label>
         </div>
         <div class="action-row">
-          <button class="account-btn" id="saveProfileBtn" type="button">Save Traveler Details</button>
+          <button class="account-btn" id="saveProfileBtn" type="button">Save Partner Details</button>
           <button class="account-btn ghost" id="signOutBtn" type="button">Sign Out</button>
         </div>
         <p class="status" id="profileStatus" aria-live="polite"></p>
       </section>
 
       <article class="account-card">
-        <p class="eyebrow">Payments</p>
-        <h2>Payment methods</h2>
-        <p class="muted">Manage cards and wallet methods used for bookings.</p>
+        <p class="eyebrow">Campaign Goal</p>
+        <h2>What to promote</h2>
+        <p class="muted">Share your key service and target audience so our team can align placements across the site.</p>
       </article>
 
       <article class="account-card">
-        <p class="eyebrow">Preferences</p>
-        <h2>Traveler preferences</h2>
-        <p class="muted">Save room, seat, and transport preferences for fast checkout.</p>
+        <p class="eyebrow">Content</p>
+        <h2>Promotion assets</h2>
+        <p class="muted">Prepare brand photos, offer text, and call-to-action links for your feature listing.</p>
       </article>
 
       <article class="account-card">
-        <p class="eyebrow">Notifications</p>
-        <h2>Booking alerts</h2>
-        <p class="muted">Booking confirmations, reminders, and cancellation updates.</p>
+        <p class="eyebrow">Support</p>
+        <h2>Coordination updates</h2>
+        <p class="muted">Use this account for onboarding and campaign coordination updates from the Imagine Davao team.</p>
       </article>
     </section>
   </main>

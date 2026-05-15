@@ -55,7 +55,6 @@ console.error('[vercel-api-check] Suggested disable-first candidates:');
   'api/admin/booking-inventory.js',
   'api/auth/forgot-password.js',
   'api/auth/reset-password.js',
-  'api/auth/bookings.js',
   'api/cms/items.js',
   'api/booking/inventory.js'
 ].forEach((name) => console.error(`- ${name}`));

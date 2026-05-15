@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Bookings | Imagine Davao</title>
+  <title>Partner Access | Imagine Davao</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -30,24 +30,15 @@
     </header>
 
     <section class="panel">
-      <h1>Booking History</h1>
-      <p class="muted" id="bookingsSub">Sign in to view your booking history and level progress.</p>
+      <h1>Partner Portal Notice</h1>
+      <p class="muted">Traveler booking history and level tracking are no longer part of Imagine Davao accounts.</p>
       <div class="card">
-        <p class="level-value" id="bookingsLevel">Level 1</p>
-        <p class="muted" id="bookingsCount">0 bookings</p>
-        <div class="progress"><div class="progress-fill" id="bookingsProgress"></div></div>
-        <p class="muted" id="bookingsNext">Next level at 5 bookings.</p>
+        <p>Use the partner account page to manage business listing details and promotion requests.</p>
+        <a class="btn block-link" href="account">Open Partner Account</a>
       </div>
-    </section>
-
-    <section class="panel">
-      <h2>Recent Bookings</h2>
-      <div id="bookingsGrid" class="grid"></div>
-      <p class="status" id="bookingsStatus" aria-live="polite"></p>
     </section>
   </main>
 
   <script src="api-client.js"></script>
-  <script src="my-bookings.js"></script>
 </body>
 </html>

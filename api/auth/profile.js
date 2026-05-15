@@ -1,5 +1,19 @@
 const { readJsonBody, sendJson } = require("../../lib/common");
 const { hasSupabaseAuthConfig, resolveAuthContext, updateProfileById } = require("../../lib/auth");
+const { buildAccessSummary } = require("../../lib/access-control");
+
+function profilePayload(auth, profile = auth.profile) {
+  const role = profile?.role || "partner";
+  return {
+    id: auth.user.id,
+    email: auth.user.email || profile?.email || "",
+    role,
+    fullName: profile?.full_name || "",
+    phone: profile?.phone || "",
+    avatarUrl: profile?.avatar_url || "",
+    access: buildAccessSummary({ role })
+  };
+}
 
 module.exports = async function handler(req, res) {
   if (!hasSupabaseAuthConfig()) return sendJson(res, 500, { error: "Supabase auth is not configured" });
@@ -9,14 +23,7 @@ module.exports = async function handler(req, res) {
 
   if (req.method === "GET") {
     return sendJson(res, 200, {
-      profile: {
-        id: auth.user.id,
-        email: auth.user.email || auth.profile?.email || "",
-        role: auth.profile?.role || "user",
-        fullName: auth.profile?.full_name || "",
-        phone: auth.profile?.phone || "",
-        avatarUrl: auth.profile?.avatar_url || ""
-      }
+      profile: profilePayload(auth)
     });
   }
 
@@ -29,15 +36,13 @@ module.exports = async function handler(req, res) {
         phone: body.phone,
         avatar_url: body.avatarUrl
       });
+      const mergedProfile = {
+        ...(auth.profile || {}),
+        ...(updated || {}),
+        role: updated?.role || auth.profile?.role || "partner"
+      };
       return sendJson(res, 200, {
-        profile: {
-          id: auth.user.id,
-          email: updated?.email || auth.user.email || "",
-          role: updated?.role || auth.profile?.role || "user",
-          fullName: updated?.full_name || "",
-          phone: updated?.phone || "",
-          avatarUrl: updated?.avatar_url || ""
-        }
+        profile: profilePayload(auth, mergedProfile)
       });
     } catch (error) {
       return sendJson(res, 400, { error: error.message || "Failed to update profile" });

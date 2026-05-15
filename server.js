@@ -33,6 +33,7 @@ loadEnvFile(path.join(process.cwd(), ".env"));
 const cmsContentHandler = require("./api/cms/content");
 const cmsItemsHandler = require("./api/cms/items");
 const searchHandler = require("./api/search");
+const partnersHandler = require("./api/partners");
 const bookingInventoryHandler = require("./api/booking/inventory");
 const adminBookingInventoryHandler = require("./api/admin/booking-inventory");
 const authLoginHandler = require("./api/auth/login");
@@ -41,7 +42,6 @@ const authLogoutHandler = require("./api/auth/logout");
 const authForgotPasswordHandler = require("./api/auth/forgot-password");
 const authResetPasswordHandler = require("./api/auth/reset-password");
 const authProfileHandler = require("./api/auth/profile");
-const authBookingsHandler = require("./api/auth/bookings");
 
 const HOST = process.env.HOST || "127.0.0.1";
 const PORT = Number(process.env.PORT || 8080);
@@ -91,14 +91,6 @@ const RESULT_IMAGES = {
 function sendJson(res, statusCode, payload) {
   res.writeHead(statusCode, { "Content-Type": "application/json; charset=utf-8" });
   res.end(JSON.stringify(payload));
-}
-
-function getIp(req) {
-  const forwarded = req.headers["x-forwarded-for"];
-  if (typeof forwarded === "string" && forwarded.trim()) {
-    return forwarded.split(",")[0].trim();
-  }
-  return req.socket.remoteAddress || "unknown";
 }
 
 async function readBody(req) {
@@ -176,6 +168,9 @@ async function handleBookLink(req, res) {
 
     const trackId = crypto.randomUUID();
     const trackedUrl = buildTrackedUrl(url, trackId);
+    const safePayload = payload && typeof payload === "object" ? { ...payload } : {};
+    delete safePayload.userId;
+    delete safePayload.userEmail;
 
     await appendClickLog({
       trackId,
@@ -186,10 +181,7 @@ async function handleBookLink(req, res) {
       title,
       url,
       trackedUrl,
-      payload,
-      userAgent: req.headers["user-agent"] || "",
-      referer: req.headers.referer || "",
-      ip: getIp(req)
+      payload: safePayload
     });
 
     sendJson(res, 200, { trackId, trackedUrl });
@@ -435,6 +427,11 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  if (req.method === "GET" && reqUrl.pathname === "/api/partners") {
+    await partnersHandler(req, res);
+    return;
+  }
+
   if (req.method === "POST" && reqUrl.pathname === "/api/auth/login") {
     await authLoginHandler(req, res);
     return;
@@ -462,11 +459,6 @@ const server = http.createServer(async (req, res) => {
 
   if ((req.method === "GET" || req.method === "PUT") && reqUrl.pathname === "/api/auth/profile") {
     await authProfileHandler(req, res);
-    return;
-  }
-
-  if (req.method === "GET" && reqUrl.pathname === "/api/auth/bookings") {
-    await authBookingsHandler(req, res);
     return;
   }
 

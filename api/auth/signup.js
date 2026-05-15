@@ -1,5 +1,6 @@
 const { readJsonBody, sendJson } = require("../../lib/common");
 const { ensureProfileForUser, hasSupabaseAuthConfig, signupWithPassword } = require("../../lib/auth");
+const { buildAccessSummary } = require("../../lib/access-control");
 
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") return sendJson(res, 405, { error: "Method not allowed" });
@@ -14,9 +15,11 @@ module.exports = async function handler(req, res) {
 
     const result = await signupWithPassword(email, password);
     const user = result?.user || null;
+    let profile = null;
     if (user) {
-      await ensureProfileForUser(user, "user");
+      profile = await ensureProfileForUser(user, "partner");
     }
+    const access = buildAccessSummary(profile || { role: "partner" });
 
     return sendJson(res, 200, {
       accessToken: result?.access_token || "",
@@ -26,10 +29,11 @@ module.exports = async function handler(req, res) {
         ? {
             id: user.id,
             email: user.email || email,
-            role: "user",
+            role: profile?.role || "partner",
             fullName: "",
             phone: "",
-            avatarUrl: ""
+            avatarUrl: "",
+            access
           }
         : null
     });
