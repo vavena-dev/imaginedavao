@@ -58,19 +58,28 @@
   </header>
 
   <main id="mainContent">
-    <section class="hero" id="now">
+    <section class="hero" id="now" aria-labelledby="heroTitle">
+      <div class="hero-media fade-up delay-1">
+        <img id="heroImage" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Mount_Apo_Banner.JPG/1920px-Mount_Apo_Banner.JPG" alt="Mount Apo rising above the Davao highlands" width="1920" height="1080" fetchpriority="high" decoding="async" />
+        <span class="hero-photo-credit" id="heroPhotoCredit">Mount Apo / Wikimedia Commons</span>
+      </div>
       <div class="hero-copy fade-up">
-          <p class="eyebrow">Signature Campaign</p>
-        <h1 id="heroTitle">Built by Baybay, Mountain and Market</h1>
-        <p id="heroText">Start your Davao journey where dawn hikes meet night markets, and every neighborhood tells a different story.</p>
+        <p class="eyebrow">Signature Campaign</p>
+        <h1 id="heroTitle">Where Mount Apo Meets the City</h1>
+        <p id="heroText">Plan a Davao escape that moves from cool highland mornings to fruit markets, coastal roads, and late-night food streets.</p>
+        <div class="hero-signal-row" aria-label="Davao trip styles">
+          <span>Mountain</span>
+          <span>Market</span>
+          <span>Island</span>
+        </div>
         <div class="hero-cta-row">
           <a href="booking" class="cta-primary" id="heroCta">Plan & Book Davao</a>
           <button class="carousel-toggle" id="carouselToggle" type="button">Next Story</button>
         </div>
       </div>
-      <div class="hero-media fade-up delay-1">
-        <img id="heroImage" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Davao_City_skyline_at_night_01.jpg/1920px-Davao_City_skyline_at_night_01.jpg" alt="Davao City skyline at dusk" width="1920" height="1080" fetchpriority="high" decoding="async" />
+      <div class="hero-meta fade-up delay-1" aria-label="Davao travel highlights">
         <div class="hero-stamp" id="heroStamp">DVO</div>
+        <p>Highlands, city routes, and island access in one Mindanao gateway.</p>
       </div>
     </section>
 

@@ -33,25 +33,31 @@ const CITY_DATA = {
     },
     heroStories: [
       {
-        title: "Built by Baybay, Mountain and Market",
-        text: "Start your Davao journey where dawn hikes meet night markets, and every neighborhood tells a different story.",
-        cta: "Explore Highlights",
-        image: "https://upload.wikimedia.org/wikipedia/commons/4/4f/2022-10-07_Davao-Samal_Bridge_002.jpg",
-        alt: "Davao skyline at dusk"
+        title: "Where Mount Apo Meets the City",
+        text: "Plan a Davao escape that moves from cool highland mornings to fruit markets, coastal roads, and late-night food streets.",
+        cta: "Plan & Book Davao",
+        href: "booking",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Mount_Apo_Banner.JPG/1920px-Mount_Apo_Banner.JPG",
+        alt: "Mount Apo rising above the Davao highlands",
+        credit: "Mount Apo / Wikimedia Commons"
       },
       {
-        title: "Fruit Capital Energy, All Year",
-        text: "Taste durian, pomelo and cacao in local routes designed for food-first travelers and curious families.",
+        title: "Fruit Capital Energy, After Dark",
+        text: "Follow durian, cacao, and seafood routes from Magsaysay fruit stands to Roxas night market tables.",
         cta: "See Food Routes",
+        href: "eat",
         image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Fruit_market_in_Magsaysay_Davao_City.jpg/1920px-Fruit_market_in_Magsaysay_Davao_City.jpg",
-        alt: "Fresh produce and tropical fruits"
+        alt: "Fresh tropical fruit at a Davao market",
+        credit: "Magsaysay fruit market / Wikimedia Commons"
       },
       {
-        title: "From Samal Shores to High Ridge Trails",
-        text: "Pair beach mornings and mountain sunsets in one seamless long weekend.",
-        cta: "Plan Weekend",
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Roxas_Ave_Night_Market_001.jpg/1920px-Roxas_Ave_Night_Market_001.jpg",
-        alt: "Tropical shoreline near Davao"
+        title: "City, Coast, Highlands",
+        text: "Use Davao as the launch point for coastal drives, Samal day plans, and highland viewpoints in one trip.",
+        cta: "Build Your Route",
+        href: "booking#experiences",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Davao_City_Coastal_Road.jpg/1920px-Davao_City_Coastal_Road.jpg",
+        alt: "Davao City Coastal Road beside the gulf",
+        credit: "Davao Coastal Road / Wikimedia Commons"
       }
     ],
     districts: [
@@ -303,6 +309,7 @@ const heroText = document.getElementById("heroText");
 const heroCta = document.getElementById("heroCta");
 const heroImage = document.getElementById("heroImage");
 const heroStamp = document.getElementById("heroStamp");
+const heroPhotoCredit = document.getElementById("heroPhotoCredit");
 const districtGrid = document.getElementById("districtGrid");
 const eventGrid = document.getElementById("eventGrid");
 const dealGrid = document.getElementById("dealGrid");
@@ -589,8 +596,12 @@ function updateHero(story) {
   heroTitle.textContent = story.title;
   heroText.textContent = story.text;
   heroCta.textContent = story.cta;
+  heroCta.href = story.href || "booking";
   heroImage.src = story.image;
   heroImage.alt = story.alt;
+  if (heroPhotoCredit) {
+    heroPhotoCredit.textContent = story.credit || "Davao image / Wikimedia Commons";
+  }
 }
 
 function buildFallbackCity(base) {

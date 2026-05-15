@@ -452,6 +452,10 @@ function isAdminRole(user) {
   return String(user?.role || "").toLowerCase() === "admin";
 }
 
+function canOpenAdminCms(user) {
+  return isAdminRole(user) || Boolean(user?.access?.canAdminCms) || Boolean(user?.access?.resources?.["page:admin"]);
+}
+
 async function guardAdminAccess() {
   const adminToken = localStorage.getItem(ADMIN_TOKEN_KEY);
   if (adminToken) return true;
@@ -470,7 +474,7 @@ async function guardAdminAccess() {
     });
     const data = await response.json().catch(() => ({}));
     const user = data?.user || data?.profile || null;
-    if (!response.ok || !isAdminRole(user)) {
+    if (!response.ok || !canOpenAdminCms(user)) {
       alert("Admin access is required to open the CMS.");
       window.location.href = "/";
       return false;
@@ -894,6 +898,7 @@ filterPage.addEventListener("change", () => {
 async function initAdminPage() {
   const allowed = await guardAdminAccess();
   if (!allowed) return;
+  document.body.classList.remove("admin-locked");
 
   syncSectionOptions(filterSection.value);
   applyFieldProfile();

@@ -1,0 +1,94 @@
+[
+  {
+    "id": "partner-davao-featured-listing",
+    "city": "davao",
+    "slug": "featured-listing",
+    "title": "Featured Listing",
+    "category": "visibility",
+    "partnerType": "Hotels, restaurants, attractions, tour operators",
+    "placementType": "Priority card on matching public pages",
+    "billingModel": "monthly",
+    "priceAmount": 12000,
+    "priceCurrency": "PHP",
+    "commissionRate": 0,
+    "leadFeeAmount": 0,
+    "featuredSlots": 4,
+    "summary": "A recurring placement for partners that want steady visibility across high-intent travel pages.",
+    "benefits": [
+      "Priority card placement on one matching section page",
+      "Tracked call-to-action link for booking or enquiry traffic",
+      "Monthly performance summary for renewals and upgrades"
+    ],
+    "status": "published",
+    "sortOrder": 1
+  },
+  {
+    "id": "partner-davao-seasonal-campaign",
+    "city": "davao",
+    "slug": "seasonal-campaign",
+    "title": "Seasonal Campaign Feature",
+    "category": "campaign",
+    "partnerType": "Events, festivals, restaurants, hotels",
+    "placementType": "Campaign bundle across partner page, deals, and booking prompts",
+    "billingModel": "campaign",
+    "priceAmount": 35000,
+    "priceCurrency": "PHP",
+    "commissionRate": 0,
+    "leadFeeAmount": 0,
+    "featuredSlots": 3,
+    "summary": "A time-boxed promotion for festivals, long weekends, openings, and seasonal offers.",
+    "benefits": [
+      "Campaign story and offer card across relevant pages",
+      "Partner offer surfaced inside booking and itinerary prompts",
+      "Post-campaign click and enquiry report"
+    ],
+    "status": "published",
+    "sortOrder": 2
+  },
+  {
+    "id": "partner-davao-affiliate-booking",
+    "city": "davao",
+    "slug": "affiliate-booking",
+    "title": "Affiliate Booking Row",
+    "category": "booking",
+    "partnerType": "Hotels, experiences, car rentals",
+    "placementType": "Bookable row in the on-site booking demo flow",
+    "billingModel": "commission",
+    "priceAmount": 0,
+    "priceCurrency": "PHP",
+    "commissionRate": 8,
+    "leadFeeAmount": 0,
+    "featuredSlots": 10,
+    "summary": "A performance-led option where ImagineDavao earns from tracked bookings instead of a fixed placement fee.",
+    "benefits": [
+      "Partner row in Flights, Hotels, Experiences, or Cars",
+      "Tracked outbound booking URL",
+      "Commission or affiliate payout tied to completed partner checkout"
+    ],
+    "status": "published",
+    "sortOrder": 3
+  },
+  {
+    "id": "partner-davao-qualified-lead",
+    "city": "davao",
+    "slug": "qualified-lead",
+    "title": "Qualified Lead Package",
+    "category": "lead-generation",
+    "partnerType": "Tour operators, event organizers, private transport",
+    "placementType": "Inquiry routing from itinerary and concierge surfaces",
+    "billingModel": "lead_fee",
+    "priceAmount": 0,
+    "priceCurrency": "PHP",
+    "commissionRate": 0,
+    "leadFeeAmount": 450,
+    "featuredSlots": 8,
+    "summary": "A low-friction model for partners that prefer paying only when a traveler asks for a quote or contact.",
+    "benefits": [
+      "Lead capture from relevant planning journeys",
+      "Category and city filters to keep enquiries qualified",
+      "Lead fee charged only for valid traveller enquiries"
+    ],
+    "status": "published",
+    "sortOrder": 4
+  }
+]

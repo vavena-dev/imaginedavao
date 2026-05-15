@@ -120,13 +120,17 @@
     statsGrid.innerHTML = source
       .map((item) => {
         const label = normalizeLabel(item.title);
+        let displayTitle = item.title || "Metric";
         let value = item.text || "0";
 
         if (label.includes("featured") && label.includes("place")) value = String(dynamic.featuredPlaces);
-        if (label.includes("district")) value = String(dynamic.diningDistricts);
+        if (label.includes("district")) {
+          value = String(dynamic.diningDistricts);
+          displayTitle = dynamic.diningDistricts === 1 ? "Dining District" : "Dining Districts";
+        }
         if (label.includes("booking")) value = String(dynamic.bookingHub);
 
-        return `<div><dt>${value}</dt><dd>${item.title || "Metric"}</dd></div>`;
+        return `<div><dt>${value}</dt><dd>${displayTitle}</dd></div>`;
       })
       .join("");
   }

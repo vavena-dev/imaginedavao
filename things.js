@@ -103,7 +103,7 @@
 
   function renderCards(items) {
     if (!items.length) {
-      thingsGrid.innerHTML = '<article class="things-card"><div class="things-card-body"><h3>No activities configured yet.</h3><p>Add cards from Admin CMS.</p></div></article>';
+      thingsGrid.innerHTML = '<article class="things-card"><div class="things-card-body"><h3>Activity highlights are being refreshed.</h3><p>Check back for the latest Davao experiences.</p></div></article>';
       return;
     }
 

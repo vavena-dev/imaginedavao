@@ -16,6 +16,10 @@ async function hasAdminAccess(req) {
 }
 
 module.exports = async function handler(req, res) {
+  if (!(await hasAdminAccess(req))) {
+    return sendJson(res, 401, { error: "Unauthorized" });
+  }
+
   if (req.method === "GET") {
     try {
       const url = new URL(req.url, "http://localhost");
@@ -31,10 +35,6 @@ module.exports = async function handler(req, res) {
     } catch (error) {
       return sendJson(res, 500, { error: error.message || "Failed to list items" });
     }
-  }
-
-  if (!(await hasAdminAccess(req))) {
-    return sendJson(res, 401, { error: "Unauthorized" });
   }
 
   if (req.method === "POST") {

@@ -1,2 +1,174 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Partner With Tourism | Imagine Davao</title><link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet" /><link rel="stylesheet" href="page.css" /><link rel="stylesheet" href="main-footer.css" /></head><body><div class="wrap"><header class="topbar"><a class="brand" href="/"><span class="kicker">Imagine</span><span class="city">Davao</span></a><a class="back" href="/">Back to City Guide</a></header><section class="hero"><div class="hero-copy"><p>Partner Program</p><h1>Grow With Davao Tourism</h1><p class="desc">A landing page for hotels, restaurants, attractions and operators to join campaign features and co-marketing placements.</p></div><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Davao_City_skyline_at_night_01.jpg/1920px-Davao_City_skyline_at_night_01.jpg" alt="Partnership" /></section><section class="grid"><article class="card"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Davao_Agdao_skyline_%28Davao_City%3B_04-22-2024%29.jpg/1920px-Davao_Agdao_skyline_%28Davao_City%3B_04-22-2024%29.jpg" alt="Hotel" /><div class="body"><h3>Hospitality Partners</h3><p>List room packages and city pass bundles.</p></div></article><article class="card"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Davao_City_Coastal_Road.jpg/1920px-Davao_City_Coastal_Road.jpg" alt="Restaurant" /><div class="body"><h3>Food Partners</h3><p>Get featured in seasonal dining campaigns.</p></div></article><article class="card"><img src="https://upload.wikimedia.org/wikipedia/commons/0/04/2022-10-07_Davao-Samal_Bridge_001.jpg" alt="Attraction" /><div class="body"><h3>Attraction Partners</h3><p>Promote experiences, events and discounts.</p></div></article></section></div><div class="chat-widget" id="chatWidget"><button class="chat-fab" id="chatFab"><span>AI</span><small>Ask Imagine AI</small></button><section class="chat-panel"><header class="chat-header"><div><h4>Imagine AI Concierge</h4><p>Live AI Travel Assistant</p></div><button id="closeChat" class="close-btn">Close</button></header><div class="chat-body"><article class="chat-msg ai">Ask for itinerary planning, hotel picks, flight routes, and activity recommendations.</article></div><form class="chat-input-row" id="chatForm"><input id="chatInput" type="text" /><button type="submit">Send</button></form></section></div><script src="api-client.js"></script><script src="main-footer.js"></script><script src="page.js"></script></body></html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Partner Program | Imagine Davao</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="page.css" />
+  <link rel="stylesheet" href="main-footer.css" />
+  <link rel="stylesheet" href="partner.css" />
+</head>
+<body data-page="partner" data-section="partner">
+  <a class="skip-link" href="#partnerMain">Skip to main content</a>
+  <div class="wrap">
+    <header class="topbar partner-topbar">
+      <a class="brand" href="/">
+        <span class="kicker">Imagine</span>
+        <span class="city">Davao</span>
+      </a>
+      <div class="partner-actions">
+        <a class="back" href="/">Back to City Guide</a>
+        <a class="back" href="admin" data-access-resource="nav:admin_cms" data-admin-only hidden>ADMIN CMS</a>
+      </div>
+    </header>
+
+    <main id="partnerMain">
+      <section class="hero partner-hero">
+        <div class="hero-copy partner-hero-copy">
+          <p>Partner Program</p>
+          <h1>Turn Davao Travel Demand Into Measurable Revenue</h1>
+          <p class="desc">ImagineDavao gives hotels, restaurants, tours, events, and transport operators a clear route from discovery to booking, lead generation, and sponsored campaign visibility.</p>
+          <div class="partner-hero-links">
+            <a class="partner-primary" href="signin?mode=signup">Join as Partner</a>
+            <a class="partner-secondary" href="#partnerPrograms">View Packages</a>
+          </div>
+        </div>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Davao_City_skyline_at_night_01.jpg/1920px-Davao_City_skyline_at_night_01.jpg" alt="Davao city skyline at night" />
+      </section>
+
+      <section class="partner-model" aria-labelledby="partnerModelTitle">
+        <div class="partner-section-copy">
+          <p class="eyebrow">How Partner Pages Usually Work</p>
+          <h2 id="partnerModelTitle">A partner page is a sales funnel for local businesses</h2>
+          <p>Tourism partner pages usually do four jobs: explain who can join, package paid visibility, route traffic into bookings or enquiries, and prove performance so partners renew.</p>
+        </div>
+        <div class="partner-table-wrap">
+          <table class="partner-table">
+            <thead>
+              <tr>
+                <th>Step</th>
+                <th>What Happens</th>
+                <th>Income Stream</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Package</td>
+                <td>ImagineDavao defines partner offers by category, placement, and billing model.</td>
+                <td>Monthly listing or campaign fee</td>
+              </tr>
+              <tr>
+                <td>Publish</td>
+                <td>Approved partners appear on matching travel pages, booking rows, or campaign surfaces.</td>
+                <td>Sponsored placement</td>
+              </tr>
+              <tr>
+                <td>Route</td>
+                <td>Travellers click into partner checkout, booking requests, contact links, or quote forms.</td>
+                <td>Affiliate commission or lead fee</td>
+              </tr>
+              <tr>
+                <td>Report</td>
+                <td>Clicks, leads, placement dates, and campaign outcomes support renewal conversations.</td>
+                <td>Renewal, upsell, and seasonal bundles</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="partner-programs" id="partnerPrograms" aria-labelledby="partnerProgramsTitle">
+        <div class="partner-section-copy">
+          <p class="eyebrow">Partner Income System</p>
+          <h2 id="partnerProgramsTitle">Programs that can be priced, tracked, and renewed</h2>
+          <p id="partnerRevenueSummary">Loading current partner programs from ImagineDavao.</p>
+        </div>
+        <div class="partner-program-grid" id="partnerProgramGrid" aria-live="polite">
+          <article class="partner-loading">Loading partner programs...</article>
+        </div>
+        <div class="partner-table-wrap partner-program-table-wrap">
+          <table class="partner-table">
+            <thead>
+              <tr>
+                <th>Program</th>
+                <th>Billing</th>
+                <th>Partner Fit</th>
+                <th>Revenue Basis</th>
+              </tr>
+            </thead>
+            <tbody id="partnerProgramRows">
+              <tr>
+                <td colspan="4">Loading partner program table...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="partner-proof" aria-label="Partner categories">
+        <article class="card">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Davao_Agdao_skyline_%28Davao_City%3B_04-22-2024%29.jpg/1920px-Davao_Agdao_skyline_%28Davao_City%3B_04-22-2024%29.jpg" alt="Davao hotel district skyline" />
+          <div class="body">
+            <h3>Hospitality Partners</h3>
+            <p>Feature rooms, stay packages, long-weekend promos, and direct booking links.</p>
+          </div>
+        </article>
+        <article class="card">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Roxas_Ave_Night_Market_001.jpg/1920px-Roxas_Ave_Night_Market_001.jpg" alt="Davao night market food stalls" />
+          <div class="body">
+            <h3>Food Partners</h3>
+            <p>Promote dining routes, seasonal offers, cafe features, and neighborhood food trails.</p>
+          </div>
+        </article>
+        <article class="card">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/2022-10-07_Davao-Samal_Bridge_001.jpg" alt="Davao Samal bridge construction over the gulf" />
+          <div class="body">
+            <h3>Experience Partners</h3>
+            <p>Route travellers into tours, transport, activities, events, and private quote requests.</p>
+          </div>
+        </article>
+      </section>
+
+      <section class="partner-cta">
+        <div>
+          <p class="eyebrow">Next Step</p>
+          <h2>Start with a partner profile, then match the right revenue model.</h2>
+          <p>Partner accounts collect the business details ImagineDavao needs for listings, campaigns, booking rows, and lead routing.</p>
+        </div>
+        <a class="partner-primary" href="signin?mode=signup">Create Partner Account</a>
+      </section>
+    </main>
+  </div>
+
+  <div class="chat-widget" id="chatWidget">
+    <button class="chat-fab" id="chatFab">
+      <span>AI</span>
+      <small>Ask Imagine AI</small>
+    </button>
+    <section class="chat-panel">
+      <header class="chat-header">
+        <div>
+          <h4>Imagine AI Concierge</h4>
+          <p>Live AI Travel Assistant</p>
+        </div>
+        <button id="closeChat" class="close-btn">Close</button>
+      </header>
+      <div class="chat-body">
+        <article class="chat-msg ai">Ask for itinerary planning, hotel picks, flight routes, and activity recommendations.</article>
+      </div>
+      <form class="chat-input-row" id="chatForm">
+        <input id="chatInput" type="text" />
+        <button type="submit">Send</button>
+      </form>
+    </section>
+  </div>
+
+  <script src="api-client.js"></script>
+  <script src="partner.js"></script>
+  <script src="main-footer.js"></script>
+  <script src="page.js"></script>
+</body>
+</html>
